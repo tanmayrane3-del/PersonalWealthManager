@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Teal Colors -->
+    <color name="teal_500">#009688</color>
+    <color name="teal_600">#00897B</color>
+    <color name="teal_700">#00796B</color>
+    <color name="teal_800">#00695C</color>
+
+    <!-- Custom Teal Card Colors -->
+    <color name="card_light_teal">#E0F2F1</color>
+    <color name="card_medium_teal">#B2DFDB</color>
+    <color name="card_income_teal">#4BA8A0</color>
+    <color name="card_dark_teal">#00796B</color>
+
+    <!-- Purple Colors -->
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+
+    <!-- Basic Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray_100">#F5F5F5</color>
+    <color name="gray_200">#EEEEEE</color>
+    <color name="gray_300">#E0E0E0</color>
+    <color name="gray_500">#9E9E9E</color>
+    <color name="gray_700">#616161</color>
+    <color name="gray_900">#212121</color>
+
+    <!-- Text Colors -->
+    <color name="text_dark">#212121</color>
+    <color name="text_muted">#757575</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#9E9E9E</color>
+
+    <!-- Icon Colors -->
+    <color name="icon_light">#FFFFFF</color>
+    <color name="icon_dark">#424242</color>
+
+    <!-- Status Colors -->
+    <color name="income_green">#4CAF50</color>
+    <color name="expense_red">#F44336</color>
+    <color name="warning_orange">#FF9800</color>
+    <color name="error_red">#D32F2F</color>
+
+    <!-- Amount Display Colors -->
+    <color name="amount_positive">#4CAF50</color>
+    <color name="amount_negative">#F44336</color>
+
+    <!-- Background Colors -->
+    <color name="background_light">#FAFAFA</color>
+    <color name="background_gradient_start">#E0F2F1</color>
+    <color name="background_gradient_end">#B2DFDB</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="card_bg">#FFFFFF</color>
+
+    <!-- Button Colors -->
+    <color name="filter_button_bg">#00897B</color>
+
+    <!-- SMS Transaction Highlight - light red for unmatched (Other) transactions -->
+    <color name="card_other_highlight">#FFEBEE</color>
+</resources>

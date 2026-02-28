@@ -1,0 +1,68 @@
+package com.example.personalwealthmanager.domain.model
+
+data class User(
+    val email: String,
+    val sessionToken: String
+)
+
+data class Transaction(
+    val transactionId: String,
+    val amount: String,
+    val date: String,
+    val time: String,
+    val type: String, // "income" or "expense"
+    val categoryName: String,
+    val categoryIcon: String?,
+    val sourceName: String?,
+    val recipientName: String?,
+    val paymentMethod: String,
+    val transactionReference: String?,
+    val tags: List<String>,
+    val notes: String?
+)
+
+data class Category(
+    val id: String,
+    val name: String,
+    val description: String? = null,
+    val icon: String? = null,
+    val color: String? = null,
+    val type: String? = null,  // Type is determined by which endpoint is called, not from response
+    val isGlobal: Boolean = false,
+    val isUserSpecific: Boolean = false,
+    val transactionCount: Int = 0
+)
+
+data class Source(
+    val id: String,
+    val name: String,
+    val description: String? = null,
+    val type: String? = null,
+    val contactInfo: String? = null,
+    val sourceIdentifier: String? = null,
+    val defaultCategoryId: String? = null,
+    val isGlobal: Boolean = false,
+    val isUserSpecific: Boolean = false,
+    val transactionCount: Int = 0
+)
+
+data class Recipient(
+    val id: String,
+    val name: String,
+    val type: String? = null,
+    val description: String? = null,
+    val contactInfo: String? = null,
+    val isFavorite: Boolean = false,
+    val isGlobal: Boolean = false,
+    val isUserSpecific: Boolean = false,
+    val transactionCount: Int = 0,
+    val paymentIdentifier: String? = null,
+    val defaultCategoryId: String? = null
+)
+
+data class TransactionMetadata(
+    val incomeCategories: List<Category>,
+    val expenseCategories: List<Category>,
+    val sources: List<Source>,
+    val recipients: List<Recipient>
+)
