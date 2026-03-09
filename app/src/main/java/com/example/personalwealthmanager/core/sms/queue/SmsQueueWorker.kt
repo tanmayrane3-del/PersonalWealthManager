@@ -7,8 +7,15 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
+import androidx.work.BackoffPolicy
+import androidx.work.Constraints
 import androidx.work.CoroutineWorker
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import java.util.concurrent.TimeUnit
 import com.example.personalwealthmanager.R
 import com.example.personalwealthmanager.core.sms.SmsReceiver
 import com.example.personalwealthmanager.core.utils.SessionManager
@@ -32,6 +39,8 @@ class SmsQueueWorker @AssistedInject constructor(
 
     companion object {
         private const val TAG = "SmsQueueWorker"
+        const val WORK_NAME = "sms_queue_process"
+        private const val POLL_INTERVAL_MINUTES = 5L
     }
 
     override suspend fun doWork(): Result {
@@ -81,18 +90,40 @@ class SmsQueueWorker @AssistedInject constructor(
                     else -> {
                         Log.w(TAG, "Backend returned ${response.code()} — will retry")
                         reportQueueCount()
+                        scheduleNextRun()
                         return Result.retry()
                     }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Network error processing SMS id=${item.id}: ${e.message}")
                 reportQueueCount()
+                scheduleNextRun()
                 return Result.retry()
             }
         }
 
         reportQueueCount()
+        scheduleNextRun()
         return Result.success()
+    }
+
+    private fun scheduleNextRun() {
+        val next = OneTimeWorkRequestBuilder<SmsQueueWorker>()
+            .setInitialDelay(POLL_INTERVAL_MINUTES, TimeUnit.MINUTES)
+            .setConstraints(
+                Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build()
+            )
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 15, TimeUnit.SECONDS)
+            .build()
+
+        WorkManager.getInstance(context).enqueueUniqueWork(
+            WORK_NAME,
+            ExistingWorkPolicy.REPLACE,
+            next
+        )
+        Log.d(TAG, "Next queue check scheduled in ${POLL_INTERVAL_MINUTES}m")
     }
 
     private suspend fun reportQueueCount() {
