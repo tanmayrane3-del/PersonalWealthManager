@@ -197,4 +197,36 @@
     <string name="edit">Edit</string>
     <string name="add">Add</string>
     <string name="enter_description">Enter description</string>
+
+    <!-- Assets / Stocks -->
+    <string name="assets">Assets</string>
+    <string name="stocks">Stocks</string>
+    <string name="sync">Sync</string>
+    <string name="syncing">Syncing…</string>
+    <string name="no_holdings">No holdings found. Tap sync to fetch from Zerodha.</string>
+    <string name="holdings_synced">Holdings synced successfully</string>
+    <string name="sync_failed">Sync failed: %s</string>
+    <string name="zerodha_not_connected">Zerodha not connected. Please set up your Demat account.</string>
+
+    <!-- Setup Demat / Zerodha -->
+    <string name="setup_demat">Setup Demat</string>
+    <string name="connect_zerodha">Connect Zerodha</string>
+    <string name="api_key_hint">API Key</string>
+    <string name="api_secret_hint">API Secret</string>
+    <string name="save_credentials">Save</string>
+    <string name="credentials_saved">Credentials saved successfully</string>
+    <string name="check_holdings">Check Holdings →</string>
+    <string name="zerodha_steps_title">How to get your API key:</string>
+    <string name="zerodha_steps">1. Visit zerodha.com/products/api\n2. Create a new app\n3. Copy API Key and API Secret\n4. Set redirect URL to:\nhttps://wealth-backend-demo.onrender.com/api/kite/auth/callback</string>
+    <string name="open_kite_apps">Open zerodha.com/products/api</string>
+    <string name="api_key_required">API Key is required</string>
+    <string name="api_secret_required">API Secret is required</string>
+
+    <!-- Dashboard — Stocks Summary -->
+    <string name="assets_section">ASSETS</string>
+    <string name="stock_holdings_label">Stock Holdings</string>
+    <string name="total_portfolio_value">Total Portfolio Value</string>
+    <string name="todays_pnl">Today\'s P&amp;L</string>
+    <string name="stocks_not_connected">—</string>
+    <string name="refresh_stocks">Refresh stocks</string>
 </resources>

@@ -59,4 +59,7 @@
 
     <!-- SMS Transaction Highlight - light red for unmatched (Other) transactions -->
     <color name="card_other_highlight">#FFEBEE</color>
+
+    <!-- Stocks / Assets Dashboard Card -->
+    <color name="card_stocks_indigo">#3F51B5</color>
 </resources>

@@ -25,4 +25,15 @@ object ApiConfig {
     object Sms {
         const val PARSE = "api/sms/parse"
     }
+
+    object Zerodha {
+        const val CREDENTIALS     = "api/zerodha/credentials"
+        const val AUTH_URL        = "api/zerodha/auth-url"
+        const val AUTH_CALLBACK   = "wealthapp://auth/success"
+    }
+
+    object Holdings {
+        const val SYNC     = "api/holdings/sync"
+        const val HOLDINGS = "api/holdings"
+    }
 }

@@ -60,6 +60,22 @@ data class Recipient(
     val defaultCategoryId: String? = null
 )
 
+data class StockHolding(
+    val id: String,
+    val tradingSymbol: String,
+    val exchange: String,
+    val quantity: Int,
+    val averagePrice: Double,
+    val lastPrice: Double,
+    val currentValue: Double,
+    val pnl: Double,
+    val pnlPercentage: Double,
+    val dayChange: Double,
+    val dayChangePercentage: Double,
+    val closePrice: Double,
+    val lastSyncedAt: String?
+)
+
 data class TransactionMetadata(
     val incomeCategories: List<Category>,
     val expenseCategories: List<Category>,

@@ -73,6 +73,27 @@
             android:exported="false"
             android:theme="@style/Theme.PersonalWealthManager" />
 
+        <!-- Stocks Activity — singleTop so onNewIntent fires after Chrome Custom Tab redirect -->
+        <activity
+            android:name=".presentation.stocks.StocksActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.PersonalWealthManager">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="wealthapp" android:host="auth" android:path="/callback" />
+            </intent-filter>
+        </activity>
+
+        <!-- Setup Zerodha Activity -->
+        <activity
+            android:name=".presentation.zerodha.SetupZerodhaActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PersonalWealthManager"
+            android:windowSoftInputMode="adjustResize" />
+
         <!-- SMS BroadcastReceiver for auto expense creation -->
         <receiver
             android:name=".core.sms.SmsReceiver"
@@ -85,10 +106,15 @@
 
         <!-- Disable WorkManager's default initializer — we use HiltWorkerFactory instead -->
         <provider
-            android:name="androidx.work.impl.WorkManagerInitializer"
-            android:authorities="${applicationId}.workmanager-init"
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
             android:exported="false"
-            tools:node="remove" />
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
 
     </application>
 

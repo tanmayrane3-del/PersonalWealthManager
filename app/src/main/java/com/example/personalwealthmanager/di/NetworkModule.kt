@@ -4,9 +4,11 @@ import android.content.Context
 import com.example.personalwealthmanager.core.utils.SessionManager
 import com.example.personalwealthmanager.data.remote.api.AdminApi
 import com.example.personalwealthmanager.data.remote.api.AuthApi
+import com.example.personalwealthmanager.data.remote.api.HoldingsApi
 import com.example.personalwealthmanager.data.remote.api.MetadataApi
 import com.example.personalwealthmanager.data.remote.api.SmsApi
 import com.example.personalwealthmanager.data.remote.api.TransactionApi
+import com.example.personalwealthmanager.data.remote.api.ZerodhaApi
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -126,5 +128,17 @@ object NetworkModule {
     @Singleton
     fun provideAdminApi(retrofit: Retrofit): AdminApi {
         return retrofit.create(AdminApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideZerodhaApi(retrofit: Retrofit): ZerodhaApi {
+        return retrofit.create(ZerodhaApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHoldingsApi(retrofit: Retrofit): HoldingsApi {
+        return retrofit.create(HoldingsApi::class.java)
     }
 }

@@ -17,12 +17,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
+import com.example.personalwealthmanager.presentation.stocks.StocksActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.personalwealthmanager.ApiConfig
 import com.example.personalwealthmanager.presentation.categories.CategoryManagementActivity
 import com.example.personalwealthmanager.presentation.sources.SourceManagementActivity
 import com.example.personalwealthmanager.presentation.recipients.RecipientManagementActivity
+import com.example.personalwealthmanager.presentation.zerodha.SetupZerodhaActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,6 +51,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var ivRefreshIncome: ImageView
     private lateinit var ivRefreshExpenses: ImageView
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var tvStockValue: TextView
+    private lateinit var tvStockDayPnl: TextView
+    private lateinit var ivRefreshStocks: ImageView
 
     private val fromCalendar = Calendar.getInstance()
     private val toCalendar = Calendar.getInstance()
@@ -68,6 +73,9 @@ class MainActivity : AppCompatActivity() {
         ivRefreshIncome = findViewById(R.id.ivRefreshIncome)
         ivRefreshExpenses = findViewById(R.id.ivRefreshExpenses)
         drawerLayout = findViewById(R.id.drawerLayout)
+        tvStockValue = findViewById(R.id.tvStockValue)
+        tvStockDayPnl = findViewById(R.id.tvStockDayPnl)
+        ivRefreshStocks = findViewById(R.id.ivRefreshStocks)
 
         val fromDateContainer = findViewById<View>(R.id.fromDateContainer)
         val toDateContainer = findViewById<View>(R.id.toDateContainer)
@@ -108,6 +116,14 @@ class MainActivity : AppCompatActivity() {
             refreshExpenses()
         }
 
+        ivRefreshStocks.setOnClickListener {
+            refreshStocks()
+        }
+
+        findViewById<View>(R.id.stocksCard).setOnClickListener {
+            startActivity(Intent(this, StocksActivity::class.java))
+        }
+
         // Setup drawer menu
         setupDrawerMenu()
 
@@ -137,6 +153,7 @@ class MainActivity : AppCompatActivity() {
     private fun refreshData() {
         refreshIncome()
         refreshExpenses()
+        refreshStocks()
     }
 
     private fun refreshIncome() {
@@ -291,6 +308,66 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun refreshStocks() {
+        val sessionToken = getSessionToken() ?: return
+        tvStockValue.text = getString(R.string.loading)
+        tvStockDayPnl.text = getString(R.string.loading)
+        ivRefreshStocks.isEnabled = false
+        ivRefreshStocks.alpha = 0.5f
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val url = URL("${ApiConfig.BASE_URL}/api/holdings/summary")
+                val connection = url.openConnection() as HttpURLConnection
+                connection.requestMethod = "GET"
+                connection.setRequestProperty(ApiConfig.HEADER_SESSION_TOKEN, sessionToken)
+                connection.connectTimeout = 10000
+                connection.readTimeout = 10000
+
+                val responseCode = connection.responseCode
+                val response = if (responseCode == HttpURLConnection.HTTP_OK)
+                    connection.inputStream.bufferedReader().readText()
+                else
+                    connection.errorStream?.bufferedReader()?.readText() ?: ""
+
+                withContext(Dispatchers.Main) {
+                    ivRefreshStocks.isEnabled = true
+                    ivRefreshStocks.alpha = 1.0f
+
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        val json = JSONObject(response)
+                        if (json.getString("status") == "success") {
+                            val data = json.getJSONObject("data")
+                            val totalValue = data.getDouble("total_portfolio_value")
+                            val todayPnl = data.getDouble("today_pnl")
+
+                            tvStockValue.text = formatCurrency(totalValue)
+                            val prefix = if (todayPnl >= 0) "+" else ""
+                            tvStockDayPnl.text = "$prefix${formatCurrency(todayPnl)}"
+                            tvStockDayPnl.setTextColor(ContextCompat.getColor(
+                                this@MainActivity,
+                                if (todayPnl >= 0) R.color.income_green else R.color.expense_red
+                            ))
+                        } else {
+                            tvStockValue.text = getString(R.string.stocks_not_connected)
+                            tvStockDayPnl.text = getString(R.string.stocks_not_connected)
+                        }
+                    } else {
+                        tvStockValue.text = getString(R.string.stocks_not_connected)
+                        tvStockDayPnl.text = getString(R.string.stocks_not_connected)
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    ivRefreshStocks.isEnabled = true
+                    ivRefreshStocks.alpha = 1.0f
+                    tvStockValue.text = getString(R.string.stocks_not_connected)
+                    tvStockDayPnl.text = getString(R.string.stocks_not_connected)
+                }
+            }
+        }
+    }
+
     private fun formatCurrency(amount: Double): String {
         return currencyFormat.format(amount)
     }
@@ -353,6 +430,48 @@ class MainActivity : AppCompatActivity() {
         headerView.findViewById<Button>(R.id.btnRecipientManagement)?.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)
             startActivity(Intent(this, RecipientManagementActivity::class.java))
+        }
+
+        // Assets expandable menu
+        val btnAssets = headerView.findViewById<Button>(R.id.btnAssets)
+        val ivAssetsExpand = headerView.findViewById<ImageView>(R.id.ivAssetsExpand)
+        val assetsChildItems = headerView.findViewById<LinearLayout>(R.id.assetsChildItems)
+
+        btnAssets?.setOnClickListener {
+            if (assetsChildItems?.visibility == View.VISIBLE) {
+                assetsChildItems.visibility = View.GONE
+                ivAssetsExpand?.setImageResource(R.drawable.ic_expand_more)
+            } else {
+                assetsChildItems?.visibility = View.VISIBLE
+                ivAssetsExpand?.setImageResource(R.drawable.ic_expand_less)
+            }
+        }
+        ivAssetsExpand?.setOnClickListener { btnAssets?.performClick() }
+
+        headerView.findViewById<Button>(R.id.btnStocks)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, StocksActivity::class.java))
+        }
+
+        // Setup Demat expandable menu
+        val btnSetupDemat = headerView.findViewById<Button>(R.id.btnSetupDemat)
+        val ivSetupDematExpand = headerView.findViewById<ImageView>(R.id.ivSetupDematExpand)
+        val setupDematChildItems = headerView.findViewById<LinearLayout>(R.id.setupDematChildItems)
+
+        btnSetupDemat?.setOnClickListener {
+            if (setupDematChildItems?.visibility == View.VISIBLE) {
+                setupDematChildItems.visibility = View.GONE
+                ivSetupDematExpand?.setImageResource(R.drawable.ic_expand_more)
+            } else {
+                setupDematChildItems?.visibility = View.VISIBLE
+                ivSetupDematExpand?.setImageResource(R.drawable.ic_expand_less)
+            }
+        }
+        ivSetupDematExpand?.setOnClickListener { btnSetupDemat?.performClick() }
+
+        headerView.findViewById<Button>(R.id.btnConnectZerodha)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, SetupZerodhaActivity::class.java))
         }
 
         // Logout button

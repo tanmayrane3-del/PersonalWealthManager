@@ -147,7 +147,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="24dp">
+                    android:padding="16dp">
 
                     <!-- Total Income Label -->
                     <TextView
@@ -186,27 +186,12 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/default_income"
                         android:textColor="@android:color/white"
-                        android:textSize="38sp"
+                        android:textSize="34sp"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@id/ivEditIncome"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvIncomeLabel" />
-
-                    <!-- Edit Icon (Aligned with Amount) -->
-                    <ImageView
-                        android:id="@+id/ivEditIncome"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="8dp"
-                        android:padding="12dp"
-                        android:src="@drawable/ic_edit"
-                        android:contentDescription="@string/edit_income"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:focusable="true"
-                        app:layout_constraintBottom_toBottomOf="@id/tvIncomeAmount"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/tvIncomeAmount" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
@@ -226,7 +211,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="24dp">
+                    android:padding="16dp">
 
                     <!-- Total Expenses Label -->
                     <TextView
@@ -265,27 +250,145 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/default_expenses"
                         android:textColor="@android:color/white"
-                        android:textSize="38sp"
+                        android:textSize="34sp"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@id/ivEditExpenses"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvExpensesLabel" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
 
-                    <!-- Edit Icon (Aligned with Amount) -->
+            <!-- Bifurcation Divider -->
+            <View
+                android:id="@+id/sectionDivider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="28dp"
+                android:background="@color/text_muted"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/expensesCard" />
+
+            <!-- Assets Section Label -->
+            <TextView
+                android:id="@+id/tvAssetsSection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/assets_section"
+                android:textColor="@android:color/white"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.12"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sectionDivider" />
+
+            <!-- Stock Holdings Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/stocksCard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="#006e61"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvAssetsSection">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="24dp">
+
+                    <!-- Stock Holdings Label -->
+                    <TextView
+                        android:id="@+id/tvStockHoldingsLabel"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/stock_holdings_label"
+                        android:textColor="@android:color/white"
+                        android:textSize="19sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@id/ivRefreshStocks"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <!-- Refresh Icon -->
                     <ImageView
-                        android:id="@+id/ivEditExpenses"
+                        android:id="@+id/ivRefreshStocks"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_marginStart="8dp"
                         android:padding="12dp"
-                        android:src="@drawable/ic_edit"
-                        android:contentDescription="@string/edit_expenses"
+                        android:src="@drawable/ic_refresh"
+                        android:contentDescription="@string/refresh_stocks"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:clickable="true"
                         android:focusable="true"
-                        app:layout_constraintBottom_toBottomOf="@id/tvExpensesAmount"
+                        app:layout_constraintBottom_toBottomOf="@id/tvStockHoldingsLabel"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/tvExpensesAmount" />
+                        app:layout_constraintTop_toTopOf="@id/tvStockHoldingsLabel" />
+
+                    <!-- Total Portfolio Value Label -->
+                    <TextView
+                        android:id="@+id/tvStockValueLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/total_portfolio_value"
+                        android:textColor="#B3FFFFFF"
+                        android:textSize="13sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvStockHoldingsLabel" />
+
+                    <!-- Total Portfolio Value Amount -->
+                    <TextView
+                        android:id="@+id/tvStockValue"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/stocks_not_connected"
+                        android:textColor="@android:color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvStockValueLabel" />
+
+                    <!-- Today's P&L Label -->
+                    <TextView
+                        android:id="@+id/tvPnlLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="@string/todays_pnl"
+                        android:textColor="#B3FFFFFF"
+                        android:textSize="13sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvStockValue" />
+
+                    <!-- Today's P&L Amount -->
+                    <TextView
+                        android:id="@+id/tvStockDayPnl"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/stocks_not_connected"
+                        android:textColor="@android:color/white"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tvPnlLabel" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 

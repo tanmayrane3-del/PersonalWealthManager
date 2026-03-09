@@ -118,6 +118,114 @@
             android:paddingStart="16dp" />
     </LinearLayout>
 
+    <!-- Assets Header Button (expandable) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="4dp"
+        android:background="@color/card_dark_teal"
+        android:paddingStart="16dp"
+        android:paddingEnd="8dp"
+        android:gravity="center_vertical">
+
+        <Button
+            android:id="@+id/btnAssets"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="56dp"
+            android:text="@string/assets"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@android:color/transparent"
+            android:gravity="start|center_vertical" />
+
+        <ImageView
+            android:id="@+id/ivAssetsExpand"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_expand_more"
+            android:contentDescription="@string/expand_collapse"
+            android:layout_marginEnd="8dp" />
+    </LinearLayout>
+
+    <!-- Assets Child Items -->
+    <LinearLayout
+        android:id="@+id/assetsChildItems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:paddingStart="24dp"
+        android:layout_marginBottom="8dp">
+
+        <Button
+            android:id="@+id/btnStocks"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/stocks"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:background="@color/card_dark_teal"
+            android:gravity="start|center_vertical"
+            android:paddingStart="16dp" />
+    </LinearLayout>
+
+    <!-- Setup Demat Header Button (expandable) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="4dp"
+        android:background="@color/card_dark_teal"
+        android:paddingStart="16dp"
+        android:paddingEnd="8dp"
+        android:gravity="center_vertical">
+
+        <Button
+            android:id="@+id/btnSetupDemat"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="56dp"
+            android:text="@string/setup_demat"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@android:color/transparent"
+            android:gravity="start|center_vertical" />
+
+        <ImageView
+            android:id="@+id/ivSetupDematExpand"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_expand_more"
+            android:contentDescription="@string/expand_collapse"
+            android:layout_marginEnd="8dp" />
+    </LinearLayout>
+
+    <!-- Setup Demat Child Items -->
+    <LinearLayout
+        android:id="@+id/setupDematChildItems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:paddingStart="24dp"
+        android:layout_marginBottom="8dp">
+
+        <Button
+            android:id="@+id/btnConnectZerodha"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/connect_zerodha"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:background="@color/card_dark_teal"
+            android:gravity="start|center_vertical"
+            android:paddingStart="16dp" />
+    </LinearLayout>
+
     <!-- Logout Button -->
     <Button
         android:id="@+id/btnLogout"

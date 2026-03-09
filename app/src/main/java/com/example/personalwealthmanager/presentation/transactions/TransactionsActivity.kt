@@ -18,6 +18,8 @@ import com.example.personalwealthmanager.MainActivity
 import com.example.personalwealthmanager.presentation.categories.CategoryManagementActivity
 import com.example.personalwealthmanager.presentation.sources.SourceManagementActivity
 import com.example.personalwealthmanager.presentation.recipients.RecipientManagementActivity
+import com.example.personalwealthmanager.presentation.stocks.StocksActivity
+import com.example.personalwealthmanager.presentation.zerodha.SetupZerodhaActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -173,6 +175,48 @@ class TransactionsActivity : AppCompatActivity() {
         headerView.findViewById<Button>(R.id.btnRecipientManagement)?.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)
             startActivity(Intent(this, RecipientManagementActivity::class.java))
+        }
+
+        // Assets expandable menu
+        val btnAssets = headerView.findViewById<Button>(R.id.btnAssets)
+        val ivAssetsExpand = headerView.findViewById<ImageView>(R.id.ivAssetsExpand)
+        val assetsChildItems = headerView.findViewById<LinearLayout>(R.id.assetsChildItems)
+
+        btnAssets?.setOnClickListener {
+            if (assetsChildItems?.visibility == View.VISIBLE) {
+                assetsChildItems.visibility = View.GONE
+                ivAssetsExpand?.setImageResource(R.drawable.ic_expand_more)
+            } else {
+                assetsChildItems?.visibility = View.VISIBLE
+                ivAssetsExpand?.setImageResource(R.drawable.ic_expand_less)
+            }
+        }
+        ivAssetsExpand?.setOnClickListener { btnAssets?.performClick() }
+
+        headerView.findViewById<Button>(R.id.btnStocks)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, StocksActivity::class.java))
+        }
+
+        // Setup Demat expandable menu
+        val btnSetupDemat = headerView.findViewById<Button>(R.id.btnSetupDemat)
+        val ivSetupDematExpand = headerView.findViewById<ImageView>(R.id.ivSetupDematExpand)
+        val setupDematChildItems = headerView.findViewById<LinearLayout>(R.id.setupDematChildItems)
+
+        btnSetupDemat?.setOnClickListener {
+            if (setupDematChildItems?.visibility == View.VISIBLE) {
+                setupDematChildItems.visibility = View.GONE
+                ivSetupDematExpand?.setImageResource(R.drawable.ic_expand_more)
+            } else {
+                setupDematChildItems?.visibility = View.VISIBLE
+                ivSetupDematExpand?.setImageResource(R.drawable.ic_expand_less)
+            }
+        }
+        ivSetupDematExpand?.setOnClickListener { btnSetupDemat?.performClick() }
+
+        headerView.findViewById<Button>(R.id.btnConnectZerodha)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, SetupZerodhaActivity::class.java))
         }
 
         // Logout button
