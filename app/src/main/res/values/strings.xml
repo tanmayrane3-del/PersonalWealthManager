@@ -230,6 +230,21 @@
     <string name="stocks_not_connected">—</string>
     <string name="refresh_stocks">Refresh stocks</string>
 
+    <!-- Transaction Chart View -->
+    <string name="view">View</string>
+    <string name="list_view">List View</string>
+    <string name="weekly_view">Weekly View</string>
+    <string name="daily_view">Daily View</string>
+    <string name="monthly_view">Monthly View</string>
+    <string name="source_recipient_view">Source &amp; Recipient</string>
+    <string name="no_data_for_period">No data available for the selected period</string>
+    <string name="income_by_category">Income by Category</string>
+    <string name="expense_by_category">Expense by Category</string>
+    <string name="income_by_source">Income by Source</string>
+    <string name="expense_by_recipient">Expense by Recipient</string>
+    <string name="income_line">Income</string>
+    <string name="expense_line">Expense</string>
+
     <!-- Settings -->
     <string name="settings">Settings</string>
     <string name="sms_logs">SMS Logs</string>

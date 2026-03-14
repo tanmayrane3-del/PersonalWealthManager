@@ -271,7 +271,7 @@ class TransactionDetailViewModel @Inject constructor(
             _state.update {
                 it.copy(isCreatingRecipient = true, recipientCreationError = null, recipientCreated = null)
             }
-            recipientRepository.createRecipient(name, null, description, null, isFavorite, null, defaultCategoryId)
+            recipientRepository.createRecipient(name, null, description, null, isFavorite, emptyList(), defaultCategoryId)
                 .onSuccess { recipient ->
                     val updatedRecipients = _state.value.recipients + recipient
                     _state.update {

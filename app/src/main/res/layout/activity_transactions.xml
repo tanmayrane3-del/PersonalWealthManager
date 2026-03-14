@@ -56,6 +56,18 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp" />
 
+                <!-- View Button -->
+                <Button
+                    android:id="@+id/btnView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:text="@string/view"
+                    android:textColor="@android:color/white"
+                    android:background="@color/filter_button_bg"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:layout_marginStart="8dp" />
+
                 <!-- Burger Menu -->
                 <ImageView
                     android:id="@+id/btnMenu"
@@ -108,6 +120,195 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Chart Container (replaces list in view mode) -->
+            <LinearLayout
+                android:id="@+id/chartContainer"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/appBar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <!-- Chart header: date range + back button -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:gravity="center_vertical"
+                    android:background="#22FFFFFF">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvChartTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:text="@string/weekly_view" />
+
+                        <TextView
+                            android:id="@+id/tvChartDateRange"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#CCFFFFFF"
+                            android:textSize="12sp"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/all_transactions" />
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnBackToList"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="@string/list_view"
+                        android:textColor="@android:color/white"
+                        android:background="@color/filter_button_bg"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <!-- Scrollable chart content -->
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:fillViewport="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="80dp">
+
+                        <!-- Line Chart (weekly / daily / monthly) -->
+                        <com.github.mikephil.charting.charts.LineChart
+                            android:id="@+id/lineChart"
+                            android:layout_width="match_parent"
+                            android:layout_height="340dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:visibility="gone" />
+
+                        <!-- No-data label for line chart -->
+                        <TextView
+                            android:id="@+id/tvLineChartEmpty"
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:gravity="center"
+                            android:text="@string/no_data_for_period"
+                            android:textColor="#CCFFFFFF"
+                            android:textSize="14sp"
+                            android:visibility="gone" />
+
+                        <!-- Pie Charts Container (source &amp; recipient) -->
+                        <LinearLayout
+                            android:id="@+id/pieChartsContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/income_by_category"
+                                android:textColor="@android:color/white"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="16dp"
+                                android:paddingTop="14dp"
+                                android:paddingBottom="4dp" />
+
+                            <com.github.mikephil.charting.charts.PieChart
+                                android:id="@+id/pieIncomeByCategory"
+                                android:layout_width="match_parent"
+                                android:layout_height="260dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/expense_by_category"
+                                android:textColor="@android:color/white"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="16dp"
+                                android:paddingTop="14dp"
+                                android:paddingBottom="4dp" />
+
+                            <com.github.mikephil.charting.charts.PieChart
+                                android:id="@+id/pieExpenseByCategory"
+                                android:layout_width="match_parent"
+                                android:layout_height="260dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/income_by_source"
+                                android:textColor="@android:color/white"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="16dp"
+                                android:paddingTop="14dp"
+                                android:paddingBottom="4dp" />
+
+                            <com.github.mikephil.charting.charts.PieChart
+                                android:id="@+id/pieIncomeBySource"
+                                android:layout_width="match_parent"
+                                android:layout_height="260dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/expense_by_recipient"
+                                android:textColor="@android:color/white"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="16dp"
+                                android:paddingTop="14dp"
+                                android:paddingBottom="4dp" />
+
+                            <com.github.mikephil.charting.charts.PieChart
+                                android:id="@+id/pieExpenseByRecipient"
+                                android:layout_width="match_parent"
+                                android:layout_height="260dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </ScrollView>
+
+            </LinearLayout>
 
             <!-- Floating Action Button (FAB) -->
             <com.google.android.material.floatingactionbutton.FloatingActionButton
