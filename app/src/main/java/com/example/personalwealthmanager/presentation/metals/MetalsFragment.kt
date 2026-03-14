@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.personalwealthmanager.databinding.FragmentMetalsBinding
 import com.example.personalwealthmanager.domain.model.MetalHolding
 import com.example.personalwealthmanager.domain.model.MetalRates
