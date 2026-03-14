@@ -55,6 +55,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvStockValue: TextView
     private lateinit var tvStockDayPnl: TextView
     private lateinit var ivRefreshStocks: ImageView
+    private lateinit var tvGoldValue: TextView
+    private lateinit var tvGoldDayPnl: TextView
+    private lateinit var ivRefreshGold: ImageView
 
     private val fromCalendar = Calendar.getInstance()
     private val toCalendar = Calendar.getInstance()
@@ -77,6 +80,9 @@ class MainActivity : AppCompatActivity() {
         tvStockValue = findViewById(R.id.tvStockValue)
         tvStockDayPnl = findViewById(R.id.tvStockDayPnl)
         ivRefreshStocks = findViewById(R.id.ivRefreshStocks)
+        tvGoldValue = findViewById(R.id.tvGoldValue)
+        tvGoldDayPnl = findViewById(R.id.tvGoldDayPnl)
+        ivRefreshGold = findViewById(R.id.ivRefreshGold)
 
         val fromDateContainer = findViewById<View>(R.id.fromDateContainer)
         val toDateContainer = findViewById<View>(R.id.toDateContainer)
@@ -121,8 +127,16 @@ class MainActivity : AppCompatActivity() {
             refreshStocks()
         }
 
+        ivRefreshGold.setOnClickListener {
+            refreshMetals()
+        }
+
         findViewById<View>(R.id.stocksCard).setOnClickListener {
             startActivity(Intent(this, StocksActivity::class.java))
+        }
+
+        findViewById<View>(R.id.goldCard).setOnClickListener {
+            startActivity(Intent(this, com.example.personalwealthmanager.presentation.metals.MetalsActivity::class.java))
         }
 
         // Setup drawer menu
@@ -155,6 +169,7 @@ class MainActivity : AppCompatActivity() {
         refreshIncome()
         refreshExpenses()
         refreshStocks()
+        refreshMetals()
     }
 
     private fun refreshIncome() {
@@ -364,6 +379,66 @@ class MainActivity : AppCompatActivity() {
                     ivRefreshStocks.alpha = 1.0f
                     tvStockValue.text = getString(R.string.stocks_not_connected)
                     tvStockDayPnl.text = getString(R.string.stocks_not_connected)
+                }
+            }
+        }
+    }
+
+    private fun refreshMetals() {
+        val sessionToken = getSessionToken() ?: return
+        tvGoldValue.text = getString(R.string.loading)
+        tvGoldDayPnl.text = getString(R.string.loading)
+        ivRefreshGold.isEnabled = false
+        ivRefreshGold.alpha = 0.5f
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val url = URL("${ApiConfig.BASE_URL}/api/metals/holdings")
+                val connection = url.openConnection() as HttpURLConnection
+                connection.requestMethod = "GET"
+                connection.setRequestProperty(ApiConfig.HEADER_SESSION_TOKEN, sessionToken)
+                connection.connectTimeout = 10000
+                connection.readTimeout = 10000
+
+                val responseCode = connection.responseCode
+                val response = if (responseCode == HttpURLConnection.HTTP_OK)
+                    connection.inputStream.bufferedReader().readText()
+                else
+                    connection.errorStream?.bufferedReader()?.readText() ?: ""
+
+                withContext(Dispatchers.Main) {
+                    ivRefreshGold.isEnabled = true
+                    ivRefreshGold.alpha = 1.0f
+
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        val json = JSONObject(response)
+                        if (json.getString("status") == "success") {
+                            val data = json.getJSONObject("data")
+                            val totalValue = data.getDouble("total_value")
+                            val dayPnl = data.getDouble("total_day_pnl")
+
+                            tvGoldValue.text = formatCurrency(totalValue)
+                            val prefix = if (dayPnl >= 0) "+" else ""
+                            tvGoldDayPnl.text = "$prefix${formatCurrency(dayPnl)}"
+                            tvGoldDayPnl.setTextColor(ContextCompat.getColor(
+                                this@MainActivity,
+                                if (dayPnl >= 0) R.color.income_green else R.color.expense_red
+                            ))
+                        } else {
+                            tvGoldValue.text = "--"
+                            tvGoldDayPnl.text = "--"
+                        }
+                    } else {
+                        tvGoldValue.text = "--"
+                        tvGoldDayPnl.text = "--"
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    ivRefreshGold.isEnabled = true
+                    ivRefreshGold.alpha = 1.0f
+                    tvGoldValue.text = "--"
+                    tvGoldDayPnl.text = "--"
                 }
             }
         }
