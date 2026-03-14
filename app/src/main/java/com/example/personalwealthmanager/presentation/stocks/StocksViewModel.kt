@@ -55,7 +55,16 @@ class StocksViewModel @Inject constructor(
             _state.value = StocksState.Loading
             val result = holdingsRepository.syncHoldings(token)
             result.fold(
-                onSuccess = { holdings -> _state.value = StocksState.Success(holdings) },
+                onSuccess = { holdings ->
+                    _state.value = StocksState.Success(holdings)
+                    // Server computes CAGR for new stocks in background after sync response.
+                    // Silently reload after 8 s so freshly calculated CAGR values appear.
+                    launch {
+                        delay(8_000L)
+                        holdingsRepository.getHoldings(token)
+                            .onSuccess { updated -> _state.value = StocksState.Success(updated) }
+                    }
+                },
                 onFailure = { e ->
                     val msg = e.message ?: ""
                     when {
