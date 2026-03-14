@@ -13,9 +13,25 @@ interface SmsQueueDao {
     @Delete
     suspend fun delete(item: SmsQueueEntity)
 
-    @Query("SELECT * FROM sms_queue ORDER BY enqueuedAt ASC")
-    suspend fun getAll(): List<SmsQueueEntity>
+    /** Only returns items that still need processing */
+    @Query("SELECT * FROM sms_queue WHERE status = 'PENDING' ORDER BY enqueuedAt ASC")
+    suspend fun getPending(): List<SmsQueueEntity>
 
-    @Query("SELECT COUNT(*) FROM sms_queue")
+    @Query("SELECT COUNT(*) FROM sms_queue WHERE status = 'PENDING'")
     suspend fun count(): Int
+
+    @Query("UPDATE sms_queue SET status = :status, errorMessage = :error, processedAt = :processedAt WHERE id = :id")
+    suspend fun updateStatus(id: Long, status: String, error: String?, processedAt: Long)
+
+    /** For the SMS Log screen — recent 100 entries across all statuses */
+    @Query("SELECT * FROM sms_queue ORDER BY enqueuedAt DESC LIMIT 100")
+    suspend fun getRecent(): List<SmsQueueEntity>
+
+    /** Reset a FAILED item back to PENDING so it gets retried */
+    @Query("UPDATE sms_queue SET status = 'PENDING', errorMessage = NULL, processedAt = NULL WHERE id = :id")
+    suspend fun resetToPending(id: Long)
+
+    /** Purge all non-pending entries older than 15 days to keep the table bounded */
+    @Query("DELETE FROM sms_queue WHERE status IN ('SUCCESS', 'SKIPPED', 'FAILED') AND enqueuedAt < :cutoffMs")
+    suspend fun purgeOldResolved(cutoffMs: Long)
 }

@@ -229,4 +229,11 @@
     <string name="todays_pnl">Today\'s P&amp;L</string>
     <string name="stocks_not_connected">—</string>
     <string name="refresh_stocks">Refresh stocks</string>
+
+    <!-- Settings -->
+    <string name="settings">Settings</string>
+    <string name="sms_logs">SMS Logs</string>
+    <string name="sms_logs_description">View all received bank SMS and their processing status</string>
+    <string name="sms_log_empty">No SMS received yet</string>
+    <string name="open">Open</string>
 </resources>

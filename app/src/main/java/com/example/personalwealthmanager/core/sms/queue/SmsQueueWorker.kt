@@ -7,7 +7,6 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
-import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
@@ -15,7 +14,6 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import java.util.concurrent.TimeUnit
 import com.example.personalwealthmanager.R
 import com.example.personalwealthmanager.core.sms.SmsReceiver
 import com.example.personalwealthmanager.core.utils.SessionManager
@@ -40,7 +38,7 @@ class SmsQueueWorker @AssistedInject constructor(
     companion object {
         private const val TAG = "SmsQueueWorker"
         const val WORK_NAME = "sms_queue_process"
-        private const val POLL_INTERVAL_MINUTES = 5L
+        private val THIRTY_DAYS_MS = 30L * 24 * 60 * 60 * 1000
     }
 
     override suspend fun doWork(): Result {
@@ -50,10 +48,16 @@ class SmsQueueWorker @AssistedInject constructor(
             return Result.failure()
         }
 
-        val items = dao.getAll()
-        if (items.isEmpty()) return Result.success()
+        // Purge all resolved/failed entries older than 30 days
+        dao.purgeOldResolved(System.currentTimeMillis() - THIRTY_DAYS_MS)
 
-        Log.d(TAG, "Processing ${items.size} queued SMS(es)")
+        val items = dao.getPending()
+        if (items.isEmpty()) {
+            Log.d(TAG, "Queue empty — nothing to process")
+            return Result.success()
+        }
+
+        Log.d(TAG, "Processing ${items.size} pending SMS(es)")
 
         for (item in items) {
             try {
@@ -66,11 +70,13 @@ class SmsQueueWorker @AssistedInject constructor(
                     )
                 )
 
+                val now = System.currentTimeMillis()
+
                 when {
                     response.isSuccessful -> {
-                        dao.delete(item)
                         val result = response.body()?.data
                         if (result?.recorded == true) {
+                            dao.updateStatus(item.id, "SUCCESS", null, now)
                             showSuccessNotification(
                                 type = result.type ?: "expense",
                                 amount = result.amount ?: "?",
@@ -79,58 +85,57 @@ class SmsQueueWorker @AssistedInject constructor(
                                 bank = result.bank ?: item.sender,
                                 isUnmatched = result.isUnmatched == true
                             )
+                            Log.d(TAG, "SMS recorded successfully — id=${item.id}")
+                        } else {
+                            // Not a transaction (OTP, promo, etc.) — mark SKIPPED, don't retry
+                            dao.updateStatus(item.id, "SKIPPED", result?.reason ?: "Not a transaction", now)
+                            Log.d(TAG, "SMS skipped (not a transaction) — id=${item.id}")
                         }
-                        Log.d(TAG, "SMS processed successfully — id=${item.id}")
                     }
                     response.code() == 401 -> {
-                        Log.w(TAG, "Session expired — stopping queue processing")
+                        Log.w(TAG, "Session expired — marking FAILED, stopping")
+                        dao.updateStatus(item.id, "FAILED", "Session expired (401)", now)
                         reportQueueCount()
                         return Result.failure()
                     }
                     else -> {
-                        Log.w(TAG, "Backend returned ${response.code()} — will retry")
+                        // 5xx / network issue — keep PENDING, WorkManager retries via backoff
+                        Log.w(TAG, "Backend returned ${response.code()} for id=${item.id} — will retry")
                         reportQueueCount()
-                        scheduleNextRun()
                         return Result.retry()
                     }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Network error processing SMS id=${item.id}: ${e.message}")
                 reportQueueCount()
-                scheduleNextRun()
                 return Result.retry()
             }
         }
 
         reportQueueCount()
-        scheduleNextRun()
-        return Result.success()
-    }
 
-    private fun scheduleNextRun() {
-        val next = OneTimeWorkRequestBuilder<SmsQueueWorker>()
-            .setInitialDelay(POLL_INTERVAL_MINUTES, TimeUnit.MINUTES)
-            .setConstraints(
-                Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.CONNECTED)
+        // Re-enqueue if new SMS arrived while we were processing (race condition guard)
+        if (dao.count() > 0) {
+            WorkManager.getInstance(context).enqueueUniqueWork(
+                WORK_NAME,
+                ExistingWorkPolicy.REPLACE,
+                OneTimeWorkRequestBuilder<SmsQueueWorker>()
+                    .setConstraints(
+                        Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+                    )
                     .build()
             )
-            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 15, TimeUnit.SECONDS)
-            .build()
+            Log.d(TAG, "New SMS arrived during processing — re-enqueueing worker")
+        }
 
-        WorkManager.getInstance(context).enqueueUniqueWork(
-            WORK_NAME,
-            ExistingWorkPolicy.REPLACE,
-            next
-        )
-        Log.d(TAG, "Next queue check scheduled in ${POLL_INTERVAL_MINUTES}m")
+        return Result.success()
     }
 
     private suspend fun reportQueueCount() {
         try {
             val count = dao.count()
             adminApi.reportQueueCount(QueueStatsRequest(pending = count))
-            Log.d(TAG, "Queue count reported to backend: $count pending")
+            Log.d(TAG, "Queue count reported: $count pending")
         } catch (e: Exception) {
             Log.w(TAG, "Failed to report queue count: ${e.message}")
         }

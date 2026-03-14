@@ -16,7 +16,9 @@ object SmsQueueModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): SmsQueueDatabase =
-        Room.databaseBuilder(context, SmsQueueDatabase::class.java, "sms_queue.db").build()
+        Room.databaseBuilder(context, SmsQueueDatabase::class.java, "sms_queue.db")
+            .addMigrations(SmsQueueDatabase.MIGRATION_1_2)
+            .build()
 
     @Provides
     fun provideDao(db: SmsQueueDatabase): SmsQueueDao = db.dao()

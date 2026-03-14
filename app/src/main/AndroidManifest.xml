@@ -94,6 +94,17 @@
             android:theme="@style/Theme.PersonalWealthManager"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Settings -->
+        <activity
+            android:name=".presentation.settings.SettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PersonalWealthManager" />
+
+        <activity
+            android:name=".presentation.settings.SmsLogActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PersonalWealthManager" />
+
         <!-- SMS BroadcastReceiver for auto expense creation -->
         <receiver
             android:name=".core.sms.SmsReceiver"

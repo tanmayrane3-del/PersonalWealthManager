@@ -226,6 +226,18 @@
             android:paddingStart="16dp" />
     </LinearLayout>
 
+    <!-- Settings Button -->
+    <Button
+        android:id="@+id/btnSettings"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="@string/settings"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:background="@color/card_dark_teal"
+        android:layout_marginBottom="12dp" />
+
     <!-- Logout Button -->
     <Button
         android:id="@+id/btnLogout"

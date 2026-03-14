@@ -25,6 +25,7 @@ import com.example.personalwealthmanager.presentation.categories.CategoryManagem
 import com.example.personalwealthmanager.presentation.sources.SourceManagementActivity
 import com.example.personalwealthmanager.presentation.recipients.RecipientManagementActivity
 import com.example.personalwealthmanager.presentation.zerodha.SetupZerodhaActivity
+import com.example.personalwealthmanager.presentation.settings.SettingsActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -472,6 +473,12 @@ class MainActivity : AppCompatActivity() {
         headerView.findViewById<Button>(R.id.btnConnectZerodha)?.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)
             startActivity(Intent(this, SetupZerodhaActivity::class.java))
+        }
+
+        // Settings button
+        headerView.findViewById<Button>(R.id.btnSettings)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
 
         // Logout button

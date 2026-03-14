@@ -45,10 +45,15 @@ class SmsReceiver : BroadcastReceiver() {
         val messages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
         if (messages.isNullOrEmpty()) return
 
-        val entryPoint = EntryPointAccessors.fromApplication(
-            context.applicationContext,
-            SmsReceiverEntryPoint::class.java
-        )
+        val entryPoint = try {
+            EntryPointAccessors.fromApplication(
+                context.applicationContext,
+                SmsReceiverEntryPoint::class.java
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Hilt not ready, dropping SMS: ${e.message}")
+            return
+        }
         val sessionManager: SessionManager = entryPoint.sessionManager()
         val dao = entryPoint.smsQueueDao()
 
