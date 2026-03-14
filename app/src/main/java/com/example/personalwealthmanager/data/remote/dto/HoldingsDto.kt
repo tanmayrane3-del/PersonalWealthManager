@@ -15,7 +15,8 @@ data class StockHoldingDto(
     @SerializedName("day_change") val dayChange: Double,
     @SerializedName("day_change_percentage") val dayChangePercentage: Double,
     @SerializedName("close_price") val closePrice: Double,
-    @SerializedName("last_synced_at") val lastSyncedAt: String?
+    @SerializedName("last_synced_at") val lastSyncedAt: String?,
+    @SerializedName("cagr_1y") val cagr1y: Double?
 )
 
 data class HoldingsSyncResponse(

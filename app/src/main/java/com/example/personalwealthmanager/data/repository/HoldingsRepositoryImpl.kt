@@ -63,6 +63,7 @@ class HoldingsRepositoryImpl @Inject constructor(
         dayChange = dayChange,
         dayChangePercentage = dayChangePercentage,
         closePrice = closePrice,
-        lastSyncedAt = lastSyncedAt
+        lastSyncedAt = lastSyncedAt,
+        cagr1y = cagr1y
     )
 }

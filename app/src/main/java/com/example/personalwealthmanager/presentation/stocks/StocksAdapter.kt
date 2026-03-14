@@ -38,7 +38,10 @@ class StocksAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val h = holdings[position]
 
-        holder.tvQtyAvg.text = "Qty. ${h.quantity} • Avg. ${currencyFormat.format(h.averagePrice)}"
+        val cagrSuffix = if (h.cagr1y != null)
+            " • 1Y CAGR ${String.format("%.1f", h.cagr1y * 100)}%"
+        else ""
+        holder.tvQtyAvg.text = "Qty. ${h.quantity} • Avg. ${currencyFormat.format(h.averagePrice)}$cagrSuffix"
         holder.tvSymbol.text = "${h.tradingSymbol} · ${h.exchange}"
 
         val pnlSign = if (h.pnl >= 0) "+" else "-"

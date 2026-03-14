@@ -73,7 +73,8 @@ data class StockHolding(
     val dayChange: Double,
     val dayChangePercentage: Double,
     val closePrice: Double,
-    val lastSyncedAt: String?
+    val lastSyncedAt: String?,
+    val cagr1y: Double?
 )
 
 data class TransactionMetadata(
