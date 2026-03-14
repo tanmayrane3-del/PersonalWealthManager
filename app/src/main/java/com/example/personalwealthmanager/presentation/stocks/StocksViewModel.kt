@@ -35,18 +35,7 @@ class StocksViewModel @Inject constructor(
             _state.value = StocksState.Loading
             val result = holdingsRepository.getHoldings(token)
             result.fold(
-                onSuccess = { holdings ->
-                    _state.value = StocksState.Success(holdings)
-                    // If any holding is missing CAGR, the server is computing it in the background.
-                    // Silently reload once after 10 s so the freshly computed values appear.
-                    if (holdings.any { it.cagr1y == null }) {
-                        launch {
-                            delay(10_000L)
-                            holdingsRepository.getHoldings(token)
-                                .onSuccess { updated -> _state.value = StocksState.Success(updated) }
-                        }
-                    }
-                },
+                onSuccess = { holdings -> _state.value = StocksState.Success(holdings) },
                 onFailure = { e ->
                     val msg = e.message ?: ""
                     when {
@@ -66,7 +55,18 @@ class StocksViewModel @Inject constructor(
             _state.value = StocksState.Loading
             val result = holdingsRepository.syncHoldings(token)
             result.fold(
-                onSuccess = { holdings -> _state.value = StocksState.Success(holdings) },
+                onSuccess = { holdings ->
+                    _state.value = StocksState.Success(holdings)
+                    // CAGR is computed in the background after sync.
+                    // Silently reload once after 30 s so freshly computed values appear.
+                    if (holdings.any { it.cagr1y == null }) {
+                        launch {
+                            delay(30_000L)
+                            holdingsRepository.getHoldings(token)
+                                .onSuccess { updated -> _state.value = StocksState.Success(updated) }
+                        }
+                    }
+                },
                 onFailure = { e ->
                     val msg = e.message ?: ""
                     when {
