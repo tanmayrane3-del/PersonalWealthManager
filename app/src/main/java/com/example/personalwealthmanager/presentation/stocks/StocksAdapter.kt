@@ -39,7 +39,7 @@ class StocksAdapter(
         val h = holdings[position]
 
         holder.tvQtyAvg.text = "Qty. ${h.quantity} • Avg. ${currencyFormat.format(h.averagePrice)}"
-        holder.tvSymbol.text = h.tradingSymbol
+        holder.tvSymbol.text = "${h.tradingSymbol} · ${h.exchange}"
 
         val pnlSign = if (h.pnl >= 0) "+" else "-"
         val pnlColor = if (h.pnl >= 0)

@@ -41,6 +41,28 @@ class TransactionListViewModel @Inject constructor(
                     filtered = filtered.filter { it.type == filter.type }
                 }
 
+                // Filter by category
+                filter.categoryId?.let { catId ->
+                    val allCategories = _state.value.metadata.incomeCategories + _state.value.metadata.expenseCategories
+                    allCategories.find { it.id == catId }?.name?.let { name ->
+                        filtered = filtered.filter { it.categoryName == name }
+                    }
+                }
+
+                // Filter by source
+                filter.sourceId?.let { srcId ->
+                    _state.value.metadata.sources.find { it.id == srcId }?.name?.let { name ->
+                        filtered = filtered.filter { it.sourceName == name }
+                    }
+                }
+
+                // Filter by recipient
+                filter.recipientId?.let { recId ->
+                    _state.value.metadata.recipients.find { it.id == recId }?.name?.let { name ->
+                        filtered = filtered.filter { it.recipientName == name }
+                    }
+                }
+
                 // Filter by amount
                 filter.minAmount?.toDoubleOrNull()?.let { min ->
                     filtered = filtered.filter { (it.amount.toDoubleOrNull() ?: 0.0) >= min }

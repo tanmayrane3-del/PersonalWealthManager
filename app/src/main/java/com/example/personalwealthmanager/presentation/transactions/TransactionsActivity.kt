@@ -40,6 +40,10 @@ class TransactionsActivity : AppCompatActivity() {
     private lateinit var fabAddTransaction: FloatingActionButton
     private lateinit var adapter: TransactionsAdapter
 
+    private lateinit var spinnerCategory: Spinner
+    private lateinit var spinnerSource: Spinner
+    private lateinit var spinnerRecipient: Spinner
+
     private val displayDateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
     private val apiDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
@@ -242,6 +246,10 @@ class TransactionsActivity : AppCompatActivity() {
         val btnApply = filterDrawer.findViewById<Button>(R.id.btnApplyFilters)
         val btnClose = filterDrawer.findViewById<ImageView>(R.id.btnCloseFilters)
 
+        spinnerCategory = filterDrawer.findViewById(R.id.spinnerCategory)
+        spinnerSource = filterDrawer.findViewById(R.id.spinnerSource)
+        spinnerRecipient = filterDrawer.findViewById(R.id.spinnerRecipient)
+
         btnClose.setOnClickListener {
             closeFilterDrawer()
         }
@@ -251,6 +259,14 @@ class TransactionsActivity : AppCompatActivity() {
         spinnerType.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, typeOptions).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
+
+        // Initialize category/source/recipient spinners with placeholder "All"
+        val allOnlyAdapter = { ArrayAdapter(this, android.R.layout.simple_spinner_item, listOf("All")).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }}
+        spinnerCategory.adapter = allOnlyAdapter()
+        spinnerSource.adapter = allOnlyAdapter()
+        spinnerRecipient.adapter = allOnlyAdapter()
 
         // Date pickers
         etDateFrom.setOnClickListener {
@@ -270,6 +286,9 @@ class TransactionsActivity : AppCompatActivity() {
             etDateFrom.setText("")
             etDateTo.setText("")
             spinnerType.setSelection(0)
+            spinnerCategory.setSelection(0)
+            spinnerSource.setSelection(0)
+            spinnerRecipient.setSelection(0)
             etMinAmount.setText("")
             etMaxAmount.setText("")
             viewModel.resetFilters()
@@ -301,10 +320,27 @@ class TransactionsActivity : AppCompatActivity() {
                 else -> "both"
             }
 
+            val metadata = viewModel.state.value.metadata
+            val allCategories = metadata.incomeCategories + metadata.expenseCategories
+            val categoryId = if (spinnerCategory.selectedItemPosition > 0) {
+                allCategories.getOrNull(spinnerCategory.selectedItemPosition - 1)?.id
+            } else null
+
+            val sourceId = if (spinnerSource.selectedItemPosition > 0) {
+                metadata.sources.getOrNull(spinnerSource.selectedItemPosition - 1)?.id
+            } else null
+
+            val recipientId = if (spinnerRecipient.selectedItemPosition > 0) {
+                metadata.recipients.getOrNull(spinnerRecipient.selectedItemPosition - 1)?.id
+            } else null
+
             val filter = FilterState(
                 dateFrom = dateFrom,
                 dateTo = dateTo,
                 type = type,
+                categoryId = categoryId,
+                sourceId = sourceId,
+                recipientId = recipientId,
                 minAmount = etMinAmount.text.toString().ifEmpty { null },
                 maxAmount = etMaxAmount.text.toString().ifEmpty { null }
             )
@@ -394,6 +430,32 @@ class TransactionsActivity : AppCompatActivity() {
 
                 state.error?.let { error ->
                     Toast.makeText(this@TransactionsActivity, error, Toast.LENGTH_LONG).show()
+                }
+
+                // Populate filter spinners from metadata (only update adapter when item count changes)
+                val allCategories = state.metadata.incomeCategories + state.metadata.expenseCategories
+                val expectedCategoryCount = allCategories.size + 1
+                if (spinnerCategory.adapter?.count != expectedCategoryCount) {
+                    val categoryNames = listOf("All") + allCategories.map { it.name }
+                    spinnerCategory.adapter = ArrayAdapter(this@TransactionsActivity, android.R.layout.simple_spinner_item, categoryNames).apply {
+                        setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    }
+                }
+
+                val expectedSourceCount = state.metadata.sources.size + 1
+                if (spinnerSource.adapter?.count != expectedSourceCount) {
+                    val sourceNames = listOf("All") + state.metadata.sources.map { it.name }
+                    spinnerSource.adapter = ArrayAdapter(this@TransactionsActivity, android.R.layout.simple_spinner_item, sourceNames).apply {
+                        setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    }
+                }
+
+                val expectedRecipientCount = state.metadata.recipients.size + 1
+                if (spinnerRecipient.adapter?.count != expectedRecipientCount) {
+                    val recipientNames = listOf("All") + state.metadata.recipients.map { it.name }
+                    spinnerRecipient.adapter = ArrayAdapter(this@TransactionsActivity, android.R.layout.simple_spinner_item, recipientNames).apply {
+                        setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    }
                 }
             }
         }
