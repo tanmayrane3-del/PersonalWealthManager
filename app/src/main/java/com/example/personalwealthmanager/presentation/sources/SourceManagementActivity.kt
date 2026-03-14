@@ -188,6 +188,11 @@ class SourceManagementActivity : AppCompatActivity() {
             finish()
         }
 
+        headerView.findViewById<Button>(R.id.btnSettings)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, com.example.personalwealthmanager.presentation.settings.SettingsActivity::class.java))
+        }
+
         // Logout button
         headerView.findViewById<Button>(R.id.btnLogout)?.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)

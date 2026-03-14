@@ -219,6 +219,11 @@ class StocksActivity : AppCompatActivity() {
             startActivity(Intent(this, SetupZerodhaActivity::class.java))
         }
 
+        headerView.findViewById<Button>(R.id.btnSettings)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, com.example.personalwealthmanager.presentation.settings.SettingsActivity::class.java))
+        }
+
         headerView.findViewById<Button>(R.id.btnLogout)?.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)
             getSharedPreferences("AppPrefs", MODE_PRIVATE).edit().clear().apply()
