@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.personalwealthmanager.databinding.FragmentMetalsBinding
 import com.example.personalwealthmanager.domain.model.MetalHolding
 import com.example.personalwealthmanager.domain.model.MetalRates
@@ -50,10 +49,6 @@ class MetalsFragment : Fragment() {
             AddEditMetalBottomSheet.newInstance().show(childFragmentManager, "add_metal")
         }
 
-        binding.swipeRefresh.setOnRefreshListener {
-            viewModel.fetchAll()
-        }
-
         observeState()
         viewModel.fetchAll()
     }
@@ -61,7 +56,6 @@ class MetalsFragment : Fragment() {
     private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { state ->
-                binding.swipeRefresh.isRefreshing = false
                 when (state) {
                     is MetalsUiState.Idle -> Unit
                     is MetalsUiState.Loading -> showLoading()

@@ -55,7 +55,6 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.drawerlayout:drawerlayout:1.2.0")
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     // Architecture Components
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
