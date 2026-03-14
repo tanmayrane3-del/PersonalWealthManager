@@ -454,6 +454,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, StocksActivity::class.java))
         }
 
+        headerView.findViewById<Button>(R.id.btnMetals)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, com.example.personalwealthmanager.presentation.metals.MetalsActivity::class.java))
+        }
+
         // Setup Demat expandable menu
         val btnSetupDemat = headerView.findViewById<Button>(R.id.btnSetupDemat)
         val ivSetupDematExpand = headerView.findViewById<ImageView>(R.id.ivSetupDematExpand)

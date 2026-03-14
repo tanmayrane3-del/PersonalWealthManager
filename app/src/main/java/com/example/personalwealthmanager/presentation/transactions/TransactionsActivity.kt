@@ -25,6 +25,7 @@ import com.example.personalwealthmanager.presentation.stocks.StocksActivity
 import com.example.personalwealthmanager.presentation.zerodha.SetupZerodhaActivity
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -439,7 +440,8 @@ class TransactionsActivity : AppCompatActivity() {
                 moveViewToX(data.entryCount.toFloat()) // start at the most recent end
             }
 
-            invalidate()
+            // Animate: lines draw left-to-right, values rise from zero
+            animateXY(900, 600, Easing.EaseInOutCubic, Easing.EaseOutQuad)
         }
     }
 
@@ -472,7 +474,13 @@ class TransactionsActivity : AppCompatActivity() {
     }
 
     private fun setupPieChart(chart: PieChart, data: Map<String, Float>) {
-        val entries = data.map { (label, value) -> PieEntry(value, label) }
+        // Helper to format raw amount for legend labels
+        fun fmt(v: Float) = if (v >= 1000f) "₹${(v / 1000f).let { if (it == it.toLong().toFloat()) it.toLong().toString() else "%.1f".format(it) }}k" else "₹${v.toInt()}"
+
+        val sorted = data.entries.sortedByDescending { it.value }
+        // Embed ₹k amount in the PieEntry label → legend shows "Name  ₹Xk"
+        // setDrawEntryLabels(false) keeps names off the slices themselves
+        val entries = sorted.map { PieEntry(it.value, "${it.key}  ${fmt(it.value)}") }
 
         val colors = mutableListOf<Int>().apply {
             addAll(ColorTemplate.MATERIAL_COLORS.toList())
@@ -484,32 +492,40 @@ class TransactionsActivity : AppCompatActivity() {
             setColors(colors)
             valueTextColor = Color.WHITE
             valueTextSize = 11f
+            // setUsePercentValues(true) passes percentage to this formatter
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String =
-                    if (value >= 1000f) "₹${(value / 1000).toInt()}k" else "₹${value.toInt()}"
+                    "%.1f%%".format(value)
             }
         }
 
         chart.apply {
             this.data = if (entries.isEmpty()) null else PieData(dataSet)
             description.isEnabled = false
-            setUsePercentValues(false)
-            setDrawEntryLabels(false)   // no cluttered labels on slices; legend handles names
+            setUsePercentValues(true)   // slice labels show %; formatter receives 0–100
+            setDrawEntryLabels(false)   // names stay off slices; legend shows them
             setHoleColor(Color.TRANSPARENT)
             holeRadius = 35f
             transparentCircleRadius = 40f
             setTransparentCircleColor(Color.parseColor("#22FFFFFF"))
             isRotationEnabled = true
+
+            // Auto-generated legend follows PieDataSet entry order (already sorted descending)
             legend.apply {
                 textColor = Color.WHITE
                 textSize = 11f
                 isWordWrapEnabled = true
+                form = Legend.LegendForm.CIRCLE
             }
+
             if (entries.isEmpty()) {
                 setNoDataText(getString(R.string.no_data_for_period))
                 setNoDataTextColor(Color.WHITE)
+                invalidate()
+            } else {
+                // Slices grow outward from centre
+                animateY(900, Easing.EaseInOutQuart)
             }
-            invalidate()
         }
     }
 
@@ -603,6 +619,11 @@ class TransactionsActivity : AppCompatActivity() {
         headerView.findViewById<Button>(R.id.btnStocks)?.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)
             startActivity(Intent(this, StocksActivity::class.java))
+        }
+
+        headerView.findViewById<Button>(R.id.btnMetals)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, com.example.personalwealthmanager.presentation.metals.MetalsActivity::class.java))
         }
 
         val btnSetupDemat = headerView.findViewById<Button>(R.id.btnSetupDemat)

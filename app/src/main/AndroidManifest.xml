@@ -87,6 +87,12 @@
             </intent-filter>
         </activity>
 
+        <!-- Metals Activity -->
+        <activity
+            android:name=".presentation.metals.MetalsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PersonalWealthManager" />
+
         <!-- Setup Zerodha Activity -->
         <activity
             android:name=".presentation.zerodha.SetupZerodhaActivity"

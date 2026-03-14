@@ -6,6 +6,7 @@ import com.example.personalwealthmanager.data.remote.api.AdminApi
 import com.example.personalwealthmanager.data.remote.api.AuthApi
 import com.example.personalwealthmanager.data.remote.api.HoldingsApi
 import com.example.personalwealthmanager.data.remote.api.MetadataApi
+import com.example.personalwealthmanager.data.remote.api.MetalsApi
 import com.example.personalwealthmanager.data.remote.api.SmsApi
 import com.example.personalwealthmanager.data.remote.api.TransactionApi
 import com.example.personalwealthmanager.data.remote.api.ZerodhaApi
@@ -140,5 +141,11 @@ object NetworkModule {
     @Singleton
     fun provideHoldingsApi(retrofit: Retrofit): HoldingsApi {
         return retrofit.create(HoldingsApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMetalsApi(retrofit: Retrofit): MetalsApi {
+        return retrofit.create(MetalsApi::class.java)
     }
 }

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/card_medium_teal">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Metal Holding"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Metal Type Spinner -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Metal Type"
+        android:textColor="#AAFFFFFF"
+        android:textSize="12sp"
+        android:layout_marginBottom="4dp" />
+
+    <Spinner
+        android:id="@+id/spinnerMetalType"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/edittext_background"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Sub-type Spinner (physical gold only) -->
+    <TextView
+        android:id="@+id/tvSubTypeLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sub-Type"
+        android:textColor="#AAFFFFFF"
+        android:textSize="12sp"
+        android:layout_marginBottom="4dp"
+        android:visibility="gone" />
+
+    <Spinner
+        android:id="@+id/spinnerSubType"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/edittext_background"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone" />
+
+    <!-- Purity Radio (physical gold only) -->
+    <TextView
+        android:id="@+id/tvPurityLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Purity"
+        android:textColor="#AAFFFFFF"
+        android:textSize="12sp"
+        android:layout_marginBottom="4dp"
+        android:visibility="gone" />
+
+    <RadioGroup
+        android:id="@+id/rgPurity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone">
+
+        <RadioButton
+            android:id="@+id/rb22k"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="22K"
+            android:textColor="@android:color/white"
+            android:buttonTint="@android:color/white"
+            android:layout_marginEnd="24dp" />
+
+        <RadioButton
+            android:id="@+id/rb24k"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="24K"
+            android:textColor="@android:color/white"
+            android:buttonTint="@android:color/white"
+            android:checked="true" />
+    </RadioGroup>
+
+    <!-- Label -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Label (e.g. Grandmother's necklace)"
+        android:layout_marginBottom="12dp"
+        app:hintTextColor="#AAFFFFFF"
+        app:boxStrokeColor="#F5A623"
+        app:boxBackgroundColor="@color/card_dark_teal"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:textColor="@android:color/white" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Quantity in grams -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Quantity (grams)"
+        android:layout_marginBottom="12dp"
+        app:hintTextColor="#AAFFFFFF"
+        app:boxStrokeColor="#F5A623"
+        app:boxBackgroundColor="@color/card_dark_teal"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etQuantityGrams"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/white" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Notes -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Notes (optional)"
+        android:layout_marginBottom="20dp"
+        app:hintTextColor="#AAFFFFFF"
+        app:boxStrokeColor="#F5A623"
+        app:boxBackgroundColor="@color/card_dark_teal"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etNotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:minLines="2"
+            android:textColor="@android:color/white" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Save Button -->
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="Save"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@drawable/button_primary"
+        android:layout_marginBottom="8dp" />
+
+</LinearLayout>

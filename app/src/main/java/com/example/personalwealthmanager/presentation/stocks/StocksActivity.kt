@@ -209,6 +209,11 @@ class StocksActivity : AppCompatActivity() {
             // Already on stocks screen
         }
 
+        headerView.findViewById<Button>(R.id.btnMetals)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, com.example.personalwealthmanager.presentation.metals.MetalsActivity::class.java))
+        }
+
         setupExpandable(
             headerView,
             R.id.btnSetupDemat, R.id.ivSetupDematExpand, R.id.setupDematChildItems

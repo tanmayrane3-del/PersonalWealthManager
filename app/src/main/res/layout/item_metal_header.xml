@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="20dp"
+    android:paddingBottom="6dp">
+
+    <View
+        android:layout_width="4dp"
+        android:layout_height="20dp"
+        android:background="#F5A623"
+        android:layout_marginEnd="10dp" />
+
+    <TextView
+        android:id="@+id/tvSectionHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Physical Gold"
+        android:textColor="#F5A623"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.08" />
+
+</LinearLayout>

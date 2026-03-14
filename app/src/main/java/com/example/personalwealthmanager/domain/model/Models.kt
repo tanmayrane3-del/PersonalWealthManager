@@ -82,3 +82,20 @@ data class TransactionMetadata(
     val sources: List<Source>,
     val recipients: List<Recipient>
 )
+
+data class MetalHolding(
+    val id: String,
+    val metalType: String,
+    val subType: String?,
+    val label: String,
+    val quantityGrams: Double,
+    val purity: String,
+    val notes: String?,
+    val currentValue: Double
+)
+
+data class MetalRates(
+    val gold22kPerGram: Double,
+    val gold24kPerGram: Double,
+    val fetchedAt: String
+)

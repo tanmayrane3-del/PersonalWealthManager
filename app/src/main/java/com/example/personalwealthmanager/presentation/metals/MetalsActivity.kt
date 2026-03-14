@@ -1,21 +1,15 @@
-package com.example.personalwealthmanager.presentation.zerodha
+package com.example.personalwealthmanager.presentation.metals
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.lifecycleScope
 import com.example.personalwealthmanager.MainActivity
 import com.example.personalwealthmanager.R
 import com.example.personalwealthmanager.presentation.categories.CategoryManagementActivity
@@ -23,97 +17,33 @@ import com.example.personalwealthmanager.presentation.recipients.RecipientManage
 import com.example.personalwealthmanager.presentation.sources.SourceManagementActivity
 import com.example.personalwealthmanager.presentation.stocks.StocksActivity
 import com.example.personalwealthmanager.presentation.transactions.TransactionsActivity
+import com.example.personalwealthmanager.presentation.zerodha.SetupZerodhaActivity
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SetupZerodhaActivity : AppCompatActivity() {
-
-    private val viewModel: SetupZerodhaViewModel by viewModels()
+class MetalsActivity : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
-    private lateinit var etApiKey: EditText
-    private lateinit var etApiSecret: EditText
-    private lateinit var btnSave: Button
-    private lateinit var btnCheckHoldings: Button
-    private lateinit var btnOpenKiteApps: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_setup_zerodha)
+        setContentView(R.layout.activity_metals)
 
         drawerLayout = findViewById(R.id.drawerLayout)
-        etApiKey = findViewById(R.id.etApiKey)
-        etApiSecret = findViewById(R.id.etApiSecret)
-        btnSave = findViewById(R.id.btnSave)
-        btnCheckHoldings = findViewById(R.id.btnCheckHoldings)
-        btnOpenKiteApps = findViewById(R.id.btnOpenKiteApps)
 
         findViewById<ImageView>(R.id.btnMenu).setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.END)
         }
 
-        btnSave.setOnClickListener {
-            val apiKey = etApiKey.text.toString().trim()
-            val apiSecret = etApiSecret.text.toString().trim()
-            when {
-                apiKey.isEmpty() -> Toast.makeText(this, getString(R.string.api_key_required), Toast.LENGTH_SHORT).show()
-                apiSecret.isEmpty() -> Toast.makeText(this, getString(R.string.api_secret_required), Toast.LENGTH_SHORT).show()
-                else -> viewModel.saveCredentials(apiKey, apiSecret)
-            }
-        }
-
-        btnCheckHoldings.setOnClickListener {
-            startActivity(Intent(this, StocksActivity::class.java))
-        }
-
-        btnOpenKiteApps.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://zerodha.com/products/api/"))
-            startActivity(intent)
+        // Load MetalsFragment
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.metals_fragment_container, MetalsFragment())
+                .commit()
         }
 
         setupNavigationDrawer()
-        observeState()
-
-        // Prefill existing credentials if available
-        viewModel.loadCredentials()
-    }
-
-    private fun observeState() {
-        lifecycleScope.launch {
-            viewModel.state.collect { state ->
-                when (state) {
-                    is SetupZerodhaState.Idle -> {
-                        btnSave.isEnabled = true
-                        btnSave.text = getString(R.string.save_credentials)
-                    }
-                    is SetupZerodhaState.CredentialsLoaded -> {
-                        etApiKey.setText(state.apiKey)
-                        etApiSecret.setText(state.apiSecret)
-                        btnCheckHoldings.visibility = View.VISIBLE
-                        viewModel.resetState()
-                    }
-                    is SetupZerodhaState.Loading -> {
-                        btnSave.isEnabled = false
-                        btnSave.text = getString(R.string.loading)
-                    }
-                    is SetupZerodhaState.Success -> {
-                        btnSave.isEnabled = true
-                        btnSave.text = getString(R.string.save_credentials)
-                        Toast.makeText(this@SetupZerodhaActivity, getString(R.string.credentials_saved), Toast.LENGTH_SHORT).show()
-                        btnCheckHoldings.visibility = View.VISIBLE
-                        viewModel.resetState()
-                    }
-                    is SetupZerodhaState.Error -> {
-                        btnSave.isEnabled = true
-                        btnSave.text = getString(R.string.save_credentials)
-                        Toast.makeText(this@SetupZerodhaActivity, state.message, Toast.LENGTH_LONG).show()
-                        viewModel.resetState()
-                    }
-                }
-            }
-        }
     }
 
     private fun setupNavigationDrawer() {
@@ -137,10 +67,7 @@ class SetupZerodhaActivity : AppCompatActivity() {
             finish()
         }
 
-        setupExpandable(
-            headerView,
-            R.id.btnManagement, R.id.ivManagementExpand, R.id.managementChildItems
-        )
+        setupExpandable(headerView, R.id.btnManagement, R.id.ivManagementExpand, R.id.managementChildItems)
 
         headerView.findViewById<Button>(R.id.btnCategoryManagement)?.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)
@@ -157,29 +84,29 @@ class SetupZerodhaActivity : AppCompatActivity() {
             startActivity(Intent(this, RecipientManagementActivity::class.java))
         }
 
-        setupExpandable(
-            headerView,
-            R.id.btnAssets, R.id.ivAssetsExpand, R.id.assetsChildItems
-        )
+        setupExpandable(headerView, R.id.btnAssets, R.id.ivAssetsExpand, R.id.assetsChildItems)
 
         headerView.findViewById<Button>(R.id.btnStocks)?.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)
             startActivity(Intent(this, StocksActivity::class.java))
+            finish()
         }
 
         headerView.findViewById<Button>(R.id.btnMetals)?.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, com.example.personalwealthmanager.presentation.metals.MetalsActivity::class.java))
+            // Already on metals screen
         }
 
-        setupExpandable(
-            headerView,
-            R.id.btnSetupDemat, R.id.ivSetupDematExpand, R.id.setupDematChildItems
-        )
+        setupExpandable(headerView, R.id.btnSetupDemat, R.id.ivSetupDematExpand, R.id.setupDematChildItems)
 
         headerView.findViewById<Button>(R.id.btnConnectZerodha)?.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)
-            // Already on this screen
+            startActivity(Intent(this, SetupZerodhaActivity::class.java))
+        }
+
+        headerView.findViewById<Button>(R.id.btnSettings)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, com.example.personalwealthmanager.presentation.settings.SettingsActivity::class.java))
         }
 
         headerView.findViewById<Button>(R.id.btnLogout)?.setOnClickListener {

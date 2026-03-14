@@ -36,6 +36,10 @@ class TransactionListViewModel @Inject constructor(
                 // Apply local filters
                 var filtered = allTransactions
 
+                // Filter by date (client-side fallback — yyyy-MM-dd strings are lexicographically comparable)
+                filter.dateFrom?.let { from -> filtered = filtered.filter { it.date >= from } }
+                filter.dateTo?.let { to -> filtered = filtered.filter { it.date <= to } }
+
                 // Filter by type
                 if (filter.type != "both") {
                     filtered = filtered.filter { it.type == filter.type }
