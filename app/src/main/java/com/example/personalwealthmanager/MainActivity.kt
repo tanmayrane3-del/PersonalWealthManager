@@ -58,6 +58,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvGoldValue: TextView
     private lateinit var tvGoldDayPnl: TextView
     private lateinit var ivRefreshGold: ImageView
+    private lateinit var tvStockProjection1y: TextView
+    private lateinit var tvStockProjection3y: TextView
+    private lateinit var tvStockProjection5y: TextView
 
     private val fromCalendar = Calendar.getInstance()
     private val toCalendar = Calendar.getInstance()
@@ -83,6 +86,9 @@ class MainActivity : AppCompatActivity() {
         tvGoldValue = findViewById(R.id.tvGoldValue)
         tvGoldDayPnl = findViewById(R.id.tvGoldDayPnl)
         ivRefreshGold = findViewById(R.id.ivRefreshGold)
+        tvStockProjection1y = findViewById(R.id.tvStockProjection1y)
+        tvStockProjection3y = findViewById(R.id.tvStockProjection3y)
+        tvStockProjection5y = findViewById(R.id.tvStockProjection5y)
 
         val fromDateContainer = findViewById<View>(R.id.fromDateContainer)
         val toDateContainer = findViewById<View>(R.id.toDateContainer)
@@ -328,6 +334,9 @@ class MainActivity : AppCompatActivity() {
         val sessionToken = getSessionToken() ?: return
         tvStockValue.text = getString(R.string.loading)
         tvStockDayPnl.text = getString(R.string.loading)
+        tvStockProjection1y.text = "--"
+        tvStockProjection3y.text = "--"
+        tvStockProjection5y.text = "--"
         ivRefreshStocks.isEnabled = false
         ivRefreshStocks.alpha = 0.5f
 
@@ -356,6 +365,9 @@ class MainActivity : AppCompatActivity() {
                             val data = json.getJSONObject("data")
                             val totalValue = data.getDouble("total_portfolio_value")
                             val todayPnl = data.getDouble("today_pnl")
+                            val proj1y = data.optDouble("projected_1y", 0.0)
+                            val proj3y = data.optDouble("projected_3y", 0.0)
+                            val proj5y = data.optDouble("projected_5y", 0.0)
 
                             tvStockValue.text = formatCurrency(totalValue)
                             val prefix = if (todayPnl >= 0) "+" else ""
@@ -364,6 +376,16 @@ class MainActivity : AppCompatActivity() {
                                 this@MainActivity,
                                 if (todayPnl >= 0) R.color.income_green else R.color.expense_red
                             ))
+                            // Show projections only when CAGR data exists (proj > current value)
+                            if (proj1y > totalValue) {
+                                tvStockProjection1y.text = formatCurrency(proj1y)
+                                tvStockProjection3y.text = formatCurrency(proj3y)
+                                tvStockProjection5y.text = formatCurrency(proj5y)
+                            } else {
+                                tvStockProjection1y.text = "--"
+                                tvStockProjection3y.text = "--"
+                                tvStockProjection5y.text = "--"
+                            }
                         } else {
                             tvStockValue.text = getString(R.string.stocks_not_connected)
                             tvStockDayPnl.text = getString(R.string.stocks_not_connected)
