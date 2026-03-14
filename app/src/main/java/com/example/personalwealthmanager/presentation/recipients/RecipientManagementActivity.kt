@@ -3,6 +3,7 @@ package com.example.personalwealthmanager.presentation.recipients
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.view.Window
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
@@ -22,6 +24,8 @@ import com.example.personalwealthmanager.domain.model.Recipient
 import com.example.personalwealthmanager.presentation.categories.CategoryManagementActivity
 import com.example.personalwealthmanager.presentation.sources.SourceManagementActivity
 import com.example.personalwealthmanager.presentation.transactions.TransactionsActivity
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
@@ -198,6 +202,22 @@ class RecipientManagementActivity : AppCompatActivity() {
         }
     }
 
+    private fun addIdentifierChip(chipGroup: ChipGroup, identifier: String) {
+        val chip = Chip(this)
+        chip.text = identifier
+        chip.isCloseIconVisible = true
+        chip.chipBackgroundColor = ColorStateList.valueOf(
+            ContextCompat.getColor(this, R.color.teal_500)
+        )
+        chip.setTextColor(Color.WHITE)
+        chip.closeIconTint = ColorStateList.valueOf(Color.WHITE)
+        chip.setOnCloseIconClickListener { chipGroup.removeView(chip) }
+        chipGroup.addView(chip)
+    }
+
+    private fun getIdentifiersFromChipGroup(chipGroup: ChipGroup): List<String> =
+        (0 until chipGroup.childCount).map { (chipGroup.getChildAt(it) as Chip).text.toString() }
+
     private fun showCreateRecipientDialog() {
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -212,7 +232,9 @@ class RecipientManagementActivity : AppCompatActivity() {
         val etRecipientName = dialog.findViewById<TextInputEditText>(R.id.etRecipientName)
         val etRecipientDescription = dialog.findViewById<TextInputEditText>(R.id.etRecipientDescription)
         val cbFavorite = dialog.findViewById<CheckBox>(R.id.cbFavorite)
+        val chipGroupIdentifiers = dialog.findViewById<ChipGroup>(R.id.chipGroupIdentifiers)
         val etPaymentIdentifier = dialog.findViewById<TextInputEditText>(R.id.etPaymentIdentifier)
+        val btnAddIdentifier = dialog.findViewById<Button>(R.id.btnAddIdentifier)
         val spinnerDefaultCategory = dialog.findViewById<Spinner>(R.id.spinnerDefaultCategory)
         val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)
         val tvError = dialog.findViewById<TextView>(R.id.tvError)
@@ -232,6 +254,19 @@ class RecipientManagementActivity : AppCompatActivity() {
         categorySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerDefaultCategory.adapter = categorySpinnerAdapter
 
+        btnAddIdentifier.setOnClickListener {
+            val id = etPaymentIdentifier.text.toString().trim()
+            if (id.isEmpty()) return@setOnClickListener
+            if (chipGroupIdentifiers.childCount >= 5) {
+                tvError.text = "Maximum 5 payment identifiers allowed"
+                tvError.visibility = View.VISIBLE
+                return@setOnClickListener
+            }
+            addIdentifierChip(chipGroupIdentifiers, id)
+            etPaymentIdentifier.setText("")
+            tvError.visibility = View.GONE
+        }
+
         btnCloseDialog.setOnClickListener { dialog.dismiss() }
         btnCancel.setOnClickListener { dialog.dismiss() }
 
@@ -239,7 +274,7 @@ class RecipientManagementActivity : AppCompatActivity() {
             val name = etRecipientName.text.toString().trim()
             val description = etRecipientDescription.text.toString().trim().ifEmpty { null }
             val isFavorite = cbFavorite.isChecked
-            val paymentIdentifier = etPaymentIdentifier.text.toString().trim().ifEmpty { null }
+            val paymentIdentifiers = getIdentifiersFromChipGroup(chipGroupIdentifiers)
             val selectedPos = spinnerDefaultCategory.selectedItemPosition
             val defaultCategoryId = if (selectedPos > 0) categories[selectedPos - 1].id else null
 
@@ -253,7 +288,7 @@ class RecipientManagementActivity : AppCompatActivity() {
             progressBar.visibility = View.VISIBLE
             buttonsLayout.visibility = View.GONE
 
-            viewModel.createRecipient(name, null, description, null, isFavorite, paymentIdentifier, defaultCategoryId)
+            viewModel.createRecipient(name, null, description, null, isFavorite, paymentIdentifiers, defaultCategoryId)
 
             lifecycleScope.launch {
                 viewModel.state.collect { state ->
@@ -290,7 +325,9 @@ class RecipientManagementActivity : AppCompatActivity() {
         val etRecipientName = dialog.findViewById<TextInputEditText>(R.id.etRecipientName)
         val etRecipientDescription = dialog.findViewById<TextInputEditText>(R.id.etRecipientDescription)
         val cbFavorite = dialog.findViewById<CheckBox>(R.id.cbFavorite)
+        val chipGroupIdentifiers = dialog.findViewById<ChipGroup>(R.id.chipGroupIdentifiers)
         val etPaymentIdentifier = dialog.findViewById<TextInputEditText>(R.id.etPaymentIdentifier)
+        val btnAddIdentifier = dialog.findViewById<Button>(R.id.btnAddIdentifier)
         val spinnerDefaultCategory = dialog.findViewById<Spinner>(R.id.spinnerDefaultCategory)
         val tvTransactionWarning = dialog.findViewById<TextView>(R.id.tvTransactionWarning)
         val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)
@@ -305,7 +342,21 @@ class RecipientManagementActivity : AppCompatActivity() {
         etRecipientName.setText(recipient.name)
         etRecipientDescription.setText(recipient.description ?: "")
         cbFavorite.isChecked = recipient.isFavorite
-        etPaymentIdentifier.setText(recipient.paymentIdentifier ?: "")
+        // Pre-populate existing identifiers as chips
+        recipient.paymentIdentifiers.forEach { addIdentifierChip(chipGroupIdentifiers, it) }
+
+        btnAddIdentifier.setOnClickListener {
+            val id = etPaymentIdentifier.text.toString().trim()
+            if (id.isEmpty()) return@setOnClickListener
+            if (chipGroupIdentifiers.childCount >= 5) {
+                tvError.text = "Maximum 5 payment identifiers allowed"
+                tvError.visibility = View.VISIBLE
+                return@setOnClickListener
+            }
+            addIdentifierChip(chipGroupIdentifiers, id)
+            etPaymentIdentifier.setText("")
+            tvError.visibility = View.GONE
+        }
 
         // Populate category spinner and pre-select based on recipient's defaultCategoryId
         val categories = viewModel.state.value.expenseCategories
@@ -336,7 +387,7 @@ class RecipientManagementActivity : AppCompatActivity() {
             val name = etRecipientName.text.toString().trim()
             val description = etRecipientDescription.text.toString().trim().ifEmpty { null }
             val isFavorite = cbFavorite.isChecked
-            val paymentIdentifier = etPaymentIdentifier.text.toString().trim().ifEmpty { null }
+            val paymentIdentifiers = getIdentifiersFromChipGroup(chipGroupIdentifiers)
             val selectedPos = spinnerDefaultCategory.selectedItemPosition
             val defaultCategoryId = if (selectedPos > 0) categories[selectedPos - 1].id else null
 
@@ -351,7 +402,7 @@ class RecipientManagementActivity : AppCompatActivity() {
             buttonsLayout.visibility = View.GONE
             btnDelete.visibility = View.GONE
 
-            viewModel.updateRecipient(recipient.id, name, null, description, null, isFavorite, paymentIdentifier, defaultCategoryId)
+            viewModel.updateRecipient(recipient.id, name, null, description, null, isFavorite, paymentIdentifiers, defaultCategoryId)
 
             lifecycleScope.launch {
                 viewModel.state.collect { state ->

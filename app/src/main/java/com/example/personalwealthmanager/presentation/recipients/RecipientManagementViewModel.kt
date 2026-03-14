@@ -77,7 +77,7 @@ class RecipientManagementViewModel @Inject constructor(
         description: String?,
         contactInfo: String?,
         isFavorite: Boolean,
-        paymentIdentifier: String? = null,
+        paymentIdentifiers: List<String> = emptyList(),
         defaultCategoryId: String? = null
     ) {
         viewModelScope.launch {
@@ -85,7 +85,7 @@ class RecipientManagementViewModel @Inject constructor(
 
             recipientRepository.createRecipient(
                 name, type, description, contactInfo, isFavorite,
-                paymentIdentifier, defaultCategoryId
+                paymentIdentifiers, defaultCategoryId
             )
                 .onSuccess {
                     _state.update { it.copy(isCreating = false, createSuccess = true) }
@@ -109,7 +109,7 @@ class RecipientManagementViewModel @Inject constructor(
         description: String?,
         contactInfo: String?,
         isFavorite: Boolean?,
-        paymentIdentifier: String? = null,
+        paymentIdentifiers: List<String> = emptyList(),
         defaultCategoryId: String? = null
     ) {
         viewModelScope.launch {
@@ -117,7 +117,7 @@ class RecipientManagementViewModel @Inject constructor(
 
             recipientRepository.updateRecipient(
                 recipientId, name, type, description, contactInfo, isFavorite,
-                paymentIdentifier, defaultCategoryId
+                paymentIdentifiers, defaultCategoryId
             )
                 .onSuccess {
                     _state.update { it.copy(isUpdating = false, updateSuccess = true) }

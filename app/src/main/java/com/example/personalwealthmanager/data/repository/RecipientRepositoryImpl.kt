@@ -39,7 +39,7 @@ class RecipientRepositoryImpl @Inject constructor(
         description: String?,
         contactInfo: String?,
         isFavorite: Boolean,
-        paymentIdentifier: String?,
+        paymentIdentifiers: List<String>,
         defaultCategoryId: String?
     ): Result<Recipient> {
         return try {
@@ -52,7 +52,7 @@ class RecipientRepositoryImpl @Inject constructor(
                 description = description,
                 contactInfo = contactInfo,
                 isFavorite = isFavorite,
-                paymentIdentifier = paymentIdentifier,
+                paymentIdentifiers = paymentIdentifiers,
                 defaultCategoryId = defaultCategoryId
             )
 
@@ -81,7 +81,7 @@ class RecipientRepositoryImpl @Inject constructor(
         description: String?,
         contactInfo: String?,
         isFavorite: Boolean?,
-        paymentIdentifier: String?,
+        paymentIdentifiers: List<String>,
         defaultCategoryId: String?
     ): Result<Recipient> {
         return try {
@@ -94,7 +94,7 @@ class RecipientRepositoryImpl @Inject constructor(
                 description = description,
                 contactInfo = contactInfo,
                 isFavorite = isFavorite,
-                paymentIdentifier = paymentIdentifier,
+                paymentIdentifiers = paymentIdentifiers,
                 defaultCategoryId = defaultCategoryId
             )
 
@@ -164,7 +164,11 @@ class RecipientRepositoryImpl @Inject constructor(
             isGlobal = this.isGlobal,
             isUserSpecific = this.isUserSpecific,
             transactionCount = this.transactionCount,
-            paymentIdentifier = this.paymentIdentifier,
+            paymentIdentifiers = this.paymentIdentifier
+                ?.split("|")
+                ?.map { it.trim() }
+                ?.filter { it.isNotEmpty() }
+                ?: emptyList(),
             defaultCategoryId = this.defaultCategoryId
         )
     }

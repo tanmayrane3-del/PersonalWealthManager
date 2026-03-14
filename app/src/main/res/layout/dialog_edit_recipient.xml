@@ -133,36 +133,77 @@
                 android:layout_marginTop="12dp"
                 android:buttonTint="@android:color/white" />
 
-            <!-- Payment Identifier (for SMS auto-matching) -->
+            <!-- Payment Identifiers (for SMS auto-matching, max 5) -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Payment Identifier (for SMS)"
+                android:text="Payment Identifiers (for SMS)"
                 android:textSize="14sp"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"
                 android:paddingTop="12dp"
                 android:paddingBottom="4dp" />
 
-            <com.google.android.material.textfield.TextInputLayout
+            <!-- Chips showing added identifiers -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupIdentifiers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:boxBackgroundColor="@color/card_light_teal"
-                app:boxBackgroundMode="filled"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp">
+                android:layout_marginBottom="6dp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPaymentIdentifier"
-                    android:layout_width="match_parent"
+            <!-- Input row: text field + Add button -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="e.g. paytmqr15zd5dln17@paytm"
-                    android:inputType="text"
-                    android:textColor="@color/text_dark"
-                    android:textSize="16sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    app:boxBackgroundColor="@color/card_light_teal"
+                    app:boxBackgroundMode="filled"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPaymentIdentifier"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="e.g. paytmqr15@paytm"
+                        android:inputType="text"
+                        android:imeOptions="actionDone"
+                        android:textColor="@color/text_dark"
+                        android:textSize="14sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/btnAddIdentifier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:text="Add"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/button_filled"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvIdentifierHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tap a chip to remove it. Max 5 identifiers."
+                android:textSize="11sp"
+                android:textColor="#AAFFFFFF"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="4dp" />
 
             <!-- Default Category (for SMS auto-categorization) -->
             <TextView

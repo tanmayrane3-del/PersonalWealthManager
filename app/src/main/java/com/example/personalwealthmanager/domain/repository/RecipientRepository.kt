@@ -11,7 +11,7 @@ interface RecipientRepository {
         description: String?,
         contactInfo: String?,
         isFavorite: Boolean,
-        paymentIdentifier: String? = null,
+        paymentIdentifiers: List<String> = emptyList(),
         defaultCategoryId: String? = null
     ): Result<Recipient>
 
@@ -22,7 +22,7 @@ interface RecipientRepository {
         description: String?,
         contactInfo: String?,
         isFavorite: Boolean?,
-        paymentIdentifier: String? = null,
+        paymentIdentifiers: List<String> = emptyList(),
         defaultCategoryId: String? = null
     ): Result<Recipient>
 

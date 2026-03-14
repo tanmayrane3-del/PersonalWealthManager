@@ -131,7 +131,7 @@ data class CreateRecipientRequest(
     val description: String? = null,
     @SerializedName("contact_info") val contactInfo: String? = null,
     @SerializedName("is_favorite") val isFavorite: Boolean = false,
-    @SerializedName("payment_identifier") val paymentIdentifier: String? = null,
+    @SerializedName("payment_identifiers") val paymentIdentifiers: List<String> = emptyList(),
     @SerializedName("category_id") val defaultCategoryId: String? = null
 )
 
@@ -141,6 +141,6 @@ data class UpdateRecipientRequest(
     val description: String? = null,
     @SerializedName("contact_info") val contactInfo: String? = null,
     @SerializedName("is_favorite") val isFavorite: Boolean? = null,
-    @SerializedName("payment_identifier") val paymentIdentifier: String? = null,
+    @SerializedName("payment_identifiers") val paymentIdentifiers: List<String> = emptyList(),
     @SerializedName("category_id") val defaultCategoryId: String? = null
 )

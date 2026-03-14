@@ -56,7 +56,7 @@ data class Recipient(
     val isGlobal: Boolean = false,
     val isUserSpecific: Boolean = false,
     val transactionCount: Int = 0,
-    val paymentIdentifier: String? = null,
+    val paymentIdentifiers: List<String> = emptyList(),
     val defaultCategoryId: String? = null
 )
 
