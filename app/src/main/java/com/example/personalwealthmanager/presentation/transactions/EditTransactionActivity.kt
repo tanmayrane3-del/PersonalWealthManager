@@ -3,29 +3,49 @@ package com.example.personalwealthmanager.presentation.transactions
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
+import android.content.ContentResolver
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.*
 import androidx.activity.viewModels
+import androidx.work.BackoffPolicy
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.personalwealthmanager.domain.model.Transaction
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.personalwealthmanager.R
+import com.example.personalwealthmanager.core.sms.SmsReceiver
+import com.example.personalwealthmanager.core.sms.queue.SmsQueueDao
+import com.example.personalwealthmanager.core.sms.queue.SmsQueueEntity
+import com.example.personalwealthmanager.core.sms.queue.SmsQueueWorker
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class EditTransactionActivity : AppCompatActivity() {
 
     private val viewModel: TransactionDetailViewModel by viewModels()
+
+    @Inject
+    lateinit var smsQueueDao: SmsQueueDao
 
     private lateinit var actvTransactionType: AutoCompleteTextView
     private lateinit var etAmount: EditText
@@ -44,6 +64,7 @@ class EditTransactionActivity : AppCompatActivity() {
     private lateinit var btnDelete: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var contentCard: View
+    private lateinit var btnFetchFromInbox: LinearLayout
 
     private val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
     private val apiDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -86,6 +107,7 @@ class EditTransactionActivity : AppCompatActivity() {
             contentCard.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             btnDelete.visibility = View.VISIBLE
+            btnFetchFromInbox.visibility = View.GONE
             viewModel.loadTransaction(transactionId!!, isIncome)
         } else {
             // Add mode: hide content, show loader, fetch metadata
@@ -114,6 +136,7 @@ class EditTransactionActivity : AppCompatActivity() {
         btnDelete = findViewById(R.id.btnDelete)
         progressBar = findViewById(R.id.progressBar)
         contentCard = findViewById(R.id.contentCard)
+        btnFetchFromInbox = findViewById(R.id.btnFetchFromInbox)
 
         // Set initial date and time
         tvSelectedDate.text = dateFormat.format(selectedDate.time)
@@ -185,6 +208,10 @@ class EditTransactionActivity : AppCompatActivity() {
 
         btnDelete.setOnClickListener {
             showDeleteConfirmation()
+        }
+
+        btnFetchFromInbox.setOnClickListener {
+            showFetchFromInboxSheet()
         }
 
         findViewById<ImageView>(R.id.btnBack).setOnClickListener {
@@ -728,6 +755,113 @@ class EditTransactionActivity : AppCompatActivity() {
         }
 
         addRecipientDialog?.show()
+    }
+
+    private fun showFetchFromInboxSheet() {
+        val sheet = BottomSheetDialog(this)
+        val sheetView = layoutInflater.inflate(R.layout.bottom_sheet_fetch_inbox, null)
+        sheet.setContentView(sheetView)
+
+        val rgTimeRange = sheetView.findViewById<RadioGroup>(R.id.rgTimeRange)
+        val tvFetchStatus = sheetView.findViewById<TextView>(R.id.tvFetchStatus)
+        val btnFetchNow = sheetView.findViewById<Button>(R.id.btnFetchNow)
+
+        btnFetchNow.setOnClickListener {
+            val hoursBack = when (rgTimeRange.checkedRadioButtonId) {
+                R.id.rb1h  -> 1L
+                R.id.rb6h  -> 6L
+                R.id.rb12h -> 12L
+                R.id.rb24h -> 24L
+                R.id.rb48h -> 48L
+                R.id.rb72h -> 72L
+                else       -> 24L
+            }
+
+            btnFetchNow.isEnabled = false
+            tvFetchStatus.visibility = View.VISIBLE
+            tvFetchStatus.text = "Scanning inbox..."
+
+            lifecycleScope.launch {
+                val (queued, skipped) = withContext(Dispatchers.IO) {
+                    fetchAndQueueSms(hoursBack)
+                }
+
+                tvFetchStatus.text = when {
+                    queued == 0 && skipped == 0 -> "No bank SMS found in this time window."
+                    queued == 0 -> "All $skipped SMS already captured. Nothing new."
+                    else -> "Found ${queued + skipped} SMS — $queued new queued, $skipped already captured."
+                }
+
+                if (queued > 0) {
+                    // Trigger worker to process the newly queued SMS
+                    val workRequest = OneTimeWorkRequestBuilder<SmsQueueWorker>()
+                        .setConstraints(
+                            Constraints.Builder()
+                                .setRequiredNetworkType(NetworkType.CONNECTED)
+                                .build()
+                        )
+                        .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 15, TimeUnit.SECONDS)
+                        .build()
+                    WorkManager.getInstance(this@EditTransactionActivity).enqueueUniqueWork(
+                        "sms_queue_process",
+                        ExistingWorkPolicy.KEEP,
+                        workRequest
+                    )
+                }
+
+                btnFetchNow.isEnabled = true
+            }
+        }
+
+        sheet.show()
+    }
+
+    /** Reads SMS inbox for [hoursBack] hours, deduplicates against queue, inserts new ones.
+     *  Returns Pair(newlyQueued, alreadyInQueue). */
+    private suspend fun fetchAndQueueSms(hoursBack: Long): Pair<Int, Int> {
+        val cutoffMs = System.currentTimeMillis() - hoursBack * 60 * 60 * 1000L
+        var queued = 0
+        var skipped = 0
+
+        try {
+            val cursor = contentResolver.query(
+                Uri.parse("content://sms/inbox"),
+                arrayOf("address", "body", "date"),
+                "date > ?",
+                arrayOf(cutoffMs.toString()),
+                "date DESC"
+            ) ?: return Pair(0, 0)
+
+            cursor.use {
+                val addrIdx = it.getColumnIndex("address")
+                val bodyIdx = it.getColumnIndex("body")
+                val dateIdx = it.getColumnIndex("date")
+
+                while (it.moveToNext()) {
+                    val sender = it.getString(addrIdx) ?: continue
+                    val body   = it.getString(bodyIdx) ?: continue
+                    val ts     = it.getLong(dateIdx)
+
+                    // Only process known bank senders
+                    if (SmsReceiver.ALLOWED_SENDERS.none { allowed ->
+                            sender.contains(allowed, ignoreCase = true)
+                        }) continue
+
+                    // Dedup: skip if already in queue
+                    if (smsQueueDao.existsBySenderBodyTimestamp(sender, body, ts) > 0) {
+                        skipped++
+                        continue
+                    }
+
+                    smsQueueDao.insert(SmsQueueEntity(sender = sender, body = body, timestampMs = ts))
+                    queued++
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("FetchInbox", "Error reading SMS inbox: ${e.message}")
+        }
+
+        return Pair(queued, skipped)
     }
 
     private fun isEmoji(text: String): Boolean {

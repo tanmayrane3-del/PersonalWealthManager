@@ -34,4 +34,8 @@ interface SmsQueueDao {
     /** Purge all non-pending entries older than 15 days to keep the table bounded */
     @Query("DELETE FROM sms_queue WHERE status IN ('SUCCESS', 'SKIPPED', 'FAILED') AND enqueuedAt < :cutoffMs")
     suspend fun purgeOldResolved(cutoffMs: Long)
+
+    /** Dedup check — ±5s tolerance to handle PDU ms vs content://sms/inbox date differences. */
+    @Query("SELECT COUNT(*) FROM sms_queue WHERE sender = :sender AND body = :body AND ABS(timestampMs / 1000 - :timestampMs / 1000) <= 5")
+    suspend fun existsBySenderBodyTimestamp(sender: String, body: String, timestampMs: Long): Int
 }

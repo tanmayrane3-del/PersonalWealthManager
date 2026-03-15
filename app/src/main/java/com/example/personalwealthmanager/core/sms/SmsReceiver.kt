@@ -28,7 +28,7 @@ class SmsReceiver : BroadcastReceiver() {
         const val CHANNEL_ID = "sms_transaction_channel"
         const val CHANNEL_NAME = "SMS Transactions"
 
-        private val ALLOWED_SENDERS = listOf(
+        val ALLOWED_SENDERS = listOf(
             "ICICIT-S",
             "BOBSMS-S",
             "KOTAKB-S",
