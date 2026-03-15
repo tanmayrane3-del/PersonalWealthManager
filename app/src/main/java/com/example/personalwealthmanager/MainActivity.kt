@@ -385,9 +385,12 @@ class MainActivity : AppCompatActivity() {
                                 if (todayPnl >= 0) R.color.income_green else R.color.expense_red
                             ))
                             if (proj1y > totalValue) {
-                                tvStockProjection1y.text = "1Y  :  ${formatCompact(proj1y)}"
-                                tvStockProjection3y.text = "3Y  :  ${formatCompact(proj3y)}"
-                                tvStockProjection5y.text = "5Y  :  ${formatCompact(proj5y)}"
+                                val cagr1y = (proj1y / totalValue - 1) * 100
+                                val cagr3y = (Math.pow(proj3y / totalValue, 1.0 / 3) - 1) * 100
+                                val cagr5y = (Math.pow(proj5y / totalValue, 1.0 / 5) - 1) * 100
+                                tvStockProjection1y.text = "1Y: %.1f%%  ${formatCompact(proj1y)}".format(cagr1y)
+                                tvStockProjection3y.text = "3Y: %.1f%%  ${formatCompact(proj3y)}".format(cagr3y)
+                                tvStockProjection5y.text = "5Y: %.1f%%  ${formatCompact(proj5y)}".format(cagr5y)
                                 stockProjectionsColumn.visibility = View.VISIBLE
                             } else {
                                 stockProjectionsColumn.visibility = View.GONE
