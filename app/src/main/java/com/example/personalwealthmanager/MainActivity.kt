@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvStockProjection1y: TextView
     private lateinit var tvStockProjection3y: TextView
     private lateinit var tvStockProjection5y: TextView
+    private lateinit var stockProjectionsColumn: android.widget.LinearLayout
 
     private val fromCalendar = Calendar.getInstance()
     private val toCalendar = Calendar.getInstance()
@@ -89,6 +90,7 @@ class MainActivity : AppCompatActivity() {
         tvStockProjection1y = findViewById(R.id.tvStockProjection1y)
         tvStockProjection3y = findViewById(R.id.tvStockProjection3y)
         tvStockProjection5y = findViewById(R.id.tvStockProjection5y)
+        stockProjectionsColumn = findViewById(R.id.stockProjectionsColumn)
 
         val fromDateContainer = findViewById<View>(R.id.fromDateContainer)
         val toDateContainer = findViewById<View>(R.id.toDateContainer)
@@ -333,10 +335,8 @@ class MainActivity : AppCompatActivity() {
     private fun refreshStocks() {
         val sessionToken = getSessionToken() ?: return
         tvStockValue.text = getString(R.string.loading)
-        tvStockDayPnl.text = getString(R.string.loading)
-        tvStockProjection1y.text = "--"
-        tvStockProjection3y.text = "--"
-        tvStockProjection5y.text = "--"
+        tvStockDayPnl.text = ""
+        stockProjectionsColumn.visibility = View.GONE
         ivRefreshStocks.isEnabled = false
         ivRefreshStocks.alpha = 0.5f
 
@@ -376,15 +376,13 @@ class MainActivity : AppCompatActivity() {
                                 this@MainActivity,
                                 if (todayPnl >= 0) R.color.income_green else R.color.expense_red
                             ))
-                            // Show projections only when CAGR data exists (proj > current value)
                             if (proj1y > totalValue) {
-                                tvStockProjection1y.text = formatCurrency(proj1y)
-                                tvStockProjection3y.text = formatCurrency(proj3y)
-                                tvStockProjection5y.text = formatCurrency(proj5y)
+                                tvStockProjection1y.text = "1Y  :  ${formatCompact(proj1y)}"
+                                tvStockProjection3y.text = "3Y  :  ${formatCompact(proj3y)}"
+                                tvStockProjection5y.text = "5Y  :  ${formatCompact(proj5y)}"
+                                stockProjectionsColumn.visibility = View.VISIBLE
                             } else {
-                                tvStockProjection1y.text = "--"
-                                tvStockProjection3y.text = "--"
-                                tvStockProjection5y.text = "--"
+                                stockProjectionsColumn.visibility = View.GONE
                             }
                         } else {
                             tvStockValue.text = getString(R.string.stocks_not_connected)
@@ -468,6 +466,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun formatCurrency(amount: Double): String {
         return currencyFormat.format(amount)
+    }
+
+    private fun formatCompact(amount: Double): String = when {
+        amount >= 1_00_00_000 -> "₹${String.format("%.2f", amount / 1_00_00_000)}Cr"
+        amount >= 1_00_000    -> "₹${String.format("%.2f", amount / 1_00_000)}L"
+        else                  -> currencyFormat.format(amount)
     }
 
     private fun setupDrawerMenu() {

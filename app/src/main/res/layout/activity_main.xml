@@ -302,128 +302,47 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvAssetsSection">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="24dp">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                    <!-- Stock Holdings Label -->
-                    <TextView
-                        android:id="@+id/tvStockHoldingsLabel"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/stock_holdings_label"
-                        android:textColor="@android:color/white"
-                        android:textSize="19sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@id/ivRefreshStocks"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <!-- Refresh Icon -->
-                    <ImageView
-                        android:id="@+id/ivRefreshStocks"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="8dp"
-                        android:padding="12dp"
-                        android:src="@drawable/ic_refresh"
-                        android:contentDescription="@string/refresh_stocks"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:focusable="true"
-                        app:layout_constraintBottom_toBottomOf="@id/tvStockHoldingsLabel"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/tvStockHoldingsLabel" />
-
-                    <!-- Total Portfolio Value Label -->
-                    <TextView
-                        android:id="@+id/tvStockValueLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/total_portfolio_value"
-                        android:textColor="#B3FFFFFF"
-                        android:textSize="13sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvStockHoldingsLabel" />
-
-                    <!-- Total Portfolio Value Amount -->
-                    <TextView
-                        android:id="@+id/tvStockValue"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/stocks_not_connected"
-                        android:textColor="@android:color/white"
-                        android:textSize="32sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvStockValueLabel" />
-
-                    <!-- Today's P&L Label -->
-                    <TextView
-                        android:id="@+id/tvPnlLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
-                        android:text="@string/todays_pnl"
-                        android:textColor="#B3FFFFFF"
-                        android:textSize="13sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvStockValue" />
-
-                    <!-- Today's P&L Amount -->
-                    <TextView
-                        android:id="@+id/tvStockDayPnl"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/stocks_not_connected"
-                        android:textColor="@android:color/white"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvPnlLabel" />
-
-                    <!-- Projections divider -->
-                    <View
-                        android:id="@+id/stockProjectionsDivider"
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="16dp"
-                        android:background="#33FFFFFF"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvStockDayPnl" />
-
-                    <!-- Projections label -->
-                    <TextView
-                        android:id="@+id/tvProjectionsLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="CAGR Projections"
-                        android:textColor="#B3FFFFFF"
-                        android:textSize="12sp"
-                        android:letterSpacing="0.08"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/stockProjectionsDivider" />
-
-                    <!-- Projections row: 1Y | 3Y | 5Y -->
+                    <!-- Header: title + refresh -->
                     <LinearLayout
-                        android:id="@+id/stockProjectionsRow"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
                         android:orientation="horizontal"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvProjectionsLabel">
+                        android:gravity="center_vertical">
+                        <TextView
+                            android:id="@+id/tvStockHoldingsLabel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/stock_holdings_label"
+                            android:textColor="@android:color/white"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                        <ImageView
+                            android:id="@+id/ivRefreshStocks"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_refresh"
+                            android:contentDescription="@string/refresh_stocks"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:clickable="true"
+                            android:focusable="true" />
+                    </LinearLayout>
 
+                    <!-- Body: left (value + P&L) | vertical divider | right (projections) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="12dp">
+
+                        <!-- Left column: portfolio value + today P&L -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -432,55 +351,81 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="1Y"
+                                android:text="Total Portfolio Value"
                                 android:textColor="#B3FFFFFF"
-                                android:textSize="12sp" />
+                                android:textSize="11sp" />
+                            <TextView
+                                android:id="@+id/tvStockValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/stocks_not_connected"
+                                android:textColor="@android:color/white"
+                                android:textSize="22sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="Today's P&amp;L"
+                                android:textColor="#B3FFFFFF"
+                                android:textSize="11sp" />
+                            <TextView
+                                android:id="@+id/tvStockDayPnl"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text=""
+                                android:textColor="@android:color/white"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <!-- Vertical divider -->
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="#33FFFFFF" />
+
+                        <!-- Right column: CAGR projections (hidden until data available) -->
+                        <LinearLayout
+                            android:id="@+id/stockProjectionsColumn"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="CAGR Projections"
+                                android:textColor="#B3FFFFFF"
+                                android:textSize="11sp" />
                             <TextView
                                 android:id="@+id/tvStockProjection1y"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
                                 android:text="--"
                                 android:textColor="@android:color/white"
                                 android:textSize="13sp"
                                 android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="3Y"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="12sp" />
                             <TextView
                                 android:id="@+id/tvStockProjection3y"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
                                 android:text="--"
                                 android:textColor="@android:color/white"
                                 android:textSize="13sp"
                                 android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="5Y"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="12sp" />
                             <TextView
                                 android:id="@+id/tvStockProjection5y"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
                                 android:text="--"
                                 android:textColor="@android:color/white"
                                 android:textSize="13sp"
@@ -489,7 +434,7 @@
 
                     </LinearLayout>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <!-- Gold Holdings Card -->
