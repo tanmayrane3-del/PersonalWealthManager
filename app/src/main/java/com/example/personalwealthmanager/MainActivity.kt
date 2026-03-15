@@ -439,27 +439,19 @@ class MainActivity : AppCompatActivity() {
         ivRefreshGold.alpha = 0.5f
 
         CoroutineScope(Dispatchers.IO).launch {
+            // Always recompute CAGR on manual sync tap
+            try {
+                val url = URL("${ApiConfig.BASE_URL}/api/metals/sync-cagr")
+                val connection = url.openConnection() as HttpURLConnection
+                connection.requestMethod = "POST"
+                connection.setRequestProperty(ApiConfig.HEADER_SESSION_TOKEN, sessionToken)
+                connection.connectTimeout = 60000
+                connection.readTimeout = 60000
+                connection.responseCode
+                connection.disconnect()
+            } catch (_: Exception) { /* non-fatal — proceed to refresh */ }
+
             var summaryData = fetchMetalsSummary(sessionToken)
-
-            // If no CAGR yet, compute it now (user explicitly tapped sync)
-            if (summaryData != null && summaryData.optBoolean("has_cagr", false) == false) {
-                try {
-                    val url = URL("${ApiConfig.BASE_URL}/api/metals/sync-cagr")
-                    val connection = url.openConnection() as HttpURLConnection
-                    connection.requestMethod = "POST"
-                    connection.setRequestProperty(ApiConfig.HEADER_SESSION_TOKEN, sessionToken)
-                    connection.connectTimeout = 60000
-                    connection.readTimeout = 60000
-                    connection.responseCode // trigger the request
-                    connection.disconnect()
-                } catch (_: Exception) { /* non-fatal — show existing summary */ }
-
-                // Re-fetch after CAGR computation
-                summaryData = fetchMetalsSummary(sessionToken)
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@MainActivity, "Gold CAGR computed", Toast.LENGTH_SHORT).show()
-                }
-            }
 
             val finalData = summaryData
             withContext(Dispatchers.Main) {

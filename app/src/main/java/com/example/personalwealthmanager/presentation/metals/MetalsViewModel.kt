@@ -50,10 +50,7 @@ class MetalsViewModel @Inject constructor(
             val token = sessionManager.getSessionToken() ?: return@launch
             _cagrState.value = MetalsCagrState.Syncing
 
-            val summary = metalsRepository.getSummary(token).getOrNull()
-            if (summary != null && !summary.hasCagr) {
-                metalsRepository.syncCagr(token)  // await computation
-            }
+            metalsRepository.syncCagr(token)  // always recompute on manual sync
 
             metalsRepository.getSummary(token).onSuccess { dto ->
                 _cagrState.value = if (dto.hasCagr && dto.projected1y > dto.totalValue) {
