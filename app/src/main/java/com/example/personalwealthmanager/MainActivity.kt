@@ -58,6 +58,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvGoldValue: TextView
     private lateinit var tvGoldDayPnl: TextView
     private lateinit var ivRefreshGold: ImageView
+    private lateinit var tvGoldProjection1y: TextView
+    private lateinit var tvGoldProjection3y: TextView
+    private lateinit var tvGoldProjection5y: TextView
+    private lateinit var goldProjectionsColumn: LinearLayout
     private lateinit var tvStockProjection1y: TextView
     private lateinit var tvStockProjection3y: TextView
     private lateinit var tvStockProjection5y: TextView
@@ -87,6 +91,10 @@ class MainActivity : AppCompatActivity() {
         tvGoldValue = findViewById(R.id.tvGoldValue)
         tvGoldDayPnl = findViewById(R.id.tvGoldDayPnl)
         ivRefreshGold = findViewById(R.id.ivRefreshGold)
+        tvGoldProjection1y = findViewById(R.id.tvGoldProjection1y)
+        tvGoldProjection3y = findViewById(R.id.tvGoldProjection3y)
+        tvGoldProjection5y = findViewById(R.id.tvGoldProjection5y)
+        goldProjectionsColumn = findViewById(R.id.goldProjectionsColumn)
         tvStockProjection1y = findViewById(R.id.tvStockProjection1y)
         tvStockProjection3y = findViewById(R.id.tvStockProjection3y)
         tvStockProjection5y = findViewById(R.id.tvStockProjection5y)
@@ -136,7 +144,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         ivRefreshGold.setOnClickListener {
-            refreshMetals()
+            syncAndRefreshMetals()
         }
 
         findViewById<View>(R.id.stocksCard).setOnClickListener {
@@ -407,60 +415,117 @@ class MainActivity : AppCompatActivity() {
     private fun refreshMetals() {
         val sessionToken = getSessionToken() ?: return
         tvGoldValue.text = getString(R.string.loading)
-        tvGoldDayPnl.text = getString(R.string.loading)
+        tvGoldDayPnl.text = ""
+        goldProjectionsColumn.visibility = View.GONE
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val summaryData = fetchMetalsSummary(sessionToken)
+            withContext(Dispatchers.Main) {
+                displayMetalsSummary(summaryData)
+            }
+        }
+    }
+
+    /**
+     * Smart sync: fetches summary first; if no CAGR in DB, calls sync-cagr to compute it,
+     * then fetches summary again to show fresh projections.
+     */
+    private fun syncAndRefreshMetals() {
+        val sessionToken = getSessionToken() ?: return
+        tvGoldValue.text = getString(R.string.loading)
+        tvGoldDayPnl.text = ""
+        goldProjectionsColumn.visibility = View.GONE
         ivRefreshGold.isEnabled = false
         ivRefreshGold.alpha = 0.5f
 
         CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val url = URL("${ApiConfig.BASE_URL}/api/metals/holdings")
-                val connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "GET"
-                connection.setRequestProperty(ApiConfig.HEADER_SESSION_TOKEN, sessionToken)
-                connection.connectTimeout = 10000
-                connection.readTimeout = 10000
+            var summaryData = fetchMetalsSummary(sessionToken)
 
-                val responseCode = connection.responseCode
-                val response = if (responseCode == HttpURLConnection.HTTP_OK)
-                    connection.inputStream.bufferedReader().readText()
-                else
-                    connection.errorStream?.bufferedReader()?.readText() ?: ""
+            // If no CAGR yet, compute it now (user explicitly tapped sync)
+            if (summaryData != null && summaryData.optBoolean("has_cagr", false) == false) {
+                try {
+                    val url = URL("${ApiConfig.BASE_URL}/api/metals/sync-cagr")
+                    val connection = url.openConnection() as HttpURLConnection
+                    connection.requestMethod = "POST"
+                    connection.setRequestProperty(ApiConfig.HEADER_SESSION_TOKEN, sessionToken)
+                    connection.connectTimeout = 60000
+                    connection.readTimeout = 60000
+                    connection.responseCode // trigger the request
+                    connection.disconnect()
+                } catch (_: Exception) { /* non-fatal — show existing summary */ }
 
+                // Re-fetch after CAGR computation
+                summaryData = fetchMetalsSummary(sessionToken)
                 withContext(Dispatchers.Main) {
-                    ivRefreshGold.isEnabled = true
-                    ivRefreshGold.alpha = 1.0f
-
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        val json = JSONObject(response)
-                        if (json.getString("status") == "success") {
-                            val data = json.getJSONObject("data")
-                            val totalValue = data.getDouble("total_value")
-                            val dayPnl = data.getDouble("total_day_pnl")
-
-                            tvGoldValue.text = formatCurrency(totalValue)
-                            val prefix = if (dayPnl >= 0) "+" else ""
-                            tvGoldDayPnl.text = "$prefix${formatCurrency(dayPnl)}"
-                            tvGoldDayPnl.setTextColor(ContextCompat.getColor(
-                                this@MainActivity,
-                                if (dayPnl >= 0) R.color.income_green else R.color.expense_red
-                            ))
-                        } else {
-                            tvGoldValue.text = "--"
-                            tvGoldDayPnl.text = "--"
-                        }
-                    } else {
-                        tvGoldValue.text = "--"
-                        tvGoldDayPnl.text = "--"
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    ivRefreshGold.isEnabled = true
-                    ivRefreshGold.alpha = 1.0f
-                    tvGoldValue.text = "--"
-                    tvGoldDayPnl.text = "--"
+                    Toast.makeText(this@MainActivity, "Gold CAGR computed", Toast.LENGTH_SHORT).show()
                 }
             }
+
+            val finalData = summaryData
+            withContext(Dispatchers.Main) {
+                ivRefreshGold.isEnabled = true
+                ivRefreshGold.alpha = 1.0f
+                displayMetalsSummary(finalData)
+            }
+        }
+    }
+
+    /** Fetches /api/metals/summary and returns the data JSONObject, or null on failure. */
+    private fun fetchMetalsSummary(sessionToken: String): JSONObject? {
+        return try {
+            val url = URL("${ApiConfig.BASE_URL}/api/metals/summary")
+            val connection = url.openConnection() as HttpURLConnection
+            connection.requestMethod = "GET"
+            connection.setRequestProperty(ApiConfig.HEADER_SESSION_TOKEN, sessionToken)
+            connection.connectTimeout = 10000
+            connection.readTimeout = 10000
+
+            val responseCode = connection.responseCode
+            val response = if (responseCode == HttpURLConnection.HTTP_OK)
+                connection.inputStream.bufferedReader().readText()
+            else
+                connection.errorStream?.bufferedReader()?.readText() ?: ""
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                val json = JSONObject(response)
+                if (json.getString("status") == "success") json.getJSONObject("data") else null
+            } else null
+        } catch (_: Exception) { null }
+    }
+
+    /** Populates the gold card views from a summary data object. */
+    private fun displayMetalsSummary(data: JSONObject?) {
+        if (data == null) {
+            tvGoldValue.text = "--"
+            tvGoldDayPnl.text = "--"
+            goldProjectionsColumn.visibility = View.GONE
+            return
+        }
+
+        val totalValue = data.getDouble("total_value")
+        val dayPnl     = data.getDouble("total_day_pnl")
+        val proj1y     = data.optDouble("projected_1y", 0.0)
+        val proj3y     = data.optDouble("projected_3y", 0.0)
+        val proj5y     = data.optDouble("projected_5y", 0.0)
+
+        tvGoldValue.text = formatCurrency(totalValue)
+        val prefix = if (dayPnl >= 0) "+" else ""
+        tvGoldDayPnl.text = "$prefix${formatCurrency(dayPnl)}"
+        tvGoldDayPnl.setTextColor(ContextCompat.getColor(
+            this,
+            if (dayPnl >= 0) R.color.income_green else R.color.expense_red
+        ))
+
+        if (proj1y > totalValue && totalValue > 0) {
+            val cagr1y = (proj1y / totalValue - 1) * 100
+            val cagr3y = (Math.pow(proj3y / totalValue, 1.0 / 3) - 1) * 100
+            val cagr5y = (Math.pow(proj5y / totalValue, 1.0 / 5) - 1) * 100
+            tvGoldProjection1y.text = "1Y: %.1f%%  ${formatCompact(proj1y)}".format(cagr1y)
+            tvGoldProjection3y.text = "3Y: %.1f%%  ${formatCompact(proj3y)}".format(cagr3y)
+            tvGoldProjection5y.text = "5Y: %.1f%%  ${formatCompact(proj5y)}".format(cagr5y)
+            goldProjectionsColumn.visibility = View.VISIBLE
+        } else {
+            goldProjectionsColumn.visibility = View.GONE
         }
     }
 
