@@ -13,3 +13,14 @@ sealed class MetalsUiState {
     ) : MetalsUiState()
     data class Error(val message: String) : MetalsUiState()
 }
+
+sealed class MetalsCagrState {
+    object Idle    : MetalsCagrState()
+    object Syncing : MetalsCagrState()  // POST sync-cagr in progress
+    data class Available(
+        val totalValue:  Double,
+        val projected1y: Double,
+        val projected3y: Double,
+        val projected5y: Double
+    ) : MetalsCagrState()
+}

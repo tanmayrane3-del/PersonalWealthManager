@@ -141,13 +141,33 @@
                         android:orientation="vertical"
                         android:padding="16dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <!-- Header: label + sync button -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Total Metals Value"
-                            android:textColor="#AAFFFFFF"
-                            android:textSize="13sp"
-                            android:layout_marginBottom="4dp" />
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="4dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Total Metals Value"
+                                android:textColor="#AAFFFFFF"
+                                android:textSize="13sp" />
+
+                            <ImageView
+                                android:id="@+id/ivSyncCagr"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:padding="6dp"
+                                android:src="@drawable/ic_refresh"
+                                android:contentDescription="Sync CAGR"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:clickable="true"
+                                android:focusable="true" />
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/tvTotalValue"
@@ -157,6 +177,72 @@
                             android:textColor="#F5A623"
                             android:textSize="26sp"
                             android:textStyle="bold" />
+
+                        <!-- CAGR projections (hidden until available) -->
+                        <LinearLayout
+                            android:id="@+id/cagrProjectionsSection"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone"
+                            android:layout_marginTop="12dp">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="#33FFFFFF"
+                                android:layout_marginBottom="10dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="CAGR Projections"
+                                android:textColor="#AAFFFFFF"
+                                android:textSize="11sp"
+                                android:layout_marginBottom="6dp" />
+
+                            <TextView
+                                android:id="@+id/tvCagrProjection1y"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="--"
+                                android:textColor="@android:color/white"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvCagrProjection3y"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="--"
+                                android:textColor="@android:color/white"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvCagrProjection5y"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="--"
+                                android:textColor="@android:color/white"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <!-- Syncing indicator -->
+                        <TextView
+                            android:id="@+id/tvCagrSyncing"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Computing CAGR…"
+                            android:textColor="#AAFFFFFF"
+                            android:textSize="12sp"
+                            android:visibility="gone" />
+
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 

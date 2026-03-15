@@ -35,3 +35,12 @@ data class MetalHoldingRequest(
     val purity: String,
     val notes: String?
 )
+
+data class MetalsSummaryDto(
+    @SerializedName("total_value")   val totalValue: Double,
+    @SerializedName("total_day_pnl") val totalDayPnl: Double,
+    @SerializedName("projected_1y")  val projected1y: Double,
+    @SerializedName("projected_3y")  val projected3y: Double,
+    @SerializedName("projected_5y")  val projected5y: Double,
+    @SerializedName("has_cagr")      val hasCagr: Boolean
+)

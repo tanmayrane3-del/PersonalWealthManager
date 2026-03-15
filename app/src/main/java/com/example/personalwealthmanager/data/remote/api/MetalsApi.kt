@@ -5,6 +5,7 @@ import com.example.personalwealthmanager.data.remote.dto.MetalHoldingDto
 import com.example.personalwealthmanager.data.remote.dto.MetalHoldingRequest
 import com.example.personalwealthmanager.data.remote.dto.MetalHoldingsData
 import com.example.personalwealthmanager.data.remote.dto.MetalRatesDto
+import com.example.personalwealthmanager.data.remote.dto.MetalsSummaryDto
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -25,6 +26,16 @@ interface MetalsApi {
     suspend fun getHoldings(
         @Header("x-session-token") sessionToken: String
     ): Response<ApiResponse<MetalHoldingsData>>
+
+    @GET("api/metals/summary")
+    suspend fun getSummary(
+        @Header("x-session-token") sessionToken: String
+    ): Response<ApiResponse<MetalsSummaryDto>>
+
+    @POST("api/metals/sync-cagr")
+    suspend fun syncCagr(
+        @Header("x-session-token") sessionToken: String
+    ): Response<ApiResponse<Any>>
 
     @POST("api/metals/holdings")
     suspend fun addHolding(

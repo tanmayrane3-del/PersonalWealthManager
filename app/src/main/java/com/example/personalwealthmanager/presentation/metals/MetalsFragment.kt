@@ -49,8 +49,14 @@ class MetalsFragment : Fragment() {
             AddEditMetalBottomSheet.newInstance().show(childFragmentManager, "add_metal")
         }
 
+        binding.ivSyncCagr.setOnClickListener {
+            viewModel.syncCagrAndRefresh()
+        }
+
         observeState()
+        observeCagrState()
         viewModel.fetchAll()
+        viewModel.fetchSummary()
     }
 
     private fun observeState() {
@@ -64,6 +70,49 @@ class MetalsFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun observeCagrState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.cagrState.collect { state ->
+                when (state) {
+                    is MetalsCagrState.Idle -> {
+                        binding.cagrProjectionsSection.visibility = View.GONE
+                        binding.tvCagrSyncing.visibility = View.GONE
+                        binding.ivSyncCagr.isEnabled = true
+                        binding.ivSyncCagr.alpha = 1.0f
+                    }
+                    is MetalsCagrState.Syncing -> {
+                        binding.cagrProjectionsSection.visibility = View.GONE
+                        binding.tvCagrSyncing.visibility = View.VISIBLE
+                        binding.ivSyncCagr.isEnabled = false
+                        binding.ivSyncCagr.alpha = 0.4f
+                    }
+                    is MetalsCagrState.Available -> {
+                        binding.tvCagrSyncing.visibility = View.GONE
+                        binding.ivSyncCagr.isEnabled = true
+                        binding.ivSyncCagr.alpha = 1.0f
+                        val total = state.totalValue
+                        if (total > 0) {
+                            val cagr1y = (state.projected1y / total - 1) * 100
+                            val cagr3y = (Math.pow(state.projected3y / total, 1.0 / 3) - 1) * 100
+                            val cagr5y = (Math.pow(state.projected5y / total, 1.0 / 5) - 1) * 100
+                            val fmt = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
+                            binding.tvCagrProjection1y.text = "1Y:  %.1f%%   %s".format(cagr1y, formatCompact(state.projected1y, fmt))
+                            binding.tvCagrProjection3y.text = "3Y:  %.1f%%   %s".format(cagr3y, formatCompact(state.projected3y, fmt))
+                            binding.tvCagrProjection5y.text = "5Y:  %.1f%%   %s".format(cagr5y, formatCompact(state.projected5y, fmt))
+                        }
+                        binding.cagrProjectionsSection.visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+    }
+
+    private fun formatCompact(amount: Double, fmt: NumberFormat): String = when {
+        amount >= 1_00_00_000 -> "₹${"%.2f".format(amount / 1_00_00_000)}Cr"
+        amount >= 1_00_000    -> "₹${"%.2f".format(amount / 1_00_000)}L"
+        else                  -> fmt.format(amount)
     }
 
     private fun showLoading() {

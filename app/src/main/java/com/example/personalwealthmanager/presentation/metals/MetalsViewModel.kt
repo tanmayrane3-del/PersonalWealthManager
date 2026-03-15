@@ -20,6 +20,58 @@ class MetalsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<MetalsUiState>(MetalsUiState.Idle)
     val uiState: StateFlow<MetalsUiState> = _uiState
 
+    private val _cagrState = MutableStateFlow<MetalsCagrState>(MetalsCagrState.Idle)
+    val cagrState: StateFlow<MetalsCagrState> = _cagrState
+
+    /** Fetches CAGR summary from DB (no computation). Called on screen open. */
+    fun fetchSummary() {
+        viewModelScope.launch {
+            val token = sessionManager.getSessionToken() ?: return@launch
+            metalsRepository.getSummary(token).onSuccess { dto ->
+                if (dto.hasCagr && dto.projected1y > dto.totalValue) {
+                    _cagrState.value = MetalsCagrState.Available(
+                        totalValue  = dto.totalValue,
+                        projected1y = dto.projected1y,
+                        projected3y = dto.projected3y,
+                        projected5y = dto.projected5y
+                    )
+                }
+                // else leave Idle — projections column stays hidden
+            }
+        }
+    }
+
+    /**
+     * Smart sync: if CAGR missing in DB, computes it first (may take ~10s).
+     * Then fetches and publishes the updated summary.
+     */
+    fun syncCagrAndRefresh() {
+        viewModelScope.launch {
+            val token = sessionManager.getSessionToken() ?: return@launch
+            _cagrState.value = MetalsCagrState.Syncing
+
+            val summary = metalsRepository.getSummary(token).getOrNull()
+            if (summary != null && !summary.hasCagr) {
+                metalsRepository.syncCagr(token)  // await computation
+            }
+
+            metalsRepository.getSummary(token).onSuccess { dto ->
+                _cagrState.value = if (dto.hasCagr && dto.projected1y > dto.totalValue) {
+                    MetalsCagrState.Available(
+                        totalValue  = dto.totalValue,
+                        projected1y = dto.projected1y,
+                        projected3y = dto.projected3y,
+                        projected5y = dto.projected5y
+                    )
+                } else {
+                    MetalsCagrState.Idle
+                }
+            }.onFailure {
+                _cagrState.value = MetalsCagrState.Idle
+            }
+        }
+    }
+
     fun fetchAll() {
         viewModelScope.launch {
             _uiState.value = MetalsUiState.Loading

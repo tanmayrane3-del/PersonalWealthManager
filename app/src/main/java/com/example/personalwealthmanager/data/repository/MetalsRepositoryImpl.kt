@@ -4,6 +4,7 @@ import com.example.personalwealthmanager.data.remote.api.MetalsApi
 import com.example.personalwealthmanager.data.remote.dto.MetalHoldingDto
 import com.example.personalwealthmanager.data.remote.dto.MetalHoldingRequest
 import com.example.personalwealthmanager.data.remote.dto.MetalRatesDto
+import com.example.personalwealthmanager.data.remote.dto.MetalsSummaryDto
 import com.example.personalwealthmanager.domain.model.MetalHolding
 import com.example.personalwealthmanager.domain.model.MetalRates
 import com.example.personalwealthmanager.domain.repository.MetalsRepository
@@ -41,6 +42,31 @@ class MetalsRepositoryImpl @Inject constructor(
             } else {
                 Result.failure(Exception(parseReason(response.errorBody()?.string(), "Failed to fetch holdings")))
             }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getSummary(sessionToken: String): Result<MetalsSummaryDto> {
+        return try {
+            val response = metalsApi.getSummary(sessionToken)
+            if (response.isSuccessful && response.body()?.status == "success") {
+                val dto = response.body()?.data
+                    ?: return Result.failure(Exception("No summary data returned"))
+                Result.success(dto)
+            } else {
+                Result.failure(Exception(parseReason(response.errorBody()?.string(), "Failed to fetch summary")))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun syncCagr(sessionToken: String): Result<Unit> {
+        return try {
+            val response = metalsApi.syncCagr(sessionToken)
+            if (response.isSuccessful) Result.success(Unit)
+            else Result.failure(Exception(parseReason(response.errorBody()?.string(), "Failed to sync CAGR")))
         } catch (e: Exception) {
             Result.failure(e)
         }
