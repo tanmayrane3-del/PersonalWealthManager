@@ -248,6 +248,11 @@
     <string name="income_line">Income</string>
     <string name="expense_line">Expense</string>
 
+    <!-- Mutual Funds Summary Labels -->
+    <string name="total_invested">Total Invested</string>
+    <string name="current_value">Current Value</string>
+    <string name="gain_loss">Gain / Loss</string>
+
     <!-- Mutual Funds -->
     <string name="mutual_funds">Mutual Funds</string>
     <string name="import_cas">Import CAS PDF</string>
