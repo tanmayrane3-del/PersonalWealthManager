@@ -626,6 +626,11 @@ class TransactionsActivity : AppCompatActivity() {
             startActivity(Intent(this, com.example.personalwealthmanager.presentation.metals.MetalsActivity::class.java))
         }
 
+        headerView.findViewById<Button>(R.id.btnMutualFunds)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, com.example.personalwealthmanager.presentation.mutualfunds.MutualFundsActivity::class.java))
+        }
+
         val btnSetupDemat = headerView.findViewById<Button>(R.id.btnSetupDemat)
         val ivSetupDematExpand = headerView.findViewById<ImageView>(R.id.ivSetupDematExpand)
         val setupDematChildItems = headerView.findViewById<LinearLayout>(R.id.setupDematChildItems)

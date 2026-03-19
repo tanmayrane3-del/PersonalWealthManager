@@ -100,3 +100,71 @@ data class MetalRates(
     val gold24kPerGram: Double,
     val fetchedAt: String
 )
+
+data class MutualFundLot(
+    val id: String,
+    val purchaseDate: String,
+    val units: Double,
+    val purchaseNav: Double,
+    val amountInvested: Double
+)
+
+data class MutualFundHolding(
+    val isin: String,
+    val schemeCode: String?,
+    val schemeName: String,
+    val amcName: String?,
+    val totalUnits: Double,
+    val avgNav: Double,
+    val latestNav: Double?,
+    val latestNavDate: String?,
+    val totalInvested: Double,
+    val currentValue: Double,
+    val absoluteReturn: Double,
+    val absoluteReturnPct: Double,
+    val xirr: Double?,
+    val lots: List<MutualFundLot>
+)
+
+data class MutualFundPortfolioSummary(
+    val totalInvested: Double,
+    val currentValue: Double,
+    val absoluteReturn: Double,
+    val absoluteReturnPct: Double
+)
+
+data class MutualFundCagrSummary(
+    val totalInvested: Double,
+    val currentValue: Double,
+    val absoluteReturn: Double,
+    val absoluteReturnPct: Double,
+    val projected1y: Double,
+    val projected3y: Double,
+    val projected5y: Double,
+    val hasCagr: Boolean
+)
+
+data class CasPreviewLot(
+    val date: String,
+    val units: Double,
+    val nav: Double,
+    val amount: Double
+)
+
+data class CasPreviewFund(
+    val isin: String,
+    val schemeCode: String?,
+    val schemeName: String,
+    val amcName: String?,
+    val folioNumber: String,
+    val closingUnits: Double,
+    val amountInvested: Double,
+    val lookupFailed: Boolean,
+    val lots: List<CasPreviewLot>
+)
+
+data class SchemeLookupResult(
+    val schemeCode: String,
+    val schemeName: String?,
+    val amcName: String?
+)

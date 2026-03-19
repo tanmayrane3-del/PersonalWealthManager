@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/card_medium_teal">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_fund_manually"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- ISIN input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/isin_hint"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etIsin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapCharacters"
+            android:maxLength="12"
+            android:textColor="@android:color/white"
+            android:textColorHint="#AAFFFFFF" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Scheme lookup status -->
+    <TextView
+        android:id="@+id/tvLookupStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#AAFFFFFF"
+        android:textSize="12sp"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
+
+    <!-- Scheme name (auto-filled, read-only) -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Scheme Name"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etSchemeName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:textColor="@android:color/white"
+            android:textColorHint="#AAFFFFFF" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Units -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/units_hint"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etUnits"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/white"
+            android:textColorHint="#AAFFFFFF" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Purchase NAV -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/purchase_nav_hint"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPurchaseNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/white"
+            android:textColorHint="#AAFFFFFF" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Purchase Date -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/purchase_date_hint"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="16dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPurchaseDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:textColor="@android:color/white"
+            android:textColorHint="#AAFFFFFF" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Save button -->
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="@string/save"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/card_dark_teal"
+        android:layout_marginBottom="8dp" />
+
+</LinearLayout>

@@ -214,6 +214,12 @@ class StocksActivity : AppCompatActivity() {
             startActivity(Intent(this, com.example.personalwealthmanager.presentation.metals.MetalsActivity::class.java))
         }
 
+        headerView.findViewById<Button>(R.id.btnMutualFunds)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, com.example.personalwealthmanager.presentation.mutualfunds.MutualFundsActivity::class.java))
+            finish()
+        }
+
         setupExpandable(
             headerView,
             R.id.btnSetupDemat, R.id.ivSetupDematExpand, R.id.setupDematChildItems

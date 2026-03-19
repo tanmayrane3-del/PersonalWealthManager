@@ -1,6 +1,7 @@
 package com.example.personalwealthmanager.presentation.auth.login
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -35,8 +36,18 @@ class LoginActivity : AppCompatActivity() {
             viewModel.login(email, password)
         }
 
+        binding.tvRegister.text = android.text.SpannableString("New user? Register here").apply {
+            val start = indexOf("Register here")
+            setSpan(android.text.style.StyleSpan(android.graphics.Typeface.BOLD), start, length, 0)
+            setSpan(android.text.style.UnderlineSpan(), start, length, 0)
+        }
         binding.tvRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
+        }
+
+        binding.tvPrivacyPolicy.text = android.text.Html.fromHtml("<u>Privacy Policy</u>", android.text.Html.FROM_HTML_MODE_LEGACY)
+        binding.tvPrivacyPolicy.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://tanmayrane3-del.github.io/PersonalWealthManager-Privacy")))
         }
     }
 

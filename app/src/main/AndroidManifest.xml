@@ -93,6 +93,18 @@
             android:exported="false"
             android:theme="@style/Theme.PersonalWealthManager" />
 
+        <!-- Mutual Funds Activity -->
+        <activity
+            android:name=".presentation.mutualfunds.MutualFundsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PersonalWealthManager" />
+
+        <!-- CAS Import Activity -->
+        <activity
+            android:name=".presentation.mutualfunds.CasImportActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PersonalWealthManager" />
+
         <!-- Setup Zerodha Activity -->
         <activity
             android:name=".presentation.zerodha.SetupZerodhaActivity"

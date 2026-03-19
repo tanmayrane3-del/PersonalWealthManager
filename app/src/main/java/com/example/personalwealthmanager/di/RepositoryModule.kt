@@ -4,6 +4,7 @@ import com.example.personalwealthmanager.data.repository.AuthRepositoryImpl
 import com.example.personalwealthmanager.data.repository.CategoryRepositoryImpl
 import com.example.personalwealthmanager.data.repository.HoldingsRepositoryImpl
 import com.example.personalwealthmanager.data.repository.MetalsRepositoryImpl
+import com.example.personalwealthmanager.data.repository.MutualFundRepositoryImpl
 import com.example.personalwealthmanager.data.repository.RecipientRepositoryImpl
 import com.example.personalwealthmanager.data.repository.SourceRepositoryImpl
 import com.example.personalwealthmanager.data.repository.TransactionRepositoryImpl
@@ -12,6 +13,7 @@ import com.example.personalwealthmanager.domain.repository.AuthRepository
 import com.example.personalwealthmanager.domain.repository.CategoryRepository
 import com.example.personalwealthmanager.domain.repository.HoldingsRepository
 import com.example.personalwealthmanager.domain.repository.MetalsRepository
+import com.example.personalwealthmanager.domain.repository.MutualFundRepository
 import com.example.personalwealthmanager.domain.repository.RecipientRepository
 import com.example.personalwealthmanager.domain.repository.SourceRepository
 import com.example.personalwealthmanager.domain.repository.TransactionRepository
@@ -73,4 +75,10 @@ abstract class RepositoryModule {
     abstract fun bindMetalsRepository(
         metalsRepositoryImpl: MetalsRepositoryImpl
     ): MetalsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindMutualFundRepository(
+        mutualFundRepositoryImpl: MutualFundRepositoryImpl
+    ): MutualFundRepository
 }

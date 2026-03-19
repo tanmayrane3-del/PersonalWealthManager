@@ -129,8 +129,18 @@
                     android:layout_marginTop="24dp"
                     android:text="New user? Register here"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="16sp" />
+
+                <!-- Privacy Policy Link -->
+                <TextView
+                    android:id="@+id/tvPrivacyPolicy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/privacy_policy"
+                    android:textColor="@android:color/white"
+                    android:textSize="13sp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

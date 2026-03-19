@@ -2,6 +2,9 @@
 <resources>
     <string name="app_name">Personal WM</string>
 
+    <!-- Auth -->
+    <string name="privacy_policy">Privacy Policy</string>
+
     <!-- Common -->
     <string name="calendar_icon">Calendar icon</string>
     <string name="edit_income">Edit income</string>
@@ -244,6 +247,28 @@
     <string name="expense_by_recipient">Expense by Recipient</string>
     <string name="income_line">Income</string>
     <string name="expense_line">Expense</string>
+
+    <!-- Mutual Funds -->
+    <string name="mutual_funds">Mutual Funds</string>
+    <string name="import_cas">Import CAS PDF</string>
+    <string name="add_fund_manually">Add Fund Manually</string>
+    <string name="no_mutual_funds">No mutual fund holdings. Tap + to add.</string>
+    <string name="isin_hint">ISIN (e.g. INF109K01AN1)</string>
+    <string name="units_hint">Units</string>
+    <string name="purchase_nav_hint">Purchase NAV</string>
+    <string name="purchase_date_hint">Purchase Date</string>
+    <string name="confirm_import">Confirm Import</string>
+    <string name="cas_upload_progress">Parsing PDF and fetching NAV data…</string>
+    <string name="cas_preview_title">Found %d fund(s) — select to import</string>
+    <string name="xirr">XIRR</string>
+    <string name="avg_nav">Avg NAV</string>
+    <string name="current_nav">Current NAV</string>
+    <string name="delete_lot_confirm">Delete this purchase lot?</string>
+    <string name="delete_fund_confirm">Delete all lots for %s?</string>
+    <string name="looking_up_scheme">Looking up scheme…</string>
+    <string name="scheme_not_found">Scheme not found for this ISIN</string>
+    <string name="select_cas_pdf">Select CAS PDF</string>
+    <string name="cas_upload_instructions">Select your KFintech Consolidated Account Statement (CAS) PDF to import all mutual fund holdings at once.</string>
 
     <!-- Settings -->
     <string name="settings">Settings</string>

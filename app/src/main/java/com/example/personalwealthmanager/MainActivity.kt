@@ -37,6 +37,7 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import com.example.personalwealthmanager.presentation.transactions.TransactionsActivity
+import com.example.personalwealthmanager.presentation.mutualfunds.MutualFundsActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -618,6 +619,11 @@ class MainActivity : AppCompatActivity() {
         headerView.findViewById<Button>(R.id.btnMetals)?.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)
             startActivity(Intent(this, com.example.personalwealthmanager.presentation.metals.MetalsActivity::class.java))
+        }
+
+        headerView.findViewById<Button>(R.id.btnMutualFunds)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, MutualFundsActivity::class.java))
         }
 
         // Setup Demat expandable menu

@@ -7,6 +7,7 @@ import com.example.personalwealthmanager.data.remote.api.AuthApi
 import com.example.personalwealthmanager.data.remote.api.HoldingsApi
 import com.example.personalwealthmanager.data.remote.api.MetadataApi
 import com.example.personalwealthmanager.data.remote.api.MetalsApi
+import com.example.personalwealthmanager.data.remote.api.MutualFundApi
 import com.example.personalwealthmanager.data.remote.api.SmsApi
 import com.example.personalwealthmanager.data.remote.api.TransactionApi
 import com.example.personalwealthmanager.data.remote.api.ZerodhaApi
@@ -83,7 +84,7 @@ object NetworkModule {
             .addInterceptor(authInterceptor)  // Add auth interceptor first
             .addInterceptor(loggingInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
             .build()
     }
@@ -147,5 +148,11 @@ object NetworkModule {
     @Singleton
     fun provideMetalsApi(retrofit: Retrofit): MetalsApi {
         return retrofit.create(MetalsApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMutualFundApi(retrofit: Retrofit): MutualFundApi {
+        return retrofit.create(MutualFundApi::class.java)
     }
 }

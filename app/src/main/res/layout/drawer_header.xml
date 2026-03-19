@@ -181,6 +181,17 @@
             android:background="@color/card_dark_teal"
             android:gravity="start|center_vertical"
             android:paddingStart="16dp" />
+
+        <Button
+            android:id="@+id/btnMutualFunds"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/mutual_funds"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:background="@color/card_dark_teal"
+            android:gravity="start|center_vertical"
+            android:paddingStart="16dp" />
     </LinearLayout>
 
     <!-- Setup Demat Header Button (expandable) -->
