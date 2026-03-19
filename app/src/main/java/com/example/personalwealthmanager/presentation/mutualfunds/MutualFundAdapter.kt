@@ -27,7 +27,7 @@ class MutualFundAdapter(
     }
 
     private val items = mutableListOf<MfListItem>()
-    private val inrFmt = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
+    private val inrFmt = NumberFormat.getCurrencyInstance(Locale.Builder().setLanguage("en").setRegion("IN").build())
 
     companion object {
         private const val VIEW_TYPE_FUND = 0

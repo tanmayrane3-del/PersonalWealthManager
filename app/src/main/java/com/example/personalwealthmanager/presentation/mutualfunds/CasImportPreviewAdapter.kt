@@ -45,8 +45,10 @@ class CasImportPreviewAdapter : RecyclerView.Adapter<CasImportPreviewAdapter.VH>
         holder.cbInclude.setOnCheckedChangeListener(null)
         holder.cbInclude.isChecked = position in checked
         holder.cbInclude.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) checked.add(holder.adapterPosition)
-            else           checked.remove(holder.adapterPosition)
+            val pos = holder.bindingAdapterPosition
+            if (pos != RecyclerView.NO_ID.toInt()) {
+                if (isChecked) checked.add(pos) else checked.remove(pos)
+            }
         }
 
         holder.itemView.setOnClickListener { holder.cbInclude.toggle() }

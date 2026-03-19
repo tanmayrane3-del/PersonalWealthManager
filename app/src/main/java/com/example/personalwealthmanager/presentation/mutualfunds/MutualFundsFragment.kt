@@ -107,7 +107,7 @@ class MutualFundsFragment : Fragment() {
                         binding.ivSyncCagr.alpha = 1.0f
                         val total = state.totalValue
                         if (total > 0) {
-                            val fmt = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
+                            val fmt = NumberFormat.getCurrencyInstance(Locale.Builder().setLanguage("en").setRegion("IN").build())
                             val cagr1y = (state.projected1y / total - 1) * 100
                             val cagr3y = (state.projected3y / total).pow(1.0 / 3) * 100 - 100
                             val cagr5y = (state.projected5y / total).pow(1.0 / 5) * 100 - 100
@@ -148,7 +148,7 @@ class MutualFundsFragment : Fragment() {
     private fun showSuccess(state: MutualFundsUiState.Success) {
         binding.progressBar.visibility = View.GONE
 
-        val fmt = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
+        val fmt = NumberFormat.getCurrencyInstance(Locale.Builder().setLanguage("en").setRegion("IN").build())
         binding.tvTotalInvested.text = formatCompact(state.summary.totalInvested, fmt)
         binding.tvCurrentValue.text  = formatCompact(state.summary.currentValue, fmt)
 
