@@ -57,13 +57,18 @@ class StocksViewModel @Inject constructor(
             result.fold(
                 onSuccess = { holdings ->
                     _state.value = StocksState.Success(holdings)
-                    // CAGR is computed in the background after sync.
-                    // Silently reload once after 30 s so freshly computed values appear.
+                    // CAGR is computed in the background by the backend after sync.
+                    // Alpha Vantage free tier: ~12 s/stock → up to 7 min for large portfolios.
+                    // Poll every 10 s (up to 40 attempts = ~6.7 min) until CAGR values appear.
                     if (holdings.any { it.cagr1y == null }) {
                         launch {
-                            delay(30_000L)
-                            holdingsRepository.getHoldings(token)
-                                .onSuccess { updated -> _state.value = StocksState.Success(updated) }
+                            repeat(40) { attempt ->
+                                delay(10_000L)
+                                val updated = holdingsRepository.getHoldings(token).getOrNull()
+                                    ?: return@repeat
+                                _state.value = StocksState.Success(updated)
+                                if (updated.all { it.cagr1y != null }) return@launch
+                            }
                         }
                     }
                 },
