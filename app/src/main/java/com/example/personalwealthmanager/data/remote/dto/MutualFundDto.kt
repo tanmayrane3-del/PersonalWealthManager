@@ -71,6 +71,7 @@ data class CasPreviewFundDto(
     @SerializedName("folio_number")   val folioNumber: String,
     @SerializedName("closing_units")  val closingUnits: Double,
     @SerializedName("amount_invested") val amountInvested: Double,
+    @SerializedName("current_value")  val currentValue: Double?,
     @SerializedName("lookup_failed")  val lookupFailed: Boolean,
     val lots: List<CasPreviewLotDto>
 )

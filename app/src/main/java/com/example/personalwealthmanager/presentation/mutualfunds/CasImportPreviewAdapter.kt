@@ -36,8 +36,12 @@ class CasImportPreviewAdapter : RecyclerView.Adapter<CasImportPreviewAdapter.VH>
 
         holder.tvSchemeName.text = fund.schemeName
         holder.tvIsin.text       = "${fund.isin}  ·  Folio: ${fund.folioNumber}"
-        holder.tvUnits.text      = "Units: ${"%.3f".format(fund.closingUnits)}"
-        holder.tvAmount.text     = "₹${"%.0f".format(fund.amountInvested)}"
+        holder.tvUnits.text  = "Units: ${"%.3f".format(fund.closingUnits)}"
+        val cv = fund.currentValue
+        holder.tvAmount.text = if (cv != null && cv > 0)
+            "₹${"%.0f".format(cv)}"
+        else
+            "₹${"%.0f".format(fund.amountInvested)} (invested)"
 
         holder.tvLookupWarning.visibility =
             if (fund.lookupFailed) View.VISIBLE else View.GONE
