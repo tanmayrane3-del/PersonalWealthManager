@@ -627,10 +627,10 @@ class MainActivity : AppCompatActivity() {
         val proj5y       = data.optDouble("projected_5y", 0.0)
         val hasCagr      = data.optBoolean("has_cagr", false)
 
-        tvMfValue.text = formatCompact(currentValue)
+        tvMfValue.text = formatCurrency(currentValue)
 
         val prefix = if (dayPnl >= 0) "+" else ""
-        tvMfReturn.text = "$prefix${formatCompact(dayPnl)}"
+        tvMfReturn.text = "$prefix${formatCurrency(dayPnl)}"
         tvMfReturn.setTextColor(ContextCompat.getColor(
             this,
             if (dayPnl >= 0) R.color.income_green else R.color.expense_red
