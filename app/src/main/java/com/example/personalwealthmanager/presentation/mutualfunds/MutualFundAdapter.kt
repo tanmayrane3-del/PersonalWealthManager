@@ -1,6 +1,5 @@
 package com.example.personalwealthmanager.presentation.mutualfunds
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -84,39 +83,34 @@ class MutualFundAdapter(
     }
 
     inner class FundVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val tvSchemeName    = itemView.findViewById<TextView>(R.id.tvSchemeName)
-        private val tvAmcName       = itemView.findViewById<TextView>(R.id.tvAmcName)
         private val tvTotalUnits    = itemView.findViewById<TextView>(R.id.tvTotalUnits)
-        private val tvAvgNav        = itemView.findViewById<TextView>(R.id.tvAvgNav)
-        private val tvCurrentNav    = itemView.findViewById<TextView>(R.id.tvCurrentNav)
-        private val tvCurrentValue  = itemView.findViewById<TextView>(R.id.tvCurrentValue)
-        private val tvAbsReturn     = itemView.findViewById<TextView>(R.id.tvAbsReturn)
-        private val tvXirr          = itemView.findViewById<TextView>(R.id.tvXirr)
+        private val tvPnlPercent    = itemView.findViewById<TextView>(R.id.tvPnlPercent)
+        private val tvSchemeName    = itemView.findViewById<TextView>(R.id.tvSchemeName)
+        private val tvPnlAmount     = itemView.findViewById<TextView>(R.id.tvPnlAmount)
+        private val tvAmcName       = itemView.findViewById<TextView>(R.id.tvAmcName)
+        private val tvNavValue      = itemView.findViewById<TextView>(R.id.tvNavValue)
         private val ivExpandChevron = itemView.findViewById<ImageView>(R.id.ivExpandChevron)
 
         fun bind(fund: MutualFundHolding, isExpanded: Boolean) {
-            tvSchemeName.text   = fund.schemeName
-            tvAmcName.text      = fund.amcName ?: ""
-            tvTotalUnits.text   = "%.3f units".format(fund.totalUnits)
-            tvAvgNav.text       = "Avg NAV: ₹%.4f".format(fund.avgNav)
-            tvCurrentNav.text   = fund.latestNav?.let { "NAV: ₹%.4f".format(it) } ?: "NAV: --"
-            tvCurrentValue.text = formatCompact(fund.currentValue)
+            val pnlSign   = if (fund.absoluteReturn >= 0) "+" else "-"
+            val pnlColor  = ContextCompat.getColor(
+                itemView.context,
+                if (fund.absoluteReturn >= 0) R.color.amount_positive else R.color.amount_negative
+            )
 
-            val returnColor = if (fund.absoluteReturn >= 0)
-                ContextCompat.getColor(itemView.context, R.color.amount_positive)
-            else
-                ContextCompat.getColor(itemView.context, R.color.amount_negative)
+            tvTotalUnits.text = "%.3f units  •  Avg ₹%.2f".format(fund.totalUnits, fund.avgNav)
+            tvSchemeName.text = fund.schemeName
+            tvAmcName.text    = fund.amcName ?: ""
 
-            tvAbsReturn.text      = "%s (%.2f%%)".format(formatCompact(fund.absoluteReturn), fund.absoluteReturnPct)
-            tvAbsReturn.setTextColor(returnColor)
+            tvPnlPercent.text = "%s%.2f%%".format(pnlSign, kotlin.math.abs(fund.absoluteReturnPct))
+            tvPnlPercent.setTextColor(pnlColor)
 
-            if (fund.xirr != null) {
-                tvXirr.text = "XIRR: %.1f%%".format(fund.xirr * 100)
-                tvXirr.setTextColor(if (fund.xirr >= 0) returnColor else ContextCompat.getColor(itemView.context, R.color.amount_negative))
-                tvXirr.visibility = View.VISIBLE
-            } else {
-                tvXirr.visibility = View.GONE
-            }
+            tvPnlAmount.text = "%s%s".format(pnlSign, formatCompact(kotlin.math.abs(fund.absoluteReturn)))
+            tvPnlAmount.setTextColor(pnlColor)
+
+            // Bottom-right: "NAV ₹X.XX  •  ₹Y.YYL" or "NAV --  •  ₹Y.YYL"
+            val navStr = fund.latestNav?.let { "NAV ₹%.2f".format(it) } ?: "NAV --"
+            tvNavValue.text = "$navStr  •  ${formatCompact(fund.currentValue)}"
 
             ivExpandChevron.setImageResource(
                 if (isExpanded) R.drawable.ic_expand_less else R.drawable.ic_expand_more
