@@ -88,7 +88,7 @@ data class ConfirmImportRequest(
 data class ImportResultDto(
     val message: String,
     val inserted: Int,
-    val skipped: Int
+    val deleted: Int
 )
 
 data class AddLotRequest(

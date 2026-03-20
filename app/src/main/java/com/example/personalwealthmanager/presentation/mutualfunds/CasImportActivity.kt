@@ -104,7 +104,7 @@ class CasImportActivity : AppCompatActivity() {
                         val r = state.result
                         Toast.makeText(
                             this@CasImportActivity,
-                            "Imported ${r.inserted} lots (${r.skipped} skipped as duplicates)",
+                            "Synced ${r.inserted} lots across ${r.deleted} old records removed",
                             Toast.LENGTH_LONG
                         ).show()
                         setResult(Activity.RESULT_OK)
