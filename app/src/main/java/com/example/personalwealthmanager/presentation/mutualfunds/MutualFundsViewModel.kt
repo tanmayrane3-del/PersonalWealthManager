@@ -37,6 +37,8 @@ class MutualFundsViewModel @Inject constructor(
                 _uiState.value = MutualFundsUiState.Error("Not logged in")
                 return@launch
             }
+            // Sync NAVs from AMFI first (like stocks syncHoldings), then read from DB
+            repository.syncNav(token)
             repository.getHoldings(token).fold(
                 onSuccess = { (funds, summary) ->
                     _uiState.value = MutualFundsUiState.Success(funds, summary)

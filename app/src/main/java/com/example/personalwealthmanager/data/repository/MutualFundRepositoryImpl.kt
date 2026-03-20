@@ -131,6 +131,16 @@ class MutualFundRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun syncNav(sessionToken: String): Result<Unit> {
+        return try {
+            val response = mutualFundApi.syncNav(sessionToken)
+            if (response.isSuccessful) Result.success(Unit)
+            else Result.failure(Exception(parseReason(response.errorBody()?.string(), "Failed to sync NAV")))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     override suspend fun syncCagr(sessionToken: String): Result<Unit> {
         return try {
             val response = mutualFundApi.syncCagr(sessionToken)

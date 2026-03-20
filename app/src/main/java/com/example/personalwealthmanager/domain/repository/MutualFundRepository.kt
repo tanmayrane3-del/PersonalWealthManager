@@ -18,5 +18,6 @@ interface MutualFundRepository {
     suspend fun getSummary(sessionToken: String): Result<MfCagrSummaryDto>
     suspend fun addLot(sessionToken: String, request: AddLotRequest): Result<Unit>
     suspend fun deleteLot(sessionToken: String, id: String): Result<Unit>
+    suspend fun syncNav(sessionToken: String): Result<Unit>
     suspend fun syncCagr(sessionToken: String): Result<Unit>
 }

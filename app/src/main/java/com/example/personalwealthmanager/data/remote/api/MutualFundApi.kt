@@ -63,6 +63,11 @@ interface MutualFundApi {
         @Path("id") id: String
     ): Response<ApiResponse<Any>>
 
+    @POST("api/mutual-funds/sync-nav")
+    suspend fun syncNav(
+        @Header("x-session-token") sessionToken: String
+    ): Response<ApiResponse<Any>>
+
     @POST("api/mutual-funds/sync-cagr")
     suspend fun syncCagr(
         @Header("x-session-token") sessionToken: String
