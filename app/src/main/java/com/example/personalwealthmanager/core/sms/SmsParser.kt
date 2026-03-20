@@ -74,7 +74,7 @@ object SmsParser {
         val rawAmount = amountRegex.find(body)?.groupValues?.get(1) ?: return null
         val amount = rawAmount.replace(",", "")
 
-        val identifierRegex = Regex("""on\s+\d{2}-\w{3}-\d{2,4}\s+on\s+(.+?)\s+-""")
+        val identifierRegex = Regex("""on\s+\d{2}-\w{3}-\d{2,4}\s+on\s+(.+?)(?=\s+-\.|\.\s)""")
         val paymentIdentifier = identifierRegex.find(body)?.groupValues?.get(1)?.trim() ?: return null
 
         val txDateRegex = Regex("""on\s+(\d{2}-\w{3}-\d{2,4})\s+on""")
