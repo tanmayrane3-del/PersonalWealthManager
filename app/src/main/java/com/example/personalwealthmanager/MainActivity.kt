@@ -620,21 +620,20 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val currentValue   = data.optDouble("current_value", 0.0)
-        val absReturn      = data.optDouble("absolute_return", 0.0)
-        val absReturnPct   = data.optDouble("absolute_return_pct", 0.0)
-        val proj1y         = data.optDouble("projected_1y", 0.0)
-        val proj3y         = data.optDouble("projected_3y", 0.0)
-        val proj5y         = data.optDouble("projected_5y", 0.0)
-        val hasCagr        = data.optBoolean("has_cagr", false)
+        val currentValue = data.optDouble("current_value", 0.0)
+        val dayPnl       = data.optDouble("total_day_pnl", 0.0)
+        val proj1y       = data.optDouble("projected_1y", 0.0)
+        val proj3y       = data.optDouble("projected_3y", 0.0)
+        val proj5y       = data.optDouble("projected_5y", 0.0)
+        val hasCagr      = data.optBoolean("has_cagr", false)
 
         tvMfValue.text = formatCompact(currentValue)
 
-        val prefix = if (absReturn >= 0) "+" else ""
-        tvMfReturn.text = "$prefix${formatCompact(absReturn)} (%.2f%%)".format(absReturnPct)
+        val prefix = if (dayPnl >= 0) "+" else ""
+        tvMfReturn.text = "$prefix${formatCompact(dayPnl)}"
         tvMfReturn.setTextColor(ContextCompat.getColor(
             this,
-            if (absReturn >= 0) R.color.income_green else R.color.expense_red
+            if (dayPnl >= 0) R.color.income_green else R.color.expense_red
         ))
 
         if (hasCagr && proj1y > currentValue && currentValue > 0) {

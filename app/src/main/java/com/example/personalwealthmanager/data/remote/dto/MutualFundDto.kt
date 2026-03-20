@@ -42,6 +42,7 @@ data class MfHoldingsData(
 data class MfCagrSummaryDto(
     @SerializedName("total_invested")       val totalInvested: Double,
     @SerializedName("current_value")        val currentValue: Double,
+    @SerializedName("total_day_pnl")        val totalDayPnl: Double,
     @SerializedName("absolute_return")      val absoluteReturn: Double,
     @SerializedName("absolute_return_pct")  val absoluteReturnPct: Double,
     @SerializedName("projected_1y")         val projected1y: Double,
