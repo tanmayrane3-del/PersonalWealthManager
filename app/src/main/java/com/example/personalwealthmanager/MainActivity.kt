@@ -67,6 +67,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvStockProjection3y: TextView
     private lateinit var tvStockProjection5y: TextView
     private lateinit var stockProjectionsColumn: android.widget.LinearLayout
+    private lateinit var tvMfValue: TextView
+    private lateinit var tvMfReturn: TextView
+    private lateinit var ivRefreshMf: ImageView
+    private lateinit var tvMfProjection1y: TextView
+    private lateinit var tvMfProjection3y: TextView
+    private lateinit var tvMfProjection5y: TextView
+    private lateinit var mfProjectionsColumn: LinearLayout
 
     private val fromCalendar = Calendar.getInstance()
     private val toCalendar = Calendar.getInstance()
@@ -100,6 +107,13 @@ class MainActivity : AppCompatActivity() {
         tvStockProjection3y = findViewById(R.id.tvStockProjection3y)
         tvStockProjection5y = findViewById(R.id.tvStockProjection5y)
         stockProjectionsColumn = findViewById(R.id.stockProjectionsColumn)
+        tvMfValue = findViewById(R.id.tvMfValue)
+        tvMfReturn = findViewById(R.id.tvMfReturn)
+        ivRefreshMf = findViewById(R.id.ivRefreshMf)
+        tvMfProjection1y = findViewById(R.id.tvMfProjection1y)
+        tvMfProjection3y = findViewById(R.id.tvMfProjection3y)
+        tvMfProjection5y = findViewById(R.id.tvMfProjection5y)
+        mfProjectionsColumn = findViewById(R.id.mfProjectionsColumn)
 
         val fromDateContainer = findViewById<View>(R.id.fromDateContainer)
         val toDateContainer = findViewById<View>(R.id.toDateContainer)
@@ -148,12 +162,20 @@ class MainActivity : AppCompatActivity() {
             syncAndRefreshMetals()
         }
 
+        ivRefreshMf.setOnClickListener {
+            syncAndRefreshMf()
+        }
+
         findViewById<View>(R.id.stocksCard).setOnClickListener {
             startActivity(Intent(this, StocksActivity::class.java))
         }
 
         findViewById<View>(R.id.goldCard).setOnClickListener {
             startActivity(Intent(this, com.example.personalwealthmanager.presentation.metals.MetalsActivity::class.java))
+        }
+
+        findViewById<View>(R.id.mfCard).setOnClickListener {
+            startActivity(Intent(this, MutualFundsActivity::class.java))
         }
 
         // Setup drawer menu
@@ -187,6 +209,7 @@ class MainActivity : AppCompatActivity() {
         refreshExpenses()
         refreshStocks()
         refreshMetals()
+        refreshMutualFunds()
     }
 
     private fun refreshIncome() {
@@ -522,6 +545,108 @@ class MainActivity : AppCompatActivity() {
             goldProjectionsColumn.visibility = View.VISIBLE
         } else {
             goldProjectionsColumn.visibility = View.GONE
+        }
+    }
+
+    private fun refreshMutualFunds() {
+        val sessionToken = getSessionToken() ?: return
+        tvMfValue.text = getString(R.string.loading)
+        tvMfReturn.text = ""
+        mfProjectionsColumn.visibility = View.GONE
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val data = fetchMfSummary(sessionToken)
+            withContext(Dispatchers.Main) { displayMfSummary(data) }
+        }
+    }
+
+    private fun syncAndRefreshMf() {
+        val sessionToken = getSessionToken() ?: return
+        tvMfValue.text = getString(R.string.loading)
+        tvMfReturn.text = ""
+        mfProjectionsColumn.visibility = View.GONE
+        ivRefreshMf.isEnabled = false
+        ivRefreshMf.alpha = 0.5f
+
+        CoroutineScope(Dispatchers.IO).launch {
+            // Always recompute CAGR on manual sync tap (same as gold)
+            try {
+                val url = URL("${ApiConfig.BASE_URL}/api/mutual-funds/sync-cagr")
+                val connection = url.openConnection() as HttpURLConnection
+                connection.requestMethod = "POST"
+                connection.setRequestProperty(ApiConfig.HEADER_SESSION_TOKEN, sessionToken)
+                connection.connectTimeout = 60000
+                connection.readTimeout = 60000
+                connection.responseCode
+                connection.disconnect()
+            } catch (_: Exception) { /* non-fatal */ }
+
+            val data = fetchMfSummary(sessionToken)
+            withContext(Dispatchers.Main) {
+                ivRefreshMf.isEnabled = true
+                ivRefreshMf.alpha = 1.0f
+                displayMfSummary(data)
+            }
+        }
+    }
+
+    private fun fetchMfSummary(sessionToken: String): JSONObject? {
+        return try {
+            val url = URL("${ApiConfig.BASE_URL}/api/mutual-funds/summary")
+            val connection = url.openConnection() as HttpURLConnection
+            connection.requestMethod = "GET"
+            connection.setRequestProperty(ApiConfig.HEADER_SESSION_TOKEN, sessionToken)
+            connection.connectTimeout = 10000
+            connection.readTimeout = 10000
+
+            val responseCode = connection.responseCode
+            val response = if (responseCode == HttpURLConnection.HTTP_OK)
+                connection.inputStream.bufferedReader().readText()
+            else
+                connection.errorStream?.bufferedReader()?.readText() ?: ""
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                val json = JSONObject(response)
+                if (json.getString("status") == "success") json.getJSONObject("data") else null
+            } else null
+        } catch (_: Exception) { null }
+    }
+
+    private fun displayMfSummary(data: JSONObject?) {
+        if (data == null) {
+            tvMfValue.text = "--"
+            tvMfReturn.text = "--"
+            mfProjectionsColumn.visibility = View.GONE
+            return
+        }
+
+        val currentValue   = data.optDouble("current_value", 0.0)
+        val absReturn      = data.optDouble("absolute_return", 0.0)
+        val absReturnPct   = data.optDouble("absolute_return_pct", 0.0)
+        val proj1y         = data.optDouble("projected_1y", 0.0)
+        val proj3y         = data.optDouble("projected_3y", 0.0)
+        val proj5y         = data.optDouble("projected_5y", 0.0)
+        val hasCagr        = data.optBoolean("has_cagr", false)
+
+        tvMfValue.text = formatCompact(currentValue)
+
+        val prefix = if (absReturn >= 0) "+" else ""
+        tvMfReturn.text = "$prefix${formatCompact(absReturn)} (%.2f%%)".format(absReturnPct)
+        tvMfReturn.setTextColor(ContextCompat.getColor(
+            this,
+            if (absReturn >= 0) R.color.income_green else R.color.expense_red
+        ))
+
+        if (hasCagr && proj1y > currentValue && currentValue > 0) {
+            val cagr1y = (proj1y / currentValue - 1) * 100
+            val cagr3y = (Math.pow(proj3y / currentValue, 1.0 / 3) - 1) * 100
+            val cagr5y = (Math.pow(proj5y / currentValue, 1.0 / 5) - 1) * 100
+            tvMfProjection1y.text = "1Y: %.1f%%  ${formatCompact(proj1y)}".format(cagr1y)
+            tvMfProjection3y.text = "3Y: %.1f%%  ${formatCompact(proj3y)}".format(cagr3y)
+            tvMfProjection5y.text = "5Y: %.1f%%  ${formatCompact(proj5y)}".format(cagr5y)
+            mfProjectionsColumn.visibility = View.VISIBLE
+        } else {
+            mfProjectionsColumn.visibility = View.GONE
         }
     }
 

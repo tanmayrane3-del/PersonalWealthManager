@@ -589,6 +589,157 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+            <!-- Mutual Funds Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/mfCard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="#006e61"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/goldCard">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Header: title + sync button -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Mutual Funds"
+                            android:textColor="@android:color/white"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                        <ImageView
+                            android:id="@+id/ivRefreshMf"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_refresh"
+                            android:contentDescription="Sync MF CAGR"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:clickable="true"
+                            android:focusable="true" />
+                    </LinearLayout>
+
+                    <!-- Body: left (value + returns) | vertical divider | right (projections) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="12dp">
+
+                        <!-- Left column: total value + absolute return -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total MF Value"
+                                android:textColor="#B3FFFFFF"
+                                android:textSize="11sp" />
+                            <TextView
+                                android:id="@+id/tvMfValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="--"
+                                android:textColor="@android:color/white"
+                                android:textSize="22sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="Returns"
+                                android:textColor="#B3FFFFFF"
+                                android:textSize="11sp" />
+                            <TextView
+                                android:id="@+id/tvMfReturn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text=""
+                                android:textColor="@android:color/white"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <!-- Vertical divider -->
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="#33FFFFFF" />
+
+                        <!-- Right column: CAGR projections (hidden until data available) -->
+                        <LinearLayout
+                            android:id="@+id/mfProjectionsColumn"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="CAGR Projections"
+                                android:textColor="#B3FFFFFF"
+                                android:textSize="11sp" />
+                            <TextView
+                                android:id="@+id/tvMfProjection1y"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="--"
+                                android:textColor="@android:color/white"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/tvMfProjection3y"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="--"
+                                android:textColor="@android:color/white"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/tvMfProjection5y"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="--"
+                                android:textColor="@android:color/white"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
