@@ -149,12 +149,12 @@ class MutualFundsFragment : Fragment() {
         binding.progressBar.visibility = View.GONE
 
         val fmt = NumberFormat.getCurrencyInstance(Locale.Builder().setLanguage("en").setRegion("IN").build())
-        binding.tvTotalInvested.text = formatCompact(state.summary.totalInvested, fmt)
-        binding.tvCurrentValue.text  = formatCompact(state.summary.currentValue, fmt)
+        binding.tvTotalInvested.text = fmt.format(state.summary.totalInvested)
+        binding.tvCurrentValue.text  = fmt.format(state.summary.currentValue)
 
         val gain = state.summary.absoluteReturn
         val gainPct = state.summary.absoluteReturnPct
-        binding.tvGainLoss.text = "%s (%.2f%%)".format(formatCompact(gain, fmt), gainPct)
+        binding.tvGainLoss.text = "%s (%.2f%%)".format(fmt.format(gain), gainPct)
         binding.tvGainLoss.setTextColor(
             ContextCompat.getColor(requireContext(), if (gain >= 0) R.color.amount_positive else R.color.amount_negative)
         )
