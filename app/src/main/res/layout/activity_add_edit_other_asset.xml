@@ -96,7 +96,7 @@
             android:layout_marginBottom="16dp"
             android:background="@drawable/edittext_background"
             android:hint="e.g. Andheri Flat, Honda City 2021"
-            android:hint_color="#88FFFFFF"
+            android:textColorHint="#88FFFFFF"
             android:textColor="@android:color/white"
             android:textSize="15sp"
             android:paddingHorizontal="12dp"
