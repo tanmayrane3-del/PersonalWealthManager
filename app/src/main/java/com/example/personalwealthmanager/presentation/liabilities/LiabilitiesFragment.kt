@@ -43,7 +43,7 @@ class LiabilitiesFragment : Fragment() {
     private lateinit var tvActiveCount: TextView
     private lateinit var fabAddLiability: FloatingActionButton
 
-    private val currencyFormat = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
+    private val currencyFormat = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("en-IN"))
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_liabilities, container, false)

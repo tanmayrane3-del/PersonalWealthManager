@@ -19,12 +19,12 @@ class OtherAssetCardAdapter(
     private val onLongPress: (PhysicalAsset) -> Unit
 ) : ListAdapter<PhysicalAsset, OtherAssetCardAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    private val currencyFormat = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
+    private val currencyFormat = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("en-IN"))
     private val inputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     private val displayDateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<PhysicalAsset>() {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<PhysicalAsset> = object : DiffUtil.ItemCallback<PhysicalAsset>() {
             override fun areItemsTheSame(old: PhysicalAsset, new: PhysicalAsset) = old.id == new.id
             override fun areContentsTheSame(old: PhysicalAsset, new: PhysicalAsset) = old == new
         }

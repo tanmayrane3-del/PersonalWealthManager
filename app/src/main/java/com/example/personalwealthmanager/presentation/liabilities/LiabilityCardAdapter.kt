@@ -16,10 +16,10 @@ class LiabilityCardAdapter(
     private val onLongPress: (Liability) -> Unit
 ) : ListAdapter<Liability, LiabilityCardAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    private val currencyFormat = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
+    private val currencyFormat = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("en-IN"))
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Liability>() {
+        val DIFF_CALLBACK: DiffUtil.ItemCallback<Liability> = object : DiffUtil.ItemCallback<Liability>() {
             override fun areItemsTheSame(old: Liability, new: Liability) = old.id == new.id
             override fun areContentsTheSame(old: Liability, new: Liability) = old == new
         }

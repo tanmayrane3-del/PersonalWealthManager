@@ -50,7 +50,7 @@ class OtherAssetsFragment : Fragment() {
     private lateinit var tvProjected5y: TextView
     private lateinit var fabAddAsset: FloatingActionButton
 
-    private val currencyFormat = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
+    private val currencyFormat = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("en-IN"))
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_other_assets, container, false)
