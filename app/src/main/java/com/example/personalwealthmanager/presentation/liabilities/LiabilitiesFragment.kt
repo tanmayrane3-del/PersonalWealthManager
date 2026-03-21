@@ -169,12 +169,4 @@ class LiabilitiesFragment : Fragment() {
         startActivity(intent)
     }
 
-    private fun confirmDelete(liability: Liability) {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Delete Liability")
-            .setMessage("Delete loan from \"${liability.lenderName}\"? This cannot be undone.")
-            .setPositiveButton("Delete") { _, _ -> viewModel.deleteLiability(liability.id) }
-            .setNegativeButton("Cancel", null)
-            .show()
-    }
 }
