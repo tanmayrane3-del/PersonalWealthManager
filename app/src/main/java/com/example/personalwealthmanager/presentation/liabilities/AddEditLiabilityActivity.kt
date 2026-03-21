@@ -243,7 +243,8 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         val tenure = intent.getIntExtra(EXTRA_TENURE_MONTHS, 0)
         if (tenure > 0) etTenureMonths.setText(tenure.toString())
 
-        selectedStartDate = intent.getStringExtra(EXTRA_START_DATE) ?: ""
+        // Backend returns full ISO timestamp "2023-10-10T00:00:00.000Z" — keep only date part
+        selectedStartDate = (intent.getStringExtra(EXTRA_START_DATE) ?: "").take(10)
         if (selectedStartDate.isNotEmpty()) {
             tvStartDate.text = selectedStartDate
             tvStartDate.setTextColor(0xFF1A1A1A.toInt())
@@ -302,7 +303,7 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         val factor  = (1 + r).pow(tenure.toDouble())
         val emi     = (principal * r * factor / (factor - 1)).roundToLong().toDouble()
 
-        val parts   = selectedStartDate.split("-")
+        val parts   = selectedStartDate.take(10).split("-")
         val startYear  = parts[0].toInt()
         val startMonth = parts[1].toInt()
         val dueDay     = parts[2].toInt()
