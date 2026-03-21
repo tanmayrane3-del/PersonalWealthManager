@@ -7,7 +7,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -38,6 +42,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 import com.example.personalwealthmanager.presentation.transactions.TransactionsActivity
 import com.example.personalwealthmanager.presentation.mutualfunds.MutualFundsActivity
+import com.example.personalwealthmanager.presentation.otherassets.OtherAssetsActivity
+import com.example.personalwealthmanager.presentation.liabilities.LiabilitiesActivity
+import com.example.personalwealthmanager.core.utils.PhysicalAssetCagrCalculator
+import com.example.personalwealthmanager.domain.model.PhysicalAsset
 
 class MainActivity : AppCompatActivity() {
 
@@ -74,6 +82,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvMfProjection3y: TextView
     private lateinit var tvMfProjection5y: TextView
     private lateinit var mfProjectionsColumn: LinearLayout
+    private lateinit var tvOtherAssetsValue: TextView
+    private lateinit var tvOtherAssetsCagr: TextView
+    private lateinit var ivRefreshOtherAssets: ImageView
+    private lateinit var tvOtherAssetsProjection1y: TextView
+    private lateinit var tvOtherAssetsProjection3y: TextView
+    private lateinit var tvOtherAssetsProjection5y: TextView
+    private lateinit var otherAssetsProjectionsColumn: LinearLayout
+    private lateinit var assetsContainer: LinearLayout
+    private lateinit var ivAssetsChevron: ImageView
+    private var isAssetsExpanded = false
 
     private val fromCalendar = Calendar.getInstance()
     private val toCalendar = Calendar.getInstance()
@@ -114,6 +132,19 @@ class MainActivity : AppCompatActivity() {
         tvMfProjection3y = findViewById(R.id.tvMfProjection3y)
         tvMfProjection5y = findViewById(R.id.tvMfProjection5y)
         mfProjectionsColumn = findViewById(R.id.mfProjectionsColumn)
+        tvOtherAssetsValue = findViewById(R.id.tvOtherAssetsValue)
+        tvOtherAssetsCagr = findViewById(R.id.tvOtherAssetsCagr)
+        ivRefreshOtherAssets = findViewById(R.id.ivRefreshOtherAssets)
+        tvOtherAssetsProjection1y = findViewById(R.id.tvOtherAssetsProjection1y)
+        tvOtherAssetsProjection3y = findViewById(R.id.tvOtherAssetsProjection3y)
+        tvOtherAssetsProjection5y = findViewById(R.id.tvOtherAssetsProjection5y)
+        otherAssetsProjectionsColumn = findViewById(R.id.otherAssetsProjectionsColumn)
+        assetsContainer = findViewById(R.id.assetsContainer)
+        ivAssetsChevron = findViewById(R.id.ivAssetsChevron)
+
+        // Start collapsed
+        assetsContainer.visibility = View.GONE
+        ivAssetsChevron.rotation = -90f
 
         val fromDateContainer = findViewById<View>(R.id.fromDateContainer)
         val toDateContainer = findViewById<View>(R.id.toDateContainer)
@@ -145,6 +176,11 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.END)
         }
 
+        // Assets section collapse/expand
+        findViewById<View>(R.id.assetsHeader).setOnClickListener {
+            if (isAssetsExpanded) collapseAssets() else expandAssets()
+        }
+
         // Refresh button click listeners
         ivRefreshIncome.setOnClickListener {
             refreshIncome()
@@ -166,6 +202,10 @@ class MainActivity : AppCompatActivity() {
             syncAndRefreshMf()
         }
 
+        ivRefreshOtherAssets.setOnClickListener {
+            refreshOtherAssets()
+        }
+
         findViewById<View>(R.id.stocksCard).setOnClickListener {
             startActivity(Intent(this, StocksActivity::class.java))
         }
@@ -176,6 +216,10 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.mfCard).setOnClickListener {
             startActivity(Intent(this, MutualFundsActivity::class.java))
+        }
+
+        findViewById<View>(R.id.otherAssetsCard).setOnClickListener {
+            startActivity(Intent(this, OtherAssetsActivity::class.java))
         }
 
         // Setup drawer menu
@@ -210,6 +254,7 @@ class MainActivity : AppCompatActivity() {
         refreshStocks()
         refreshMetals()
         refreshMutualFunds()
+        refreshOtherAssets()
     }
 
     private fun refreshIncome() {
@@ -649,6 +694,103 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun refreshOtherAssets() {
+        val sessionToken = getSessionToken() ?: return
+        tvOtherAssetsValue.text = getString(R.string.loading)
+        tvOtherAssetsCagr.text = ""
+        otherAssetsProjectionsColumn.visibility = View.GONE
+        ivRefreshOtherAssets.isEnabled = false
+        ivRefreshOtherAssets.alpha = 0.5f
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val assets = fetchPhysicalAssetsSummary(sessionToken)
+            withContext(Dispatchers.Main) {
+                ivRefreshOtherAssets.isEnabled = true
+                ivRefreshOtherAssets.alpha = 1.0f
+                displayOtherAssetsSummary(assets)
+            }
+        }
+    }
+
+    private fun fetchPhysicalAssetsSummary(sessionToken: String): List<PhysicalAsset> {
+        return try {
+            val url = URL("${ApiConfig.BASE_URL}/api/physical-assets/summary")
+            val connection = url.openConnection() as HttpURLConnection
+            connection.requestMethod = "GET"
+            connection.setRequestProperty(ApiConfig.HEADER_SESSION_TOKEN, sessionToken)
+            connection.connectTimeout = 10000
+            connection.readTimeout = 10000
+
+            val responseCode = connection.responseCode
+            val response = if (responseCode == HttpURLConnection.HTTP_OK)
+                connection.inputStream.bufferedReader().readText()
+            else
+                connection.errorStream?.bufferedReader()?.readText() ?: ""
+
+            if (responseCode != HttpURLConnection.HTTP_OK) return emptyList()
+            val json = JSONObject(response)
+            if (json.optString("status") != "success") return emptyList()
+
+            val data = json.getJSONObject("data")
+            val assetsArray = data.getJSONArray("assets")
+            val result = mutableListOf<PhysicalAsset>()
+            for (i in 0 until assetsArray.length()) {
+                val a = assetsArray.getJSONObject(i)
+                result.add(
+                    PhysicalAsset(
+                        id = a.getString("id"),
+                        assetType = a.getString("asset_type"),
+                        label = a.getString("label"),
+                        purchasePrice = a.getDouble("purchase_price"),
+                        purchaseDate = a.getString("purchase_date"),
+                        currentMarketValue = if (a.isNull("current_market_value")) null else a.getDouble("current_market_value"),
+                        marketValueLastUpdated = if (a.isNull("market_value_last_updated")) null else a.optString("market_value_last_updated"),
+                        depreciationRatePct = if (a.isNull("depreciation_rate_pct")) null else a.getDouble("depreciation_rate_pct"),
+                        notes = if (a.isNull("notes")) null else a.optString("notes"),
+                        isActive = a.optBoolean("is_active", true),
+                        hasActiveLoan = a.optBoolean("has_active_loan", false),
+                        linkedLoanId = if (a.isNull("linked_loan_id")) null else a.optString("linked_loan_id")
+                    )
+                )
+            }
+            result
+        } catch (_: Exception) { emptyList() }
+    }
+
+    private fun displayOtherAssetsSummary(assets: List<PhysicalAsset>) {
+        if (assets.isEmpty()) {
+            tvOtherAssetsValue.text = "--"
+            tvOtherAssetsCagr.text = ""
+            otherAssetsProjectionsColumn.visibility = View.GONE
+            return
+        }
+
+        val totalCurrent = assets.sumOf { PhysicalAssetCagrCalculator.getAssetCurrentValue(it) }
+        tvOtherAssetsValue.text = formatCurrency(totalCurrent)
+
+        if (totalCurrent > 0) {
+            val proj1y = assets.sumOf { PhysicalAssetCagrCalculator.getProjectedValue(it, 1) }
+            val proj3y = assets.sumOf { PhysicalAssetCagrCalculator.getProjectedValue(it, 3) }
+            val proj5y = assets.sumOf { PhysicalAssetCagrCalculator.getProjectedValue(it, 5) }
+            val overallCagr = PhysicalAssetCagrCalculator.getOverallCagr(assets, 1) * 100
+
+            val cagrSign = if (overallCagr >= 0) "+" else ""
+            tvOtherAssetsCagr.text = "$cagrSign${"%.1f".format(overallCagr)}%"
+            tvOtherAssetsCagr.setTextColor(ContextCompat.getColor(
+                this,
+                if (overallCagr >= 0) R.color.income_green else R.color.expense_red
+            ))
+
+            val cagr1y = (proj1y / totalCurrent - 1) * 100
+            val cagr3y = (Math.pow(proj3y / totalCurrent, 1.0 / 3) - 1) * 100
+            val cagr5y = (Math.pow(proj5y / totalCurrent, 1.0 / 5) - 1) * 100
+            tvOtherAssetsProjection1y.text = "1Y: %.1f%%  ${formatCompact(proj1y)}".format(cagr1y)
+            tvOtherAssetsProjection3y.text = "3Y: %.1f%%  ${formatCompact(proj3y)}".format(cagr3y)
+            tvOtherAssetsProjection5y.text = "5Y: %.1f%%  ${formatCompact(proj5y)}".format(cagr5y)
+            otherAssetsProjectionsColumn.visibility = View.VISIBLE
+        }
+    }
+
     private fun formatCurrency(amount: Double): String {
         return currencyFormat.format(amount)
     }
@@ -748,6 +890,16 @@ class MainActivity : AppCompatActivity() {
         headerView.findViewById<Button>(R.id.btnMutualFunds)?.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)
             startActivity(Intent(this, MutualFundsActivity::class.java))
+        }
+
+        headerView.findViewById<Button>(R.id.btnOtherAssets)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, OtherAssetsActivity::class.java))
+        }
+
+        headerView.findViewById<Button>(R.id.btnLiabilities)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, LiabilitiesActivity::class.java))
         }
 
         // Setup Demat expandable menu
@@ -894,6 +1046,62 @@ class MainActivity : AppCompatActivity() {
     private fun updateDateDisplay() {
         tvFromDate.text = dateFormat.format(fromCalendar.time)
         tvToDate.text = dateFormat.format(toCalendar.time)
+    }
+
+    private fun expandAssets() {
+        isAssetsExpanded = true
+        assetsContainer.measure(
+            View.MeasureSpec.makeMeasureSpec(assetsContainer.width, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        )
+        val targetHeight = assetsContainer.measuredHeight
+        assetsContainer.layoutParams.height = 0
+        assetsContainer.scaleY = 0f
+        assetsContainer.pivotY = 0f
+        assetsContainer.alpha = 0f
+        assetsContainer.visibility = View.VISIBLE
+
+        // Height drives layout space; scaleY from pivotY=0 makes cards visually unfold downward from the header
+        val heightAnim = ValueAnimator.ofInt(0, targetHeight).apply {
+            addUpdateListener {
+                assetsContainer.layoutParams.height = it.animatedValue as Int
+                assetsContainer.requestLayout()
+            }
+        }
+        val scaleAnim = ObjectAnimator.ofFloat(assetsContainer, "scaleY", 0f, 1f)
+        val alphaAnim = ObjectAnimator.ofFloat(assetsContainer, "alpha", 0f, 1f)
+        val chevronAnim = ObjectAnimator.ofFloat(ivAssetsChevron, "rotation", -90f, 0f)
+
+        AnimatorSet().apply {
+            playTogether(heightAnim, scaleAnim, alphaAnim, chevronAnim)
+            interpolator = DecelerateInterpolator()
+            duration = 350
+            start()
+        }
+    }
+
+    private fun collapseAssets() {
+        isAssetsExpanded = false
+        val initialHeight = assetsContainer.measuredHeight
+        assetsContainer.pivotY = 0f
+
+        val heightAnim = ValueAnimator.ofInt(initialHeight, 0).apply {
+            addUpdateListener {
+                assetsContainer.layoutParams.height = it.animatedValue as Int
+                assetsContainer.requestLayout()
+                if (it.animatedValue as Int == 0) assetsContainer.visibility = View.GONE
+            }
+        }
+        val scaleAnim = ObjectAnimator.ofFloat(assetsContainer, "scaleY", 1f, 0f)
+        val alphaAnim = ObjectAnimator.ofFloat(assetsContainer, "alpha", 1f, 0f)
+        val chevronAnim = ObjectAnimator.ofFloat(ivAssetsChevron, "rotation", 0f, -90f)
+
+        AnimatorSet().apply {
+            playTogether(heightAnim, scaleAnim, alphaAnim, chevronAnim)
+            interpolator = DecelerateInterpolator()
+            duration = 350
+            start()
+        }
     }
 
     override fun onBackPressed() {

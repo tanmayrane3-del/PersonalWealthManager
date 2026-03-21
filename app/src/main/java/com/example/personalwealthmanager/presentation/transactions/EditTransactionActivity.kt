@@ -28,7 +28,11 @@ import com.example.personalwealthmanager.core.sms.SmsReceiver
 import com.example.personalwealthmanager.core.sms.queue.SmsQueueDao
 import com.example.personalwealthmanager.core.sms.queue.SmsQueueEntity
 import com.example.personalwealthmanager.core.sms.queue.SmsQueueWorker
+import android.content.res.ColorStateList
+import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -686,9 +690,12 @@ class EditTransactionActivity : AppCompatActivity() {
         addRecipientDialog?.setCancelable(true)
 
         val tvDialogTitle = addRecipientDialog?.findViewById<TextView>(R.id.tvDialogTitle)
-        val etRecipientName = addRecipientDialog?.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etRecipientName)
-        val etRecipientDescription = addRecipientDialog?.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etRecipientDescription)
+        val etRecipientName = addRecipientDialog?.findViewById<TextInputEditText>(R.id.etRecipientName)
+        val etRecipientDescription = addRecipientDialog?.findViewById<TextInputEditText>(R.id.etRecipientDescription)
         val cbFavorite = addRecipientDialog?.findViewById<android.widget.CheckBox>(R.id.cbFavorite)
+        val chipGroupIdentifiers = addRecipientDialog?.findViewById<ChipGroup>(R.id.chipGroupIdentifiers)
+        val etPaymentIdentifier = addRecipientDialog?.findViewById<TextInputEditText>(R.id.etPaymentIdentifier)
+        val btnAddIdentifier = addRecipientDialog?.findViewById<Button>(R.id.btnAddIdentifier)
         val spinnerDefaultCategory = addRecipientDialog?.findViewById<Spinner>(R.id.spinnerDefaultCategory)
         val btnSave = addRecipientDialog?.findViewById<Button>(R.id.btnSave)
         val btnCancel = addRecipientDialog?.findViewById<Button>(R.id.btnCancel)
@@ -713,19 +720,41 @@ class EditTransactionActivity : AppCompatActivity() {
         btnCloseDialog?.setOnClickListener { addRecipientDialog?.dismiss() }
         btnCancel?.setOnClickListener { addRecipientDialog?.dismiss() }
 
+        btnAddIdentifier?.setOnClickListener {
+            val id = etPaymentIdentifier?.text?.toString()?.trim() ?: ""
+            if (id.isEmpty()) return@setOnClickListener
+            if ((chipGroupIdentifiers?.childCount ?: 0) >= 5) {
+                tvError?.text = "Maximum 5 payment identifiers allowed"
+                tvError?.visibility = View.VISIBLE
+                return@setOnClickListener
+            }
+            val chip = Chip(this)
+            chip.text = id
+            chip.isCloseIconVisible = true
+            chip.chipBackgroundColor = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.teal_500))
+            chip.setTextColor(Color.WHITE)
+            chip.closeIconTint = ColorStateList.valueOf(Color.WHITE)
+            chip.setOnCloseIconClickListener { chipGroupIdentifiers?.removeView(chip) }
+            chipGroupIdentifiers?.addView(chip)
+            etPaymentIdentifier?.text?.clear()
+            tvError?.visibility = View.GONE
+        }
+
         btnSave?.setOnClickListener {
             val name = etRecipientName?.text?.toString()?.trim() ?: ""
             val description = etRecipientDescription?.text?.toString()?.trim()?.ifEmpty { null }
             val isFavorite = cbFavorite?.isChecked ?: false
             val selectedPos = spinnerDefaultCategory?.selectedItemPosition ?: 0
             val defaultCategoryId = if (selectedPos > 0) expenseCategories[selectedPos - 1].id else null
+            val paymentIdentifiers = (0 until (chipGroupIdentifiers?.childCount ?: 0))
+                .map { (chipGroupIdentifiers?.getChildAt(it) as Chip).text.toString() }
             if (name.isEmpty()) {
                 tvError?.text = "Recipient name is required"
                 tvError?.visibility = View.VISIBLE
                 return@setOnClickListener
             }
             tvError?.visibility = View.GONE
-            viewModel.createRecipient(name, description, isFavorite, defaultCategoryId)
+            viewModel.createRecipient(name, description, isFavorite, defaultCategoryId, paymentIdentifiers)
         }
 
         lifecycleScope.launch {

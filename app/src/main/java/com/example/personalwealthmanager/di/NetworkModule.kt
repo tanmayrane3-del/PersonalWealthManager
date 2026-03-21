@@ -8,6 +8,8 @@ import com.example.personalwealthmanager.data.remote.api.HoldingsApi
 import com.example.personalwealthmanager.data.remote.api.MetadataApi
 import com.example.personalwealthmanager.data.remote.api.MetalsApi
 import com.example.personalwealthmanager.data.remote.api.MutualFundApi
+import com.example.personalwealthmanager.data.remote.api.PhysicalAssetApiService
+import com.example.personalwealthmanager.data.remote.api.LiabilityApiService
 import com.example.personalwealthmanager.data.remote.api.SmsApi
 import com.example.personalwealthmanager.data.remote.api.TransactionApi
 import com.example.personalwealthmanager.data.remote.api.ZerodhaApi
@@ -154,5 +156,17 @@ object NetworkModule {
     @Singleton
     fun provideMutualFundApi(retrofit: Retrofit): MutualFundApi {
         return retrofit.create(MutualFundApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePhysicalAssetApi(retrofit: Retrofit): PhysicalAssetApiService {
+        return retrofit.create(PhysicalAssetApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLiabilityApi(retrofit: Retrofit): LiabilityApiService {
+        return retrofit.create(LiabilityApiService::class.java)
     }
 }

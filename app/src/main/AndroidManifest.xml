@@ -99,6 +99,28 @@
             android:exported="false"
             android:theme="@style/Theme.PersonalWealthManager" />
 
+        <!-- Other Assets Activities -->
+        <activity
+            android:name=".presentation.otherassets.OtherAssetsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PersonalWealthManager" />
+
+        <activity
+            android:name=".presentation.otherassets.AddEditOtherAssetActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PersonalWealthManager" />
+
+        <!-- Liabilities Activities -->
+        <activity
+            android:name=".presentation.liabilities.LiabilitiesActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PersonalWealthManager" />
+
+        <activity
+            android:name=".presentation.liabilities.AddEditLiabilityActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PersonalWealthManager" />
+
         <!-- CAS Import Activity -->
         <activity
             android:name=".presentation.mutualfunds.CasImportActivity"

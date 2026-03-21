@@ -270,25 +270,59 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/expensesCard" />
 
-            <!-- Assets Section Label -->
-            <TextView
-                android:id="@+id/tvAssetsSection"
-                android:layout_width="wrap_content"
+            <!-- Assets Section Header (collapsible toggle) -->
+            <LinearLayout
+                android:id="@+id/assetsHeader"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/assets_section"
-                android:textColor="@android:color/white"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.12"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_assets_header"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sectionDivider" />
+                app:layout_constraintTop_toBottomOf="@id/sectionDivider">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/assets_section"
+                    android:textColor="@android:color/white"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.12" />
+
+                <ImageView
+                    android:id="@+id/ivAssetsChevron"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_expand_more"
+                    android:contentDescription="Toggle assets"
+                    android:tint="@android:color/white" />
+            </LinearLayout>
+
+            <!-- Assets Container (collapsible) -->
+            <LinearLayout
+                android:id="@+id/assetsContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:clipToPadding="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/assetsHeader">
 
             <!-- Stock Holdings Card -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/stocksCard"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="8dp"
@@ -297,10 +331,7 @@
                 android:foreground="?attr/selectableItemBackground"
                 app:cardBackgroundColor="#006e61"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvAssetsSection">
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -440,7 +471,7 @@
             <!-- Gold Holdings Card -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/goldCard"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="8dp"
@@ -449,10 +480,7 @@
                 android:foreground="?attr/selectableItemBackground"
                 app:cardBackgroundColor="#006e61"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/stocksCard">
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -592,7 +620,7 @@
             <!-- Mutual Funds Card -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/mfCard"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="8dp"
@@ -601,10 +629,7 @@
                 android:foreground="?attr/selectableItemBackground"
                 app:cardBackgroundColor="#006e61"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/goldCard">
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -739,6 +764,156 @@
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+            <!-- Other Assets Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/otherAssetsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="#006e61"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Header: title + refresh -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Other Assets"
+                            android:textColor="@android:color/white"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                        <ImageView
+                            android:id="@+id/ivRefreshOtherAssets"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_refresh"
+                            android:contentDescription="Refresh other assets"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:clickable="true"
+                            android:focusable="true" />
+                    </LinearLayout>
+
+                    <!-- Body: left (value + CAGR) | vertical divider | right (projections) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="12dp">
+
+                        <!-- Left column: total value + overall CAGR -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Assets Value"
+                                android:textColor="#B3FFFFFF"
+                                android:textSize="11sp" />
+                            <TextView
+                                android:id="@+id/tvOtherAssetsValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="--"
+                                android:textColor="@android:color/white"
+                                android:textSize="22sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="CAGR"
+                                android:textColor="#B3FFFFFF"
+                                android:textSize="11sp" />
+                            <TextView
+                                android:id="@+id/tvOtherAssetsCagr"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text=""
+                                android:textColor="@android:color/white"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <!-- Vertical divider -->
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="#33FFFFFF" />
+
+                        <!-- Right column: projections (hidden until data available) -->
+                        <LinearLayout
+                            android:id="@+id/otherAssetsProjectionsColumn"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="CAGR Projections"
+                                android:textColor="#B3FFFFFF"
+                                android:textSize="11sp" />
+                            <TextView
+                                android:id="@+id/tvOtherAssetsProjection1y"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="--"
+                                android:textColor="@android:color/white"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/tvOtherAssetsProjection3y"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="--"
+                                android:textColor="@android:color/white"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/tvOtherAssetsProjection5y"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="--"
+                                android:textColor="@android:color/white"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

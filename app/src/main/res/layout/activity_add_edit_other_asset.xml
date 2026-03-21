@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp"
+            android:paddingTop="16dp">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_back"
+                android:contentDescription="Back"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:text="Add Asset"
+                android:textColor="@android:color/white"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Loan-linked info banner (shown in edit mode when has_active_loan=true) -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardLoanBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"
+            app:cardCornerRadius="10dp"
+            app:cardBackgroundColor="#33FFD700">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="14dp"
+                android:text="🔗 This asset is linked to an active loan. Asset type cannot be changed."
+                android:textColor="#FFD700"
+                android:textSize="13sp" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Asset Type -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Asset Type *"
+            android:textColor="#B3FFFFFF"
+            android:textSize="13sp"
+            android:layout_marginBottom="6dp" />
+
+        <Spinner
+            android:id="@+id/spinnerAssetType"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/spinner_background_teal"
+            android:paddingHorizontal="12dp" />
+
+        <!-- Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Label *"
+            android:textColor="#B3FFFFFF"
+            android:textSize="13sp"
+            android:layout_marginBottom="6dp" />
+
+        <EditText
+            android:id="@+id/etLabel"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/edittext_background"
+            android:hint="e.g. Andheri Flat, Honda City 2021"
+            android:hint_color="#88FFFFFF"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:paddingHorizontal="12dp"
+            android:inputType="textCapSentences" />
+
+        <!-- Purchase Price -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Purchase Price (₹) *"
+            android:textColor="#B3FFFFFF"
+            android:textSize="13sp"
+            android:layout_marginBottom="6dp" />
+
+        <EditText
+            android:id="@+id/etPurchasePrice"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/edittext_background"
+            android:hint="e.g. 5000000"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:paddingHorizontal="12dp"
+            android:inputType="numberDecimal" />
+
+        <!-- Purchase Date -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Purchase Date *"
+            android:textColor="#B3FFFFFF"
+            android:textSize="13sp"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/tvPurchaseDate"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/edittext_background"
+            android:text="Tap to select date"
+            android:textColor="#88FFFFFF"
+            android:textSize="15sp"
+            android:paddingHorizontal="12dp"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Real Estate Fields -->
+        <LinearLayout
+            android:id="@+id/layoutRealEstate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current Market Value (₹) *"
+                android:textColor="#B3FFFFFF"
+                android:textSize="13sp"
+                android:layout_marginBottom="6dp" />
+
+            <EditText
+                android:id="@+id/etCurrentMarketValue"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/edittext_background"
+                android:hint="e.g. 7200000"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:paddingHorizontal="12dp"
+                android:inputType="numberDecimal" />
+        </LinearLayout>
+
+        <!-- Vehicle Fields -->
+        <LinearLayout
+            android:id="@+id/layoutVehicle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Depreciation Rate (%/yr)"
+                android:textColor="#B3FFFFFF"
+                android:textSize="13sp"
+                android:layout_marginBottom="6dp" />
+
+            <EditText
+                android:id="@+id/etDepreciationRate"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/edittext_background"
+                android:text="10"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:paddingHorizontal="12dp"
+                android:inputType="numberDecimal" />
+        </LinearLayout>
+
+        <!-- Notes -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notes (optional)"
+            android:textColor="#B3FFFFFF"
+            android:textSize="13sp"
+            android:layout_marginBottom="6dp" />
+
+        <EditText
+            android:id="@+id/etNotes"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/edittext_background"
+            android:hint="Any additional notes..."
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:padding="12dp"
+            android:gravity="top"
+            android:inputType="textMultiLine" />
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/button_primary"
+            android:text="Save Asset"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- Delete Button (edit mode only) -->
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/button_delete"
+            android:text="Delete Asset"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+</ScrollView>

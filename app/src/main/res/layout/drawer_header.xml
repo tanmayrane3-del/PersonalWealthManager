@@ -192,7 +192,30 @@
             android:background="@color/card_dark_teal"
             android:gravity="start|center_vertical"
             android:paddingStart="16dp" />
+
+        <Button
+            android:id="@+id/btnOtherAssets"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Other Assets"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:background="@color/card_dark_teal"
+            android:gravity="start|center_vertical"
+            android:paddingStart="16dp" />
     </LinearLayout>
+
+    <!-- Liabilities Button (standalone) -->
+    <Button
+        android:id="@+id/btnLiabilities"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Liabilities"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:background="@color/card_dark_teal"
+        android:layout_marginBottom="4dp" />
 
     <!-- Setup Demat Header Button (expandable) -->
     <LinearLayout

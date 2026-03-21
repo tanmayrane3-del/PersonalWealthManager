@@ -266,12 +266,12 @@ class TransactionDetailViewModel @Inject constructor(
         _state.update { it.copy(sourceCreated = null, sourceCreationError = null) }
     }
 
-    fun createRecipient(name: String, description: String?, isFavorite: Boolean, defaultCategoryId: String? = null) {
+    fun createRecipient(name: String, description: String?, isFavorite: Boolean, defaultCategoryId: String? = null, paymentIdentifiers: List<String> = emptyList()) {
         viewModelScope.launch {
             _state.update {
                 it.copy(isCreatingRecipient = true, recipientCreationError = null, recipientCreated = null)
             }
-            recipientRepository.createRecipient(name, null, description, null, isFavorite, emptyList(), defaultCategoryId)
+            recipientRepository.createRecipient(name, null, description, null, isFavorite, paymentIdentifiers, defaultCategoryId)
                 .onSuccess { recipient ->
                     val updatedRecipients = _state.value.recipients + recipient
                     _state.update {

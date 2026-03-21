@@ -168,3 +168,50 @@ data class SchemeLookupResult(
     val schemeName: String?,
     val amcName: String?
 )
+
+data class PhysicalAsset(
+    val id: String,
+    val assetType: String,
+    val label: String,
+    val purchasePrice: Double,
+    val purchaseDate: String,
+    val currentMarketValue: Double?,
+    val marketValueLastUpdated: String?,
+    val depreciationRatePct: Double?,
+    val notes: String?,
+    val isActive: Boolean,
+    val hasActiveLoan: Boolean,
+    val linkedLoanId: String?
+)
+
+data class PhysicalAssetSummary(
+    val totalCurrentValue: Double,
+    val assets: List<PhysicalAsset>
+)
+
+data class Liability(
+    val id: String,
+    val loanType: String,
+    val lenderName: String,
+    val loanAccountNumber: String?,
+    val interestType: String,
+    val interestRate: Double,
+    val originalAmount: Double,
+    val outstandingPrincipal: Double,
+    val emiAmount: Double,
+    val emiDueDay: Int?,
+    val startDate: String,
+    val tenureMonths: Int,
+    val physicalAssetId: String?,
+    val assetLabel: String?,
+    val assetType: String?,
+    val status: String,
+    val notes: String?
+)
+
+data class LiabilitySummary(
+    val totalOutstanding: Double,
+    val totalEmi: Double,
+    val activeCount: Int,
+    val liabilities: List<Liability>
+)

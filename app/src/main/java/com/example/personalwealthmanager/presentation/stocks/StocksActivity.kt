@@ -25,6 +25,8 @@ import com.example.personalwealthmanager.presentation.recipients.RecipientManage
 import com.example.personalwealthmanager.presentation.sources.SourceManagementActivity
 import com.example.personalwealthmanager.presentation.transactions.TransactionsActivity
 import com.example.personalwealthmanager.presentation.zerodha.SetupZerodhaActivity
+import com.example.personalwealthmanager.presentation.otherassets.OtherAssetsActivity
+import com.example.personalwealthmanager.presentation.liabilities.LiabilitiesActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
@@ -217,6 +219,18 @@ class StocksActivity : AppCompatActivity() {
         headerView.findViewById<Button>(R.id.btnMutualFunds)?.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)
             startActivity(Intent(this, com.example.personalwealthmanager.presentation.mutualfunds.MutualFundsActivity::class.java))
+            finish()
+        }
+
+        headerView.findViewById<Button>(R.id.btnOtherAssets)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, OtherAssetsActivity::class.java))
+            finish()
+        }
+
+        headerView.findViewById<Button>(R.id.btnLiabilities)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, LiabilitiesActivity::class.java))
             finish()
         }
 

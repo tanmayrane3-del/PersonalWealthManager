@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="80dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="8dp">
+
+                    <!-- Summary Header Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/summaryCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginBottom="12dp"
+                        android:visibility="gone"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="4dp"
+                        app:cardBackgroundColor="@color/card_dark_teal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Assets Value"
+                                android:textColor="#B3FFFFFF"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/tvTotalValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="--"
+                                android:textColor="@android:color/white"
+                                android:textSize="28sp"
+                                android:textStyle="bold" />
+
+                            <!-- CAGR Projections -->
+                            <LinearLayout
+                                android:id="@+id/cagrSection"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginTop="12dp"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="CAGR Projections"
+                                    android:textColor="#B3FFFFFF"
+                                    android:textSize="11sp" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_marginTop="6dp">
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:gravity="center">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="1Y"
+                                            android:textColor="#88FFFFFF"
+                                            android:textSize="11sp" />
+
+                                        <TextView
+                                            android:id="@+id/tvCagr1y"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="--"
+                                            android:textColor="@android:color/white"
+                                            android:textSize="14sp"
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tvProjected1y"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="--"
+                                            android:textColor="#B3FFFFFF"
+                                            android:textSize="11sp" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:gravity="center">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="3Y"
+                                            android:textColor="#88FFFFFF"
+                                            android:textSize="11sp" />
+
+                                        <TextView
+                                            android:id="@+id/tvCagr3y"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="--"
+                                            android:textColor="@android:color/white"
+                                            android:textSize="14sp"
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tvProjected3y"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="--"
+                                            android:textColor="#B3FFFFFF"
+                                            android:textSize="11sp" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        android:gravity="center">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="5Y"
+                                            android:textColor="#88FFFFFF"
+                                            android:textSize="11sp" />
+
+                                        <TextView
+                                            android:id="@+id/tvCagr5y"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="--"
+                                            android:textColor="@android:color/white"
+                                            android:textSize="14sp"
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tvProjected5y"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="--"
+                                            android:textColor="#B3FFFFFF"
+                                            android:textSize="11sp" />
+                                    </LinearLayout>
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Progress Bar -->
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="48dp"
+                        android:visibility="gone" />
+
+                    <!-- Empty State -->
+                    <LinearLayout
+                        android:id="@+id/emptyState"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="48dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🏛️"
+                            android:textSize="48sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:text="No assets yet"
+                            android:textColor="@android:color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Tap + to add your first property or vehicle"
+                            android:textColor="#B3FFFFFF"
+                            android:textSize="14sp"
+                            android:gravity="center" />
+                    </LinearLayout>
+
+                    <!-- RecyclerView -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvAssets"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:nestedScrollingEnabled="false" />
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <!-- FAB -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAddAsset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_add"
+            app:backgroundTint="@color/card_income_teal"
+            android:contentDescription="Add asset" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</FrameLayout>
