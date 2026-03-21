@@ -129,9 +129,39 @@
             android:id="@+id/spinnerInterestType"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="16dp"
             android:background="@drawable/spinner_background_teal"
             android:paddingHorizontal="12dp" />
+
+        <!-- Linked Asset (prominent here for car/home loans) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Linked Asset"
+            android:textColor="#B3FFFFFF"
+            android:textSize="13sp"
+            android:layout_marginBottom="6dp" />
+
+        <Spinner
+            android:id="@+id/spinnerLinkedAsset"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/spinner_background_teal"
+            android:paddingHorizontal="12dp" />
+
+        <!-- Tip banner shown for car/home loan types -->
+        <TextView
+            android:id="@+id/tvLinkedAssetTip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:padding="10dp"
+            android:background="#1A00BFA5"
+            android:text="💡 Link this loan to a car/property in Other Assets for complete wealth tracking"
+            android:textColor="#00BFA5"
+            android:textSize="12sp"
+            android:visibility="gone" />
 
         <!-- Section divider -->
         <View
@@ -487,23 +517,6 @@
                 android:paddingHorizontal="12dp" />
         </LinearLayout>
 
-        <!-- Linked Asset -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Linked Asset"
-            android:textColor="#B3FFFFFF"
-            android:textSize="13sp"
-            android:layout_marginBottom="6dp" />
-
-        <Spinner
-            android:id="@+id/spinnerLinkedAsset"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/spinner_background_teal"
-            android:paddingHorizontal="12dp" />
-
         <!-- Notes -->
         <TextView
             android:layout_width="wrap_content"
@@ -527,7 +540,7 @@
             android:gravity="top"
             android:inputType="textMultiLine" />
 
-        <!-- Save Button -->
+        <!-- Save / Update Button -->
         <Button
             android:id="@+id/btnSave"
             android:layout_width="match_parent"
@@ -538,6 +551,18 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold" />
+
+        <!-- Cancel Button (edit mode only) -->
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edittext_background"
+            android:text="Cancel"
+            android:textColor="#1A1A1A"
+            android:textSize="16sp"
+            android:visibility="gone" />
 
         <!-- Delete Button (edit mode only) -->
         <Button

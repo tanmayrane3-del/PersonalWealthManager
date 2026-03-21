@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -77,11 +78,13 @@ class AddEditLiabilityActivity : AppCompatActivity() {
     private lateinit var tvStatusEmisRemaining: TextView
 
     // Optional / edit views
+    private lateinit var tvLinkedAssetTip: TextView
     private lateinit var layoutStatus: LinearLayout
     private lateinit var spinnerStatus: Spinner
     private lateinit var spinnerLinkedAsset: Spinner
     private lateinit var etNotes: EditText
     private lateinit var btnSave: Button
+    private lateinit var btnCancel: Button
     private lateinit var btnDelete: Button
 
     private var selectedStartDate: String = ""
@@ -127,11 +130,13 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         tvStatusEmisPaid        = findViewById(R.id.tvStatusEmisPaid)
         tvStatusEmisRemaining   = findViewById(R.id.tvStatusEmisRemaining)
 
+        tvLinkedAssetTip     = findViewById(R.id.tvLinkedAssetTip)
         layoutStatus         = findViewById(R.id.layoutStatus)
         spinnerStatus        = findViewById(R.id.spinnerStatus)
         spinnerLinkedAsset   = findViewById(R.id.spinnerLinkedAsset)
         etNotes              = findViewById(R.id.etNotes)
         btnSave              = findViewById(R.id.btnSave)
+        btnCancel            = findViewById(R.id.btnCancel)
         btnDelete            = findViewById(R.id.btnDelete)
 
         setupSpinners()
@@ -139,6 +144,8 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         editLiabilityId = intent.getStringExtra(EXTRA_LIABILITY_ID)
         if (editLiabilityId != null) {
             tvTitle.text = "Edit Liability"
+            btnSave.text = "Update Liability"
+            btnCancel.visibility = View.VISIBLE
             btnDelete.visibility = View.VISIBLE
             layoutStatus.visibility = View.VISIBLE
             prefillEditData()
@@ -148,7 +155,22 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
         btnCalculate.setOnClickListener { calculateAndShow() }
         btnSave.setOnClickListener { save() }
+        btnCancel.setOnClickListener { finish() }
         btnDelete.setOnClickListener { confirmDelete() }
+
+        // Show tip for car/home loans
+        spinnerLoanType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val loanType = loanTypeValues[position]
+                tvLinkedAssetTip.visibility = if (loanType == "car" || loanType == "home") View.VISIBLE else View.GONE
+                tvLinkedAssetTip.text = when (loanType) {
+                    "car"  -> "💡 Link this loan to your car in Other Assets for complete wealth tracking"
+                    "home" -> "💡 Link this loan to your property in Other Assets for complete wealth tracking"
+                    else   -> ""
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
         observeActionState()
         assetsViewModel.fetchSummary()

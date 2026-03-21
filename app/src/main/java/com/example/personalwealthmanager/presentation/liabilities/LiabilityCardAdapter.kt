@@ -13,7 +13,7 @@ import java.text.NumberFormat
 import java.util.Locale
 
 class LiabilityCardAdapter(
-    private val onLongPress: (Liability) -> Unit
+    private val onClick: (Liability) -> Unit
 ) : ListAdapter<Liability, LiabilityCardAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     private val currencyFormat = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("en-IN"))
@@ -82,10 +82,9 @@ class LiabilityCardAdapter(
             holder.tvEmiDueDay.visibility = View.GONE
         }
 
-        // Long press
-        holder.itemView.setOnLongClickListener {
-            onLongPress(liability)
-            true
+        // Tap to edit
+        holder.itemView.setOnClickListener {
+            onClick(liability)
         }
     }
 

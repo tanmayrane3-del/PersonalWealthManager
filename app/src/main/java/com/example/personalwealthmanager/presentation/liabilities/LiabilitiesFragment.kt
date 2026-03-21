@@ -1,6 +1,5 @@
 package com.example.personalwealthmanager.presentation.liabilities
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -62,7 +61,7 @@ class LiabilitiesFragment : Fragment() {
         tvActiveCount = view.findViewById(R.id.tvActiveCount)
         fabAddLiability = view.findViewById(R.id.fabAddLiability)
 
-        adapter = LiabilityCardAdapter(onLongPress = { liability -> showLongPressMenu(liability) })
+        adapter = LiabilityCardAdapter(onClick = { liability -> openEdit(liability) })
         rvLiabilities.layoutManager = LinearLayoutManager(requireContext())
         rvLiabilities.adapter = adapter
         rvLiabilities.isNestedScrollingEnabled = false
@@ -148,19 +147,6 @@ class LiabilitiesFragment : Fragment() {
         summaryCard.visibility = View.GONE
         emptyState.visibility = View.VISIBLE
         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-    }
-
-    private fun showLongPressMenu(liability: Liability) {
-        val items = arrayOf("Edit", "Delete")
-        AlertDialog.Builder(requireContext())
-            .setTitle(liability.lenderName)
-            .setItems(items) { _, which ->
-                when (which) {
-                    0 -> openEdit(liability)
-                    1 -> confirmDelete(liability)
-                }
-            }
-            .show()
     }
 
     private fun openEdit(liability: Liability) {
