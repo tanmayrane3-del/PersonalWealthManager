@@ -158,15 +158,24 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         btnCancel.setOnClickListener { finish() }
         btnDelete.setOnClickListener { confirmDelete() }
 
-        // Show tip for car/home loans
+        // Show required warning for car/home loans
         spinnerLoanType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val loanType = loanTypeValues[position]
-                tvLinkedAssetTip.visibility = if (loanType == "car" || loanType == "home") View.VISIBLE else View.GONE
-                tvLinkedAssetTip.text = when (loanType) {
-                    "car"  -> "💡 Link this loan to your car in Other Assets for complete wealth tracking"
-                    "home" -> "💡 Link this loan to your property in Other Assets for complete wealth tracking"
-                    else   -> ""
+                when (loanType) {
+                    "car" -> {
+                        tvLinkedAssetTip.visibility = View.VISIBLE
+                        tvLinkedAssetTip.text = "⚠️ Required — Link to your car. If not listed, add it in Other Assets first."
+                        tvLinkedAssetTip.setBackgroundColor(0x33FF8F00.toInt())
+                        tvLinkedAssetTip.setTextColor(0xFFFF8F00.toInt())
+                    }
+                    "home" -> {
+                        tvLinkedAssetTip.visibility = View.VISIBLE
+                        tvLinkedAssetTip.text = "⚠️ Required — Link to your property. If not listed, add it in Other Assets first."
+                        tvLinkedAssetTip.setBackgroundColor(0x33FF8F00.toInt())
+                        tvLinkedAssetTip.setTextColor(0xFFFF8F00.toInt())
+                    }
+                    else -> tvLinkedAssetTip.visibility = View.GONE
                 }
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -381,6 +390,18 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         if (lenderName.isEmpty()) { etLenderName.error = "Required"; return }
 
         val loanType          = loanTypeValues[spinnerLoanType.selectedItemPosition]
+        val selectedAssetIdx  = spinnerLinkedAsset.selectedItemPosition
+
+        // Linked asset is mandatory for car and home loans
+        if ((loanType == "car" || loanType == "home") && selectedAssetIdx == 0) {
+            Toast.makeText(
+                this,
+                if (loanType == "car") "Please link this loan to a car. Add one in Other Assets first."
+                else "Please link this loan to a property. Add one in Other Assets first.",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
         val loanAccountNumber = etLoanAccountNumber.text.toString().trim().ifEmpty { null }
         val interestType      = interestTypeValues[spinnerInterestType.selectedItemPosition]
         val interestRate      = etInterestRate.text.toString().trim().toDoubleOrNull() ?: return
@@ -388,7 +409,6 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         val tenureMonths      = etTenureMonths.text.toString().trim().toIntOrNull() ?: return
         val notes             = etNotes.text.toString().trim().ifEmpty { null }
 
-        val selectedAssetIdx  = spinnerLinkedAsset.selectedItemPosition
         val physicalAssetId   = if (selectedAssetIdx > 0) physicalAssets[selectedAssetIdx - 1].id else null
 
         btnSave.isEnabled = false
