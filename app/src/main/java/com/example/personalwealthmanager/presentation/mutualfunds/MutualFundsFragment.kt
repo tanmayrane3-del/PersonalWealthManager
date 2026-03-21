@@ -154,6 +154,8 @@ class MutualFundsFragment : Fragment() {
 
         val gain = state.summary.absoluteReturn
         val gainPct = state.summary.absoluteReturnPct
+        val gainColor = ContextCompat.getColor(requireContext(), if (gain >= 0) R.color.amount_positive else R.color.amount_negative)
+        binding.tvCurrentValue.setTextColor(gainColor)
         binding.tvGainLoss.text = "%s (%.2f%%)".format(fmt.format(gain), gainPct)
         binding.tvGainLoss.setTextColor(
             ContextCompat.getColor(requireContext(), if (gain >= 0) R.color.amount_positive else R.color.amount_negative)
