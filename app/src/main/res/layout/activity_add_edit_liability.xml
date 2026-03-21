@@ -44,6 +44,17 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <!-- ── SECTION: LOAN DETAILS ── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LOAN DETAILS"
+            android:textColor="#80FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.12"
+            android:layout_marginBottom="12dp" />
+
         <!-- Loan Type -->
         <TextView
             android:layout_width="wrap_content"
@@ -83,11 +94,11 @@
             android:paddingHorizontal="12dp"
             android:inputType="textCapWords" />
 
-        <!-- Loan Account Number (optional) -->
+        <!-- Account Number -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Loan Account Number (optional)"
+            android:text="Account No. (optional)"
             android:textColor="#B3FFFFFF"
             android:textSize="13sp"
             android:layout_marginBottom="6dp" />
@@ -118,9 +129,49 @@
             android:id="@+id/spinnerInterestType"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/spinner_background_teal"
             android:paddingHorizontal="12dp" />
+
+        <!-- Section divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#26FFFFFF"
+            android:layout_marginBottom="20dp" />
+
+        <!-- ── SECTION: LOAN PARAMETERS ── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LOAN PARAMETERS"
+            android:textColor="#80FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.12"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Loan Amount -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loan Amount (₹) *"
+            android:textColor="#B3FFFFFF"
+            android:textSize="13sp"
+            android:layout_marginBottom="6dp" />
+
+        <EditText
+            android:id="@+id/etOriginalAmount"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/edittext_background"
+            android:hint="e.g. 12,06,542"
+            android:textColorHint="#88000000"
+            android:textColor="#1A1A1A"
+            android:textSize="15sp"
+            android:paddingHorizontal="12dp"
+            android:inputType="numberDecimal" />
 
         <!-- Interest Rate -->
         <TextView
@@ -137,95 +188,29 @@
             android:layout_height="52dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/edittext_background"
-            android:hint="e.g. 8.5"
+            android:hint="e.g. 8.7"
             android:textColorHint="#88000000"
             android:textColor="#1A1A1A"
             android:textSize="15sp"
             android:paddingHorizontal="12dp"
             android:inputType="numberDecimal" />
 
-        <!-- Original Amount -->
+        <!-- Tenure -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Original Loan Amount (₹) *"
+            android:text="Tenure (months) *"
             android:textColor="#B3FFFFFF"
             android:textSize="13sp"
             android:layout_marginBottom="6dp" />
 
         <EditText
-            android:id="@+id/etOriginalAmount"
+            android:id="@+id/etTenureMonths"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/edittext_background"
-            android:hint="e.g. 5000000"
-            android:textColorHint="#88000000"
-            android:textColor="#1A1A1A"
-            android:textSize="15sp"
-            android:paddingHorizontal="12dp"
-            android:inputType="numberDecimal" />
-
-        <!-- Outstanding Principal -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Outstanding Principal (₹) *"
-            android:textColor="#B3FFFFFF"
-            android:textSize="13sp"
-            android:layout_marginBottom="6dp" />
-
-        <EditText
-            android:id="@+id/etOutstandingPrincipal"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/edittext_background"
-            android:hint="Current outstanding balance"
-            android:textColorHint="#88000000"
-            android:textColor="#1A1A1A"
-            android:textSize="15sp"
-            android:paddingHorizontal="12dp"
-            android:inputType="numberDecimal" />
-
-        <!-- EMI Amount -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Monthly EMI (₹) *"
-            android:textColor="#B3FFFFFF"
-            android:textSize="13sp"
-            android:layout_marginBottom="6dp" />
-
-        <EditText
-            android:id="@+id/etEmiAmount"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/edittext_background"
-            android:hint="e.g. 45000"
-            android:textColorHint="#88000000"
-            android:textColor="#1A1A1A"
-            android:textSize="15sp"
-            android:paddingHorizontal="12dp"
-            android:inputType="numberDecimal" />
-
-        <!-- EMI Due Day (optional) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="EMI Due Day (1-31, optional)"
-            android:textColor="#B3FFFFFF"
-            android:textSize="13sp"
-            android:layout_marginBottom="6dp" />
-
-        <EditText
-            android:id="@+id/etEmiDueDay"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/edittext_background"
-            android:hint="e.g. 5"
+            android:hint="e.g. 60"
             android:textColorHint="#88000000"
             android:textColor="#1A1A1A"
             android:textSize="15sp"
@@ -245,7 +230,7 @@
             android:id="@+id/tvStartDate"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/edittext_background"
             android:text="Tap to select date"
             android:textColor="#88000000"
@@ -255,44 +240,227 @@
             android:clickable="true"
             android:focusable="true" />
 
-        <!-- Tenure -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tenure (months) *"
-            android:textColor="#B3FFFFFF"
-            android:textSize="13sp"
-            android:layout_marginBottom="6dp" />
-
-        <EditText
-            android:id="@+id/etTenureMonths"
+        <!-- Calculate Button -->
+        <Button
+            android:id="@+id/btnCalculate"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="48dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/edittext_background"
-            android:hint="e.g. 240 (20 years)"
-            android:textColorHint="#88000000"
-            android:textColor="#1A1A1A"
-            android:textSize="15sp"
-            android:paddingHorizontal="12dp"
-            android:inputType="number" />
+            android:background="@drawable/button_primary"
+            android:text="CALCULATE STATUS"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.08" />
 
-        <!-- Linked Physical Asset (optional) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Linked Asset (optional)"
-            android:textColor="#B3FFFFFF"
-            android:textSize="13sp"
-            android:layout_marginBottom="6dp" />
-
-        <Spinner
-            android:id="@+id/spinnerLinkedAsset"
+        <!-- ── LOAN STATUS CARD (hidden until calculated) ── -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardLoanStatus"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/spinner_background_teal"
-            android:paddingHorizontal="12dp" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:visibility="gone"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#0D2A2A">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="LOAN STATUS"
+                    android:textColor="#80FFFFFF"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.15"
+                    android:layout_marginBottom="14dp" />
+
+                <!-- Monthly EMI -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="10dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Monthly EMI"
+                        android:textColor="#99FFFFFF"
+                        android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/tvStatusEmi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- EMI Due Day -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="10dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="EMI Due Day"
+                        android:textColor="#99FFFFFF"
+                        android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/tvStatusEmiDueDay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Loan Ends -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="10dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Loan Ends"
+                        android:textColor="#99FFFFFF"
+                        android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/tvStatusLoanEnd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Total Interest -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="14dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Total Interest"
+                        android:textColor="#99FFFFFF"
+                        android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/tvStatusTotalInterest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#26FFFFFF"
+                    android:layout_marginBottom="14dp" />
+
+                <!-- Outstanding Today (highlighted) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Outstanding Today"
+                        android:textColor="#99FFFFFF"
+                        android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/tvStatusOutstanding"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#00E5CC"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- EMIs Paid -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="10dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="EMIs Paid"
+                        android:textColor="#99FFFFFF"
+                        android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/tvStatusEmisPaid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- EMIs Remaining -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="EMIs Remaining"
+                        android:textColor="#99FFFFFF"
+                        android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/tvStatusEmisRemaining"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Section divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#26FFFFFF"
+            android:layout_marginBottom="20dp" />
+
+        <!-- ── OPTIONAL / EDIT FIELDS ── -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="OPTIONAL"
+            android:textColor="#80FFFFFF"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.12"
+            android:layout_marginBottom="12dp" />
 
         <!-- Status (edit mode only) -->
         <LinearLayout
@@ -305,7 +473,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Status"
+                android:text="Loan Status"
                 android:textColor="#B3FFFFFF"
                 android:textSize="13sp"
                 android:layout_marginBottom="6dp" />
@@ -319,11 +487,28 @@
                 android:paddingHorizontal="12dp" />
         </LinearLayout>
 
+        <!-- Linked Asset -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Linked Asset"
+            android:textColor="#B3FFFFFF"
+            android:textSize="13sp"
+            android:layout_marginBottom="6dp" />
+
+        <Spinner
+            android:id="@+id/spinnerLinkedAsset"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/spinner_background_teal"
+            android:paddingHorizontal="12dp" />
+
         <!-- Notes -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Notes (optional)"
+            android:text="Notes"
             android:textColor="#B3FFFFFF"
             android:textSize="13sp"
             android:layout_marginBottom="6dp" />
