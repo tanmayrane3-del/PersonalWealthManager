@@ -8,21 +8,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.MainActivity
 import com.example.personalwealthmanager.domain.model.Transaction
-import com.example.personalwealthmanager.presentation.categories.CategoryManagementActivity
-import com.example.personalwealthmanager.presentation.sources.SourceManagementActivity
-import com.example.personalwealthmanager.presentation.recipients.RecipientManagementActivity
-import com.example.personalwealthmanager.presentation.stocks.StocksActivity
-import com.example.personalwealthmanager.presentation.zerodha.SetupZerodhaActivity
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.animation.Easing
@@ -37,21 +29,21 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
 @AndroidEntryPoint
-class TransactionsActivity : AppCompatActivity() {
+class TransactionsActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
+
+    override fun getSelfButtonId() = R.id.btnTransactions
 
     private val viewModel: TransactionListViewModel by viewModels()
 
     private lateinit var rvTransactions: RecyclerView
     private lateinit var tvEmptyState: TextView
     private lateinit var progressBar: ProgressBar
-    private lateinit var drawerLayout: DrawerLayout
     private lateinit var filterDrawer: LinearLayout
     private lateinit var fabAddTransaction: FloatingActionButton
     private lateinit var adapter: TransactionsAdapter
@@ -85,7 +77,7 @@ class TransactionsActivity : AppCompatActivity() {
         initializeViews()
         setupRecyclerView()
         setupClickListeners()
-        setupNavigationDrawer()
+        setupDrawerMenu()
         setupFilterDrawer()
         observeState()
 
@@ -97,7 +89,6 @@ class TransactionsActivity : AppCompatActivity() {
         rvTransactions = findViewById(R.id.rvTransactions)
         tvEmptyState = findViewById(R.id.tvEmptyState)
         progressBar = findViewById(R.id.progressBar)
-        drawerLayout = findViewById(R.id.drawerLayout)
         filterDrawer = findViewById(R.id.filterDrawer)
         fabAddTransaction = findViewById(R.id.fabAddTransaction)
 
@@ -547,133 +538,6 @@ class TransactionsActivity : AppCompatActivity() {
             from != null -> "From $from"
             to != null -> "Until $to"
             else -> getString(R.string.all_transactions)
-        }
-    }
-
-    // ─── Navigation drawer ─────────────────────────────────────────────────────
-
-    private fun setupNavigationDrawer() {
-        val navigationView = findViewById<NavigationView>(R.id.navigationView)
-        val headerView = navigationView.getHeaderView(0)
-
-        val sharedPrefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        val userEmail = sharedPrefs.getString("user_email", "user@example.com")
-        headerView.findViewById<TextView>(R.id.tvUserEmail)?.text = userEmail
-
-        headerView.findViewById<Button>(R.id.btnDashboard)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            startActivity(intent)
-            finish()
-        }
-
-        headerView.findViewById<Button>(R.id.btnTransactions)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-        }
-
-        val btnManagement = headerView.findViewById<Button>(R.id.btnManagement)
-        val ivManagementExpand = headerView.findViewById<ImageView>(R.id.ivManagementExpand)
-        val managementChildItems = headerView.findViewById<LinearLayout>(R.id.managementChildItems)
-
-        btnManagement?.setOnClickListener {
-            if (managementChildItems?.visibility == View.VISIBLE) {
-                managementChildItems.visibility = View.GONE
-                ivManagementExpand?.setImageResource(R.drawable.ic_expand_more)
-            } else {
-                managementChildItems?.visibility = View.VISIBLE
-                ivManagementExpand?.setImageResource(R.drawable.ic_expand_less)
-            }
-        }
-        ivManagementExpand?.setOnClickListener { btnManagement?.performClick() }
-
-        headerView.findViewById<Button>(R.id.btnCategoryManagement)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, CategoryManagementActivity::class.java))
-        }
-
-        headerView.findViewById<Button>(R.id.btnSourceManagement)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, SourceManagementActivity::class.java))
-        }
-
-        headerView.findViewById<Button>(R.id.btnRecipientManagement)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, RecipientManagementActivity::class.java))
-        }
-
-        val btnAssets = headerView.findViewById<Button>(R.id.btnAssets)
-        val ivAssetsExpand = headerView.findViewById<ImageView>(R.id.ivAssetsExpand)
-        val assetsChildItems = headerView.findViewById<LinearLayout>(R.id.assetsChildItems)
-
-        btnAssets?.setOnClickListener {
-            if (assetsChildItems?.visibility == View.VISIBLE) {
-                assetsChildItems.visibility = View.GONE
-                ivAssetsExpand?.setImageResource(R.drawable.ic_expand_more)
-            } else {
-                assetsChildItems?.visibility = View.VISIBLE
-                ivAssetsExpand?.setImageResource(R.drawable.ic_expand_less)
-            }
-        }
-        ivAssetsExpand?.setOnClickListener { btnAssets?.performClick() }
-
-        headerView.findViewById<Button>(R.id.btnStocks)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, StocksActivity::class.java))
-        }
-
-        headerView.findViewById<Button>(R.id.btnMetals)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, com.example.personalwealthmanager.presentation.metals.MetalsActivity::class.java))
-        }
-
-        headerView.findViewById<Button>(R.id.btnMutualFunds)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, com.example.personalwealthmanager.presentation.mutualfunds.MutualFundsActivity::class.java))
-        }
-
-        headerView.findViewById<Button>(R.id.btnOtherAssets)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, com.example.personalwealthmanager.presentation.otherassets.OtherAssetsActivity::class.java))
-        }
-
-        headerView.findViewById<Button>(R.id.btnLiabilities)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, com.example.personalwealthmanager.presentation.liabilities.LiabilitiesActivity::class.java))
-        }
-
-        val btnSetupDemat = headerView.findViewById<Button>(R.id.btnSetupDemat)
-        val ivSetupDematExpand = headerView.findViewById<ImageView>(R.id.ivSetupDematExpand)
-        val setupDematChildItems = headerView.findViewById<LinearLayout>(R.id.setupDematChildItems)
-
-        btnSetupDemat?.setOnClickListener {
-            if (setupDematChildItems?.visibility == View.VISIBLE) {
-                setupDematChildItems.visibility = View.GONE
-                ivSetupDematExpand?.setImageResource(R.drawable.ic_expand_more)
-            } else {
-                setupDematChildItems?.visibility = View.VISIBLE
-                ivSetupDematExpand?.setImageResource(R.drawable.ic_expand_less)
-            }
-        }
-        ivSetupDematExpand?.setOnClickListener { btnSetupDemat?.performClick() }
-
-        headerView.findViewById<Button>(R.id.btnConnectZerodha)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, SetupZerodhaActivity::class.java))
-        }
-
-        headerView.findViewById<Button>(R.id.btnSettings)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, com.example.personalwealthmanager.presentation.settings.SettingsActivity::class.java))
-        }
-
-        headerView.findViewById<Button>(R.id.btnLogout)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            sharedPrefs.edit().clear().apply()
-            val intent = Intent(this, com.example.personalwealthmanager.presentation.auth.login.LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
         }
     }
 

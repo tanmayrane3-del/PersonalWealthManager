@@ -2,18 +2,18 @@ package com.example.personalwealthmanager.presentation.settings
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.example.personalwealthmanager.R
+import com.example.personalwealthmanager.presentation.base.BaseDrawerActivity
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : BaseDrawerActivity() {
+
+    override fun getSelfButtonId() = R.id.btnSettings
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
-        findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
+        setupDrawerMenu()
 
         findViewById<CardView>(R.id.cardSmsLogs).setOnClickListener {
             startActivity(Intent(this, SmsLogActivity::class.java))

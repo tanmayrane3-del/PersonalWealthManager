@@ -2,7 +2,6 @@ package com.example.personalwealthmanager.presentation.categories
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -10,29 +9,23 @@ import android.view.View
 import android.view.Window
 import android.widget.*
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.MainActivity
 import com.example.personalwealthmanager.domain.model.Category
-import com.example.personalwealthmanager.presentation.recipients.RecipientManagementActivity
-import com.example.personalwealthmanager.presentation.sources.SourceManagementActivity
-import com.example.personalwealthmanager.presentation.transactions.TransactionsActivity
-import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CategoryManagementActivity : AppCompatActivity() {
+class CategoryManagementActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
+
+    override fun getSelfButtonId() = R.id.btnCategoryManagement
 
     private val viewModel: CategoryManagementViewModel by viewModels()
 
-    private lateinit var drawerLayout: DrawerLayout
     private lateinit var progressBar: ProgressBar
 
     // Income section views
@@ -67,12 +60,11 @@ class CategoryManagementActivity : AppCompatActivity() {
         initializeViews()
         setupRecyclerViews()
         setupClickListeners()
-        setupNavigationDrawer()
+        setupDrawerMenu()
         observeState()
     }
 
     private fun initializeViews() {
-        drawerLayout = findViewById(R.id.drawerLayout)
         progressBar = findViewById(R.id.progressBar)
 
         // Income section
@@ -151,95 +143,6 @@ class CategoryManagementActivity : AppCompatActivity() {
         // Expense section collapse/expand
         expenseHeader.setOnClickListener {
             viewModel.toggleExpenseSection()
-        }
-    }
-
-    private fun setupNavigationDrawer() {
-        val navigationView = findViewById<NavigationView>(R.id.navigationView)
-        val headerView = navigationView.getHeaderView(0)
-
-        // Set user email from SharedPreferences
-        val sharedPrefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        val userEmail = sharedPrefs.getString("user_email", "user@example.com")
-        headerView.findViewById<TextView>(R.id.tvUserEmail)?.text = userEmail
-
-        // Dashboard button
-        headerView.findViewById<Button>(R.id.btnDashboard)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            startActivity(intent)
-            finish()
-        }
-
-        // Transactions button
-        headerView.findViewById<Button>(R.id.btnTransactions)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            val intent = Intent(this, TransactionsActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-
-        // Management expand/collapse
-        val btnManagement = headerView.findViewById<Button>(R.id.btnManagement)
-        val ivManagementExpand = headerView.findViewById<ImageView>(R.id.ivManagementExpand)
-        val managementChildItems = headerView.findViewById<LinearLayout>(R.id.managementChildItems)
-
-        // Set initial state - expanded since we're on the category management screen
-        managementChildItems?.visibility = View.VISIBLE
-        ivManagementExpand?.setImageResource(R.drawable.ic_expand_less)
-
-        btnManagement?.setOnClickListener {
-            if (managementChildItems?.visibility == View.VISIBLE) {
-                managementChildItems.visibility = View.GONE
-                ivManagementExpand?.setImageResource(R.drawable.ic_expand_more)
-            } else {
-                managementChildItems?.visibility = View.VISIBLE
-                ivManagementExpand?.setImageResource(R.drawable.ic_expand_less)
-            }
-        }
-
-        ivManagementExpand?.setOnClickListener {
-            btnManagement?.performClick()
-        }
-
-        // Category management button - already on this screen
-        headerView.findViewById<Button>(R.id.btnCategoryManagement)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            // Already on category management screen
-        }
-
-        // Source management button
-        headerView.findViewById<Button>(R.id.btnSourceManagement)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            val intent = Intent(this, SourceManagementActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-
-        // Recipient management button
-        headerView.findViewById<Button>(R.id.btnRecipientManagement)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            val intent = Intent(this, RecipientManagementActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-
-        headerView.findViewById<Button>(R.id.btnSettings)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, com.example.personalwealthmanager.presentation.settings.SettingsActivity::class.java))
-        }
-
-        // Logout button
-        headerView.findViewById<Button>(R.id.btnLogout)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            // Clear session
-            sharedPrefs.edit().clear().apply()
-            // Navigate to login
-            val intent = Intent(this, com.example.personalwealthmanager.presentation.auth.login.LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
         }
     }
 
@@ -440,12 +343,4 @@ class CategoryManagementActivity : AppCompatActivity() {
         )
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
-            drawerLayout.closeDrawer(GravityCompat.END)
-        } else {
-            super.onBackPressed()
-        }
-    }
 }

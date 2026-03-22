@@ -50,7 +50,9 @@ import android.graphics.Color
 import com.example.personalwealthmanager.domain.model.PhysicalAsset
 import com.example.personalwealthmanager.domain.model.Liability
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
+
+    override fun getSelfButtonId() = R.id.btnDashboard
 
     companion object {
         private const val REQUEST_CODE_SMS_PERMISSION = 1001
@@ -63,8 +65,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvExpensesAmount: TextView
     private lateinit var ivRefreshIncome: ImageView
     private lateinit var ivRefreshExpenses: ImageView
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var tvStockValue: TextView
+private lateinit var tvStockValue: TextView
     private lateinit var tvStockDayPnl: TextView
     private lateinit var ivRefreshStocks: ImageView
     private lateinit var tvGoldValue: TextView
@@ -1084,207 +1085,7 @@ class MainActivity : AppCompatActivity() {
         else                  -> currencyFormat.format(amount)
     }
 
-    private fun setupDrawerMenu() {
-        val navigationView = findViewById<com.google.android.material.navigation.NavigationView>(R.id.navigationView)
-        val headerView = navigationView.getHeaderView(0)
 
-        // Display user email
-        val tvUserEmail = headerView.findViewById<TextView>(R.id.tvUserEmail)
-        val userEmail = getUserEmail()
-        tvUserEmail.text = userEmail ?: "User"
-
-        // Dashboard button - already on this screen
-        val btnDashboard = headerView.findViewById<Button>(R.id.btnDashboard)
-        btnDashboard?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            // Already on dashboard screen
-        }
-
-        // Transactions button
-        val btnTransactions = headerView.findViewById<Button>(R.id.btnTransactions)
-        btnTransactions.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, TransactionsActivity::class.java))
-        }
-
-        // Management expandable menu
-        val btnManagement = headerView.findViewById<Button>(R.id.btnManagement)
-        val ivManagementExpand = headerView.findViewById<ImageView>(R.id.ivManagementExpand)
-        val managementChildItems = headerView.findViewById<LinearLayout>(R.id.managementChildItems)
-
-        btnManagement?.setOnClickListener {
-            if (managementChildItems?.visibility == View.VISIBLE) {
-                managementChildItems.visibility = View.GONE
-                ivManagementExpand?.setImageResource(R.drawable.ic_expand_more)
-            } else {
-                managementChildItems?.visibility = View.VISIBLE
-                ivManagementExpand?.setImageResource(R.drawable.ic_expand_less)
-            }
-        }
-
-        ivManagementExpand?.setOnClickListener {
-            btnManagement?.performClick()
-        }
-
-        // Category management button
-        headerView.findViewById<Button>(R.id.btnCategoryManagement)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, CategoryManagementActivity::class.java))
-        }
-
-        // Source management button
-        headerView.findViewById<Button>(R.id.btnSourceManagement)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, SourceManagementActivity::class.java))
-        }
-
-        // Recipient management button
-        headerView.findViewById<Button>(R.id.btnRecipientManagement)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, RecipientManagementActivity::class.java))
-        }
-
-        // Assets expandable menu
-        val btnAssets = headerView.findViewById<Button>(R.id.btnAssets)
-        val ivAssetsExpand = headerView.findViewById<ImageView>(R.id.ivAssetsExpand)
-        val assetsChildItems = headerView.findViewById<LinearLayout>(R.id.assetsChildItems)
-
-        btnAssets?.setOnClickListener {
-            if (assetsChildItems?.visibility == View.VISIBLE) {
-                assetsChildItems.visibility = View.GONE
-                ivAssetsExpand?.setImageResource(R.drawable.ic_expand_more)
-            } else {
-                assetsChildItems?.visibility = View.VISIBLE
-                ivAssetsExpand?.setImageResource(R.drawable.ic_expand_less)
-            }
-        }
-        ivAssetsExpand?.setOnClickListener { btnAssets?.performClick() }
-
-        headerView.findViewById<Button>(R.id.btnStocks)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, StocksActivity::class.java))
-        }
-
-        headerView.findViewById<Button>(R.id.btnMetals)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, com.example.personalwealthmanager.presentation.metals.MetalsActivity::class.java))
-        }
-
-        headerView.findViewById<Button>(R.id.btnMutualFunds)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, MutualFundsActivity::class.java))
-        }
-
-        headerView.findViewById<Button>(R.id.btnOtherAssets)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, OtherAssetsActivity::class.java))
-        }
-
-        headerView.findViewById<Button>(R.id.btnNetWorth)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, NetWorthActivity::class.java))
-        }
-
-        headerView.findViewById<Button>(R.id.btnLiabilities)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, LiabilitiesActivity::class.java))
-        }
-
-        // Setup Demat expandable menu
-        val btnSetupDemat = headerView.findViewById<Button>(R.id.btnSetupDemat)
-        val ivSetupDematExpand = headerView.findViewById<ImageView>(R.id.ivSetupDematExpand)
-        val setupDematChildItems = headerView.findViewById<LinearLayout>(R.id.setupDematChildItems)
-
-        btnSetupDemat?.setOnClickListener {
-            if (setupDematChildItems?.visibility == View.VISIBLE) {
-                setupDematChildItems.visibility = View.GONE
-                ivSetupDematExpand?.setImageResource(R.drawable.ic_expand_more)
-            } else {
-                setupDematChildItems?.visibility = View.VISIBLE
-                ivSetupDematExpand?.setImageResource(R.drawable.ic_expand_less)
-            }
-        }
-        ivSetupDematExpand?.setOnClickListener { btnSetupDemat?.performClick() }
-
-        headerView.findViewById<Button>(R.id.btnConnectZerodha)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, SetupZerodhaActivity::class.java))
-        }
-
-        // Settings button
-        headerView.findViewById<Button>(R.id.btnSettings)?.setOnClickListener {
-            drawerLayout.closeDrawer(GravityCompat.END)
-            startActivity(Intent(this, SettingsActivity::class.java))
-        }
-
-        // Logout button
-        val btnLogout = headerView.findViewById<Button>(R.id.btnLogout)
-        btnLogout.setOnClickListener {
-            logout()
-        }
-    }
-
-    private fun logout() {
-        val sessionToken = getSessionToken()
-        if (sessionToken == null) {
-            navigateToLogin()
-            return
-        }
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val url = URL(ApiConfig.BASE_URL + ApiConfig.Endpoints.LOGOUT)
-                val connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "POST"
-                connection.setRequestProperty("X-Session-Token", sessionToken)
-                connection.connectTimeout = 10000
-                connection.readTimeout = 10000
-
-                val responseCode = connection.responseCode
-
-                withContext(Dispatchers.Main) {
-                    clearSession()
-                    Toast.makeText(
-                        this@MainActivity,
-                        getString(R.string.logout_success),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    navigateToLogin()
-                }
-
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    // Even if logout API fails, clear local session
-                    clearSession()
-                    navigateToLogin()
-                }
-            }
-        }
-    }
-
-    private fun clearSession() {
-        getSharedPreferences("AppPrefs", Context.MODE_PRIVATE).edit {
-            remove("session_token")
-            remove("user_email")
-        }
-    }
-
-    private fun getSessionToken(): String? {
-        return getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
-            .getString("session_token", null)
-    }
-
-    private fun getUserEmail(): String? {
-        return getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
-            .getString("user_email", null)
-    }
-
-    private fun navigateToLogin() {
-        val intent = Intent(this, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
-    }
 
     private fun showDatePickerDialog(isFromDate: Boolean) {
         val calendar = if (isFromDate) fromCalendar else toCalendar
@@ -1394,11 +1195,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
-            drawerLayout.closeDrawer(GravityCompat.END)
-        } else {
-            super.onBackPressed()
-        }
-    }
 }
