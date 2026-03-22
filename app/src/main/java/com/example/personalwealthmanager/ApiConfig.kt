@@ -24,4 +24,9 @@ object ApiConfig {
         const val ADD_INCOME = "/api/income"
         const val ADD_EXPENSE = "/api/expenses"
     }
+
+    object NetWorth {
+        const val CURRENT   = "/api/net-worth/current"
+        const val SNAPSHOTS = "/api/net-worth/snapshots"
+    }
 }

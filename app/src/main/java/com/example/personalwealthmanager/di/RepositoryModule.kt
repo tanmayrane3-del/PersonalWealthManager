@@ -7,6 +7,7 @@ import com.example.personalwealthmanager.data.repository.MetalsRepositoryImpl
 import com.example.personalwealthmanager.data.repository.MutualFundRepositoryImpl
 import com.example.personalwealthmanager.data.repository.PhysicalAssetRepositoryImpl
 import com.example.personalwealthmanager.data.repository.LiabilityRepositoryImpl
+import com.example.personalwealthmanager.data.repository.NetWorthRepositoryImpl
 import com.example.personalwealthmanager.data.repository.RecipientRepositoryImpl
 import com.example.personalwealthmanager.data.repository.SourceRepositoryImpl
 import com.example.personalwealthmanager.data.repository.TransactionRepositoryImpl
@@ -18,6 +19,7 @@ import com.example.personalwealthmanager.domain.repository.MetalsRepository
 import com.example.personalwealthmanager.domain.repository.MutualFundRepository
 import com.example.personalwealthmanager.domain.repository.PhysicalAssetRepository
 import com.example.personalwealthmanager.domain.repository.LiabilityRepository
+import com.example.personalwealthmanager.domain.repository.NetWorthRepository
 import com.example.personalwealthmanager.domain.repository.RecipientRepository
 import com.example.personalwealthmanager.domain.repository.SourceRepository
 import com.example.personalwealthmanager.domain.repository.TransactionRepository
@@ -97,4 +99,10 @@ abstract class RepositoryModule {
     abstract fun bindLiabilityRepository(
         liabilityRepositoryImpl: LiabilityRepositoryImpl
     ): LiabilityRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNetWorthRepository(
+        netWorthRepositoryImpl: NetWorthRepositoryImpl
+    ): NetWorthRepository
 }

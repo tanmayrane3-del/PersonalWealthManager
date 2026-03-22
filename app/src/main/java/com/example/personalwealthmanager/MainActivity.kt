@@ -44,7 +44,9 @@ import com.example.personalwealthmanager.presentation.transactions.TransactionsA
 import com.example.personalwealthmanager.presentation.mutualfunds.MutualFundsActivity
 import com.example.personalwealthmanager.presentation.otherassets.OtherAssetsActivity
 import com.example.personalwealthmanager.presentation.liabilities.LiabilitiesActivity
+import com.example.personalwealthmanager.presentation.networth.NetWorthActivity
 import com.example.personalwealthmanager.core.utils.PhysicalAssetCagrCalculator
+import android.graphics.Color
 import com.example.personalwealthmanager.domain.model.PhysicalAsset
 import com.example.personalwealthmanager.domain.model.Liability
 
@@ -98,6 +100,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvLiabilitiesEmpty: TextView
     private var isLiabilitiesExpanded = false
 
+    // Net Worth card views
+    private lateinit var tvNetWorthValue: TextView
+    private lateinit var tvNetWorthAssets: TextView
+    private lateinit var tvNetWorthLiabilities: TextView
+    private lateinit var tvNetWorthDelta: TextView
+    private lateinit var ivRefreshNetWorth: ImageView
+
     private val fromCalendar = Calendar.getInstance()
     private val toCalendar = Calendar.getInstance()
     private val dateFormat = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
@@ -149,6 +158,18 @@ class MainActivity : AppCompatActivity() {
         liabilitiesContainer = findViewById(R.id.liabilitiesContainer)
         ivLiabilitiesChevron = findViewById(R.id.ivLiabilitiesChevron)
         tvLiabilitiesEmpty = findViewById(R.id.tvLiabilitiesEmpty)
+
+        // Net Worth card
+        tvNetWorthValue      = findViewById(R.id.tvNetWorthValue)
+        tvNetWorthAssets     = findViewById(R.id.tvNetWorthAssets)
+        tvNetWorthLiabilities = findViewById(R.id.tvNetWorthLiabilities)
+        tvNetWorthDelta      = findViewById(R.id.tvNetWorthDelta)
+        ivRefreshNetWorth    = findViewById(R.id.ivRefreshNetWorth)
+
+        findViewById<androidx.cardview.widget.CardView>(R.id.netWorthCard).setOnClickListener {
+            startActivity(Intent(this, NetWorthActivity::class.java))
+        }
+        ivRefreshNetWorth.setOnClickListener { refreshNetWorth() }
 
         // Start collapsed
         assetsContainer.visibility = View.GONE
@@ -264,6 +285,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshData() {
+        refreshNetWorth()
         refreshIncome()
         refreshExpenses()
         refreshStocks()
@@ -807,6 +829,72 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun refreshNetWorth() {
+        val token = getSessionToken() ?: return
+        tvNetWorthValue.text = getString(R.string.loading)
+        tvNetWorthAssets.text = "--"
+        tvNetWorthLiabilities.text = "--"
+        tvNetWorthDelta.visibility = View.GONE
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val currentJson   = fetchJsonResponse("${ApiConfig.BASE_URL}${ApiConfig.NetWorth.CURRENT}", token)
+                val snapshotsJson = fetchJsonResponse("${ApiConfig.BASE_URL}${ApiConfig.NetWorth.SNAPSHOTS}?period=1m", token)
+
+                withContext(Dispatchers.Main) {
+                    val data = currentJson?.getJSONObject("data")
+                    val netWorth    = data?.getDouble("net_worth")    ?: 0.0
+                    val assets      = data?.getDouble("total_assets") ?: 0.0
+                    val liabilities = data?.getDouble("total_liabilities") ?: 0.0
+
+                    tvNetWorthValue.text = formatCompact(netWorth)
+                    tvNetWorthValue.setTextColor(
+                        if (netWorth >= 0) Color.parseColor("#4CAF50") else Color.parseColor("#F44336")
+                    )
+                    tvNetWorthAssets.text     = formatCompact(assets)
+                    tvNetWorthLiabilities.text = formatCompact(liabilities)
+
+                    // Delta since yesterday
+                    val snapshots = snapshotsJson?.getJSONObject("data")?.getJSONArray("snapshots")
+                    if (snapshots != null && snapshots.length() >= 2) {
+                        val yesterday = snapshots.getJSONObject(snapshots.length() - 2).getDouble("net_worth")
+                        val delta = netWorth - yesterday
+                        val sign = if (delta >= 0) "▲ +" else "▼ "
+                        tvNetWorthDelta.text = "$sign${formatCompact(kotlin.math.abs(delta))} since yesterday"
+                        tvNetWorthDelta.setTextColor(
+                            if (delta >= 0) Color.parseColor("#4CAF50") else Color.parseColor("#F44336")
+                        )
+                        tvNetWorthDelta.visibility = View.VISIBLE
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    tvNetWorthValue.text = "Tap to retry"
+                    tvNetWorthValue.setTextColor(Color.parseColor("#F44336"))
+                }
+            }
+        }
+    }
+
+    private fun fetchJsonResponse(urlString: String, token: String): JSONObject? {
+        return try {
+            val url  = URL(urlString)
+            val conn = url.openConnection() as HttpURLConnection
+            conn.requestMethod = "GET"
+            conn.setRequestProperty(ApiConfig.HEADER_SESSION_TOKEN, token)
+            conn.connectTimeout = 10000
+            conn.readTimeout    = 10000
+            val code = conn.responseCode
+            val body = if (code == HttpURLConnection.HTTP_OK)
+                conn.inputStream.bufferedReader().readText()
+            else
+                conn.errorStream?.bufferedReader()?.readText() ?: ""
+            if (code != HttpURLConnection.HTTP_OK) return null
+            val json = JSONObject(body)
+            if (json.optString("status") == "success") json else null
+        } catch (_: Exception) { null }
+    }
+
     private fun refreshLiabilities() {
         val sessionToken = getSessionToken() ?: return
         CoroutineScope(Dispatchers.IO).launch {
@@ -1090,6 +1178,11 @@ class MainActivity : AppCompatActivity() {
         headerView.findViewById<Button>(R.id.btnOtherAssets)?.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)
             startActivity(Intent(this, OtherAssetsActivity::class.java))
+        }
+
+        headerView.findViewById<Button>(R.id.btnNetWorth)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            startActivity(Intent(this, NetWorthActivity::class.java))
         }
 
         headerView.findViewById<Button>(R.id.btnLiabilities)?.setOnClickListener {

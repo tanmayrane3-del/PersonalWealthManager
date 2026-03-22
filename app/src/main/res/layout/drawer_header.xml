@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@color/card_medium_teal"
-    android:padding="16dp">
+    android:padding="12dp">
 
     <!-- User Email Header -->
     <TextView
@@ -13,41 +13,45 @@
         android:layout_height="wrap_content"
         android:text="user@example.com"
         android:textColor="@android:color/white"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="bold"
-        android:layout_marginBottom="24dp"
-        android:paddingTop="24dp" />
+        android:layout_marginBottom="16dp"
+        android:paddingTop="16dp" />
 
     <!-- Dashboard Button -->
     <Button
         android:id="@+id/btnDashboard"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="44dp"
         android:text="@string/dashboard"
         android:textColor="@android:color/white"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         android:background="@color/card_dark_teal"
-        android:layout_marginBottom="12dp" />
+        android:gravity="start|center_vertical"
+        android:paddingStart="16dp"
+        android:layout_marginBottom="6dp" />
 
     <!-- Transactions Button -->
     <Button
         android:id="@+id/btnTransactions"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="44dp"
         android:text="@string/transactions"
         android:textColor="@android:color/white"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         android:background="@color/card_dark_teal"
-        android:layout_marginBottom="12dp" />
+        android:gravity="start|center_vertical"
+        android:paddingStart="16dp"
+        android:layout_marginBottom="6dp" />
 
     <!-- Management Header Button -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="2dp"
         android:background="@color/card_dark_teal"
         android:paddingStart="16dp"
         android:paddingEnd="8dp"
@@ -57,21 +61,21 @@
             android:id="@+id/btnManagement"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="56dp"
+            android:layout_height="44dp"
             android:text="@string/management"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:background="@android:color/transparent"
             android:gravity="start|center_vertical" />
 
         <ImageView
             android:id="@+id/ivManagementExpand"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/ic_expand_more"
             android:contentDescription="@string/expand_collapse"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="4dp" />
     </LinearLayout>
 
     <!-- Management Child Items Container -->
@@ -81,16 +85,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
-        android:paddingStart="24dp"
-        android:layout_marginBottom="8dp">
+        android:paddingStart="16dp"
+        android:layout_marginBottom="4dp">
 
         <Button
             android:id="@+id/btnCategoryManagement"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="38dp"
             android:text="@string/categories"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:background="@color/card_dark_teal"
             android:gravity="start|center_vertical"
             android:paddingStart="16dp" />
@@ -98,10 +102,10 @@
         <Button
             android:id="@+id/btnSourceManagement"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="38dp"
             android:text="@string/income_source_management"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:background="@color/card_dark_teal"
             android:gravity="start|center_vertical"
             android:paddingStart="16dp" />
@@ -109,21 +113,35 @@
         <Button
             android:id="@+id/btnRecipientManagement"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="38dp"
             android:text="@string/recipient_management"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:background="@color/card_dark_teal"
             android:gravity="start|center_vertical"
             android:paddingStart="16dp" />
     </LinearLayout>
+
+    <!-- Net Worth Button -->
+    <Button
+        android:id="@+id/btnNetWorth"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="Net Worth"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:background="@color/card_dark_teal"
+        android:gravity="start|center_vertical"
+        android:paddingStart="16dp"
+        android:layout_marginBottom="2dp" />
 
     <!-- Assets Header Button (expandable) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="2dp"
         android:background="@color/card_dark_teal"
         android:paddingStart="16dp"
         android:paddingEnd="8dp"
@@ -133,21 +151,21 @@
             android:id="@+id/btnAssets"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="56dp"
+            android:layout_height="44dp"
             android:text="@string/assets"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:background="@android:color/transparent"
             android:gravity="start|center_vertical" />
 
         <ImageView
             android:id="@+id/ivAssetsExpand"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/ic_expand_more"
             android:contentDescription="@string/expand_collapse"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="4dp" />
     </LinearLayout>
 
     <!-- Assets Child Items -->
@@ -157,16 +175,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
-        android:paddingStart="24dp"
-        android:layout_marginBottom="8dp">
+        android:paddingStart="16dp"
+        android:layout_marginBottom="4dp">
 
         <Button
             android:id="@+id/btnStocks"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="38dp"
             android:text="@string/stocks"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:background="@color/card_dark_teal"
             android:gravity="start|center_vertical"
             android:paddingStart="16dp" />
@@ -174,10 +192,10 @@
         <Button
             android:id="@+id/btnMetals"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="38dp"
             android:text="Metals"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:background="@color/card_dark_teal"
             android:gravity="start|center_vertical"
             android:paddingStart="16dp" />
@@ -185,10 +203,10 @@
         <Button
             android:id="@+id/btnMutualFunds"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="38dp"
             android:text="@string/mutual_funds"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:background="@color/card_dark_teal"
             android:gravity="start|center_vertical"
             android:paddingStart="16dp" />
@@ -196,10 +214,10 @@
         <Button
             android:id="@+id/btnOtherAssets"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="38dp"
             android:text="Other Assets"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:background="@color/card_dark_teal"
             android:gravity="start|center_vertical"
             android:paddingStart="16dp" />
@@ -209,20 +227,22 @@
     <Button
         android:id="@+id/btnLiabilities"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="44dp"
         android:text="Liabilities"
         android:textColor="@android:color/white"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         android:background="@color/card_dark_teal"
-        android:layout_marginBottom="4dp" />
+        android:gravity="start|center_vertical"
+        android:paddingStart="16dp"
+        android:layout_marginBottom="2dp" />
 
     <!-- Setup Demat Header Button (expandable) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="2dp"
         android:background="@color/card_dark_teal"
         android:paddingStart="16dp"
         android:paddingEnd="8dp"
@@ -232,21 +252,21 @@
             android:id="@+id/btnSetupDemat"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="56dp"
+            android:layout_height="44dp"
             android:text="@string/setup_demat"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:background="@android:color/transparent"
             android:gravity="start|center_vertical" />
 
         <ImageView
             android:id="@+id/ivSetupDematExpand"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/ic_expand_more"
             android:contentDescription="@string/expand_collapse"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="4dp" />
     </LinearLayout>
 
     <!-- Setup Demat Child Items -->
@@ -256,16 +276,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
-        android:paddingStart="24dp"
-        android:layout_marginBottom="8dp">
+        android:paddingStart="16dp"
+        android:layout_marginBottom="4dp">
 
         <Button
             android:id="@+id/btnConnectZerodha"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="38dp"
             android:text="@string/connect_zerodha"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:background="@color/card_dark_teal"
             android:gravity="start|center_vertical"
             android:paddingStart="16dp" />
@@ -275,23 +295,27 @@
     <Button
         android:id="@+id/btnSettings"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="44dp"
         android:text="@string/settings"
         android:textColor="@android:color/white"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         android:background="@color/card_dark_teal"
-        android:layout_marginBottom="12dp" />
+        android:gravity="start|center_vertical"
+        android:paddingStart="16dp"
+        android:layout_marginBottom="6dp" />
 
     <!-- Logout Button -->
     <Button
         android:id="@+id/btnLogout"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="44dp"
         android:text="@string/logout"
         android:textColor="@android:color/white"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="bold"
-        android:background="@color/card_dark_teal" />
+        android:background="@color/card_dark_teal"
+        android:gravity="start|center_vertical"
+        android:paddingStart="16dp" />
 
 </LinearLayout>
