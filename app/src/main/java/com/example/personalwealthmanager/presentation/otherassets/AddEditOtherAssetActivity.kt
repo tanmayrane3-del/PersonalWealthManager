@@ -53,6 +53,7 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
     private lateinit var layoutVehicle: LinearLayout
     private lateinit var etNotes: EditText
     private lateinit var btnSave: Button
+    private lateinit var btnCancel: Button
     private lateinit var btnDelete: Button
     private lateinit var cardLoanBanner: View
 
@@ -77,6 +78,7 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
         layoutVehicle = findViewById(R.id.layoutVehicle)
         etNotes = findViewById(R.id.etNotes)
         btnSave = findViewById(R.id.btnSave)
+        btnCancel = findViewById(R.id.btnCancel)
         btnDelete = findViewById(R.id.btnDelete)
         cardLoanBanner = findViewById(R.id.cardLoanBanner)
 
@@ -101,6 +103,8 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
 
         if (editAssetId != null) {
             tvTitle.text = "Edit Asset"
+            btnSave.text = "Update"
+            btnCancel.visibility = View.VISIBLE
             btnDelete.visibility = View.VISIBLE
 
             val assetType = intent.getStringExtra(EXTRA_ASSET_TYPE) ?: "real_estate"
@@ -111,9 +115,9 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
             val price = intent.getDoubleExtra(EXTRA_PURCHASE_PRICE, 0.0)
             if (price > 0) etPurchasePrice.setText(price.toLong().toString())
 
-            selectedDate = intent.getStringExtra(EXTRA_PURCHASE_DATE) ?: ""
+            selectedDate = (intent.getStringExtra(EXTRA_PURCHASE_DATE) ?: "").take(10)
             if (selectedDate.isNotEmpty()) {
-                tvPurchaseDate.text = selectedDate
+                tvPurchaseDate.text = formatDisplayDate(selectedDate)
                 tvPurchaseDate.setTextColor(0xFF1A1A1A.toInt())
             } else {
                 tvPurchaseDate.text = "Tap to select date"
@@ -150,7 +154,10 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
         // Back button
         findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
 
-        // Save
+        // Cancel
+        btnCancel.setOnClickListener { finish() }
+
+        // Save / Update
         btnSave.setOnClickListener { save() }
 
         // Delete
@@ -187,7 +194,7 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
             this,
             { _, year, month, day ->
                 selectedDate = "%04d-%02d-%02d".format(year, month + 1, day)
-                tvPurchaseDate.text = selectedDate
+                tvPurchaseDate.text = formatDisplayDate(selectedDate)
                 tvPurchaseDate.setTextColor(0xFF1A1A1A.toInt())
             },
             cal.get(Calendar.YEAR),
@@ -261,6 +268,13 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
             .show()
     }
 
+    private fun formatDisplayDate(yyyyMMdd: String): String {
+        return try {
+            val parts = yyyyMMdd.split("-")
+            "${parts[2]}-${parts[1]}-${parts[0]}"
+        } catch (e: Exception) { yyyyMMdd }
+    }
+
     private fun observeActionState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -279,7 +293,7 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
                         }
                         is OtherAssetsActionState.Error -> {
                             btnSave.isEnabled = true
-                            btnSave.text = "Save Asset"
+                            btnSave.text = if (editAssetId != null) "Update" else "Save Asset"
                             Toast.makeText(this@AddEditOtherAssetActivity, state.message, Toast.LENGTH_LONG).show()
                             viewModel.resetActionState()
                         }

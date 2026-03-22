@@ -219,7 +219,7 @@
             android:gravity="top"
             android:inputType="textMultiLine" />
 
-        <!-- Save Button -->
+        <!-- Save / Update Button -->
         <Button
             android:id="@+id/btnSave"
             android:layout_width="match_parent"
@@ -230,6 +230,18 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold" />
+
+        <!-- Cancel Button (edit mode only) -->
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/button_secondary"
+            android:text="Cancel"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:visibility="gone" />
 
         <!-- Delete Button (edit mode only) -->
         <Button

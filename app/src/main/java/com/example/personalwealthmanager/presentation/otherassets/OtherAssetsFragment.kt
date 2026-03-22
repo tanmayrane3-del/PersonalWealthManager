@@ -74,7 +74,7 @@ class OtherAssetsFragment : Fragment() {
         tvProjected5y = view.findViewById(R.id.tvProjected5y)
         fabAddAsset = view.findViewById(R.id.fabAddAsset)
 
-        adapter = OtherAssetCardAdapter(onLongPress = { asset -> showLongPressMenu(asset) })
+        adapter = OtherAssetCardAdapter(onLongPress = { asset -> openEdit(asset) })
         rvAssets.layoutManager = LinearLayoutManager(requireContext())
         rvAssets.adapter = adapter
         rvAssets.isNestedScrollingEnabled = false

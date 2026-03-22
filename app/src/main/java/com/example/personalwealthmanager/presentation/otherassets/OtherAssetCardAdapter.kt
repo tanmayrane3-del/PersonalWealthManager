@@ -103,11 +103,7 @@ class OtherAssetCardAdapter(
             )
         )
 
-        // Long press
-        holder.itemView.setOnLongClickListener {
-            onLongPress(asset)
-            true
-        }
+        holder.itemView.setOnClickListener { onLongPress(asset) }
     }
 
     private fun formatCompact(amount: Double): String = when {
