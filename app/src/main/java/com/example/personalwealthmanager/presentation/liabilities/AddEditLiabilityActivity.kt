@@ -2,6 +2,7 @@ package com.example.personalwealthmanager.presentation.liabilities
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -13,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -22,6 +24,7 @@ import com.example.personalwealthmanager.R
 import com.example.personalwealthmanager.data.remote.dto.CreateLiabilityRequest
 import com.example.personalwealthmanager.data.remote.dto.UpdateLiabilityRequest
 import com.example.personalwealthmanager.domain.model.PhysicalAsset
+import com.example.personalwealthmanager.presentation.otherassets.AddEditOtherAssetActivity
 import com.example.personalwealthmanager.presentation.otherassets.OtherAssetsUiState
 import com.example.personalwealthmanager.presentation.otherassets.OtherAssetsViewModel
 import com.google.android.material.card.MaterialCardView
@@ -77,11 +80,17 @@ class AddEditLiabilityActivity : AppCompatActivity() {
     private lateinit var tvStatusEmisPaid: TextView
     private lateinit var tvStatusEmisRemaining: TextView
 
+    // Asset linking views
+    private lateinit var layoutAssetLinking: LinearLayout
+    private lateinit var tvAssetLinkingTitle: TextView
+    private lateinit var layoutExistingAssets: LinearLayout
+    private lateinit var spExistingAssets: Spinner
+    private lateinit var btnAddNewAsset: Button
+    private lateinit var tvLinkedAssetChip: TextView
+
     // Optional / edit views
-    private lateinit var tvLinkedAssetTip: TextView
     private lateinit var layoutStatus: LinearLayout
     private lateinit var spinnerStatus: Spinner
-    private lateinit var spinnerLinkedAsset: Spinner
     private lateinit var etNotes: EditText
     private lateinit var btnSave: Button
     private lateinit var btnCancel: Button
@@ -89,7 +98,10 @@ class AddEditLiabilityActivity : AppCompatActivity() {
 
     private var selectedStartDate: String = ""
     private var editLiabilityId: String? = null
-    private var physicalAssets: List<PhysicalAsset> = emptyList()
+    private var allAssets: List<PhysicalAsset> = emptyList()
+    private var filteredAssets: List<PhysicalAsset> = emptyList()
+    private var selectedAssetId: String? = null
+    private var pendingAutoSelectFirst: Boolean = false
 
     // Computed values (set by calculateAndShow)
     private var calculatedEmi: Double = 0.0
@@ -105,6 +117,14 @@ class AddEditLiabilityActivity : AppCompatActivity() {
     private val statusValues     = listOf("active", "closed", "foreclosed")
 
     private val monthNames = arrayOf("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
+
+    // Launcher to create a new asset and return here
+    private val addAssetLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            pendingAutoSelectFirst = true
+            assetsViewModel.fetchSummary()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -130,10 +150,15 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         tvStatusEmisPaid        = findViewById(R.id.tvStatusEmisPaid)
         tvStatusEmisRemaining   = findViewById(R.id.tvStatusEmisRemaining)
 
-        tvLinkedAssetTip     = findViewById(R.id.tvLinkedAssetTip)
+        layoutAssetLinking   = findViewById(R.id.layoutAssetLinking)
+        tvAssetLinkingTitle  = findViewById(R.id.tvAssetLinkingTitle)
+        layoutExistingAssets = findViewById(R.id.layoutExistingAssets)
+        spExistingAssets     = findViewById(R.id.spExistingAssets)
+        btnAddNewAsset       = findViewById(R.id.btnAddNewAsset)
+        tvLinkedAssetChip    = findViewById(R.id.tvLinkedAssetChip)
+
         layoutStatus         = findViewById(R.id.layoutStatus)
         spinnerStatus        = findViewById(R.id.spinnerStatus)
-        spinnerLinkedAsset   = findViewById(R.id.spinnerLinkedAsset)
         etNotes              = findViewById(R.id.etNotes)
         btnSave              = findViewById(R.id.btnSave)
         btnCancel            = findViewById(R.id.btnCancel)
@@ -158,27 +183,13 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         btnCancel.setOnClickListener { finish() }
         btnDelete.setOnClickListener { confirmDelete() }
 
-        // Show required warning for car/home loans
-        spinnerLoanType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val loanType = loanTypeValues[position]
-                when (loanType) {
-                    "car" -> {
-                        tvLinkedAssetTip.visibility = View.VISIBLE
-                        tvLinkedAssetTip.text = "⚠️ Required — Link to your car. If not listed, add it in Other Assets first."
-                        tvLinkedAssetTip.setBackgroundColor(0x33FF8F00.toInt())
-                        tvLinkedAssetTip.setTextColor(0xFFFF8F00.toInt())
-                    }
-                    "home" -> {
-                        tvLinkedAssetTip.visibility = View.VISIBLE
-                        tvLinkedAssetTip.text = "⚠️ Required — Link to your property. If not listed, add it in Other Assets first."
-                        tvLinkedAssetTip.setBackgroundColor(0x33FF8F00.toInt())
-                        tvLinkedAssetTip.setTextColor(0xFFFF8F00.toInt())
-                    }
-                    else -> tvLinkedAssetTip.visibility = View.GONE
-                }
-            }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        btnAddNewAsset.setOnClickListener {
+            val loanType = loanTypeValues[spinnerLoanType.selectedItemPosition]
+            val lockedAssetType = if (loanType == "car") "vehicle" else "real_estate"
+            val intent = Intent(this, AddEditOtherAssetActivity::class.java)
+            intent.putExtra(AddEditOtherAssetActivity.EXTRA_LOCKED_ASSET_TYPE, lockedAssetType)
+            intent.putExtra(AddEditOtherAssetActivity.EXTRA_FROM_LIABILITY_FLOW, true)
+            addAssetLauncher.launch(intent)
         }
 
         observeActionState()
@@ -195,31 +206,93 @@ class AddEditLiabilityActivity : AppCompatActivity() {
             .also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
         spinnerStatus.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, statusLabels)
             .also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
-        updateAssetSpinner(emptyList())
-    }
-
-    private fun updateAssetSpinner(assets: List<PhysicalAsset>) {
-        physicalAssets = assets
-        val labels = mutableListOf("None")
-        labels.addAll(assets.map { "${if (it.assetType == "real_estate") "🏠" else "🚗"} ${it.label}" })
-        spinnerLinkedAsset.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels)
-            .also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
-
-        val existingAssetId = intent.getStringExtra(EXTRA_PHYSICAL_ASSET_ID)
-        if (!existingAssetId.isNullOrEmpty()) {
-            val idx = assets.indexOfFirst { it.id == existingAssetId }
-            if (idx >= 0) spinnerLinkedAsset.setSelection(idx + 1)
-        }
     }
 
     private fun observeAssetsState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 assetsViewModel.uiState.collect { state ->
-                    if (state is OtherAssetsUiState.Success) updateAssetSpinner(state.summary.assets)
+                    if (state is OtherAssetsUiState.Success) {
+                        allAssets = state.summary.assets
+                        if (isCalculated) {
+                            updateAssetLinkingSection()
+                        }
+                        if (pendingAutoSelectFirst) {
+                            pendingAutoSelectFirst = false
+                            if (filteredAssets.isNotEmpty()) {
+                                spExistingAssets.setSelection(0)
+                                selectedAssetId = filteredAssets[0].id
+                                showLinkedChip(filteredAssets[0].label)
+                            }
+                        }
+                    }
                 }
             }
         }
+    }
+
+    // ── Asset Linking Section ────────────────────────────────────────────────
+
+    private fun updateAssetLinkingSection() {
+        val loanType = loanTypeValues[spinnerLoanType.selectedItemPosition]
+        if (loanType != "car" && loanType != "home") {
+            layoutAssetLinking.visibility = View.GONE
+            return
+        }
+
+        val requiredAssetType = if (loanType == "car") "vehicle" else "real_estate"
+        val assetEmoji = if (loanType == "car") "🚗" else "🏠"
+        val assetLabel = if (loanType == "car") "Car" else "Property"
+
+        tvAssetLinkingTitle.text = "$assetEmoji Link Your $assetLabel (Required *)"
+        btnAddNewAsset.text = "＋ Add New $assetLabel"
+
+        filteredAssets = allAssets.filter { it.assetType == requiredAssetType }
+
+        if (filteredAssets.isNotEmpty()) {
+            val labels = filteredAssets.map { "$assetEmoji ${it.label}" }
+            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spExistingAssets.adapter = adapter
+
+            // Try to restore previously selected asset or pre-select from edit intent
+            val targetId = selectedAssetId ?: intent.getStringExtra(EXTRA_PHYSICAL_ASSET_ID)
+            val idx = if (!targetId.isNullOrEmpty()) filteredAssets.indexOfFirst { it.id == targetId } else -1
+            if (idx >= 0) {
+                spExistingAssets.setSelection(idx)
+                selectedAssetId = filteredAssets[idx].id
+                showLinkedChip(filteredAssets[idx].label)
+            } else {
+                // Auto-select first
+                spExistingAssets.setSelection(0)
+                selectedAssetId = filteredAssets[0].id
+                showLinkedChip(filteredAssets[0].label)
+            }
+
+            spExistingAssets.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                    selectedAssetId = filteredAssets[pos].id
+                    showLinkedChip(filteredAssets[pos].label)
+                }
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+
+            layoutExistingAssets.visibility = View.VISIBLE
+        } else {
+            layoutExistingAssets.visibility = View.GONE
+            // Clear selection only if no asset was previously linked (don't clear in edit mode if asset was just removed from list)
+            if (selectedAssetId != null && filteredAssets.none { it.id == selectedAssetId }) {
+                selectedAssetId = null
+                tvLinkedAssetChip.visibility = View.GONE
+            }
+        }
+
+        layoutAssetLinking.visibility = View.VISIBLE
+    }
+
+    private fun showLinkedChip(label: String) {
+        tvLinkedAssetChip.text = "✓ Linked to: $label"
+        tvLinkedAssetChip.visibility = View.VISIBLE
     }
 
     // ── Prefill (edit mode) ─────────────────────────────────────────────────
@@ -254,6 +327,12 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         spinnerStatus.setSelection(statusValues.indexOf(status).coerceAtLeast(0))
 
         etNotes.setText(intent.getStringExtra(EXTRA_NOTES) ?: "")
+
+        // Pre-set selectedAssetId so updateAssetLinkingSection can select it
+        val existingAssetId = intent.getStringExtra(EXTRA_PHYSICAL_ASSET_ID)
+        if (!existingAssetId.isNullOrEmpty()) {
+            selectedAssetId = existingAssetId
+        }
 
         // Auto-calculate if all parameters are available
         if (original > 0 && rate > 0 && tenure > 0 && selectedStartDate.isNotEmpty()) {
@@ -332,7 +411,7 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         calculatedEmiDueDay  = dueDay
         isCalculated         = true
 
-        // Populate card
+        // Populate status card
         tvStatusEmi.text           = formatAmount(emi)
         tvStatusEmiDueDay.text     = ordinal(dueDay) + " of month"
         tvStatusLoanEnd.text       = loanEndStr
@@ -342,6 +421,9 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         tvStatusEmisRemaining.text = "${tenure - emisPaid} EMIs"
 
         cardLoanStatus.visibility = View.VISIBLE
+
+        // Show asset linking section if car/home loan
+        updateAssetLinkingSection()
     }
 
     private fun countEmisPaid(startYear: Int, startMonth: Int, dueDay: Int, tenure: Int): Int {
@@ -390,27 +472,22 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         val lenderName = etLenderName.text.toString().trim()
         if (lenderName.isEmpty()) { etLenderName.error = "Required"; return }
 
-        val loanType          = loanTypeValues[spinnerLoanType.selectedItemPosition]
-        val selectedAssetIdx  = spinnerLinkedAsset.selectedItemPosition
+        val loanType = loanTypeValues[spinnerLoanType.selectedItemPosition]
 
         // Linked asset is mandatory for car and home loans
-        if ((loanType == "car" || loanType == "home") && selectedAssetIdx == 0) {
-            Toast.makeText(
-                this,
-                if (loanType == "car") "Please link this loan to a car. Add one in Other Assets first."
-                else "Please link this loan to a property. Add one in Other Assets first.",
-                Toast.LENGTH_LONG
-            ).show()
+        if ((loanType == "car" || loanType == "home") && selectedAssetId == null) {
+            val msg = if (loanType == "car") "Please link or add a car for this loan."
+                      else "Please link or add a property for this loan."
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
             return
         }
+
         val loanAccountNumber = etLoanAccountNumber.text.toString().trim().ifEmpty { null }
         val interestType      = interestTypeValues[spinnerInterestType.selectedItemPosition]
         val interestRate      = etInterestRate.text.toString().trim().toDoubleOrNull() ?: return
         val originalAmount    = etOriginalAmount.text.toString().trim().toDoubleOrNull() ?: return
         val tenureMonths      = etTenureMonths.text.toString().trim().toIntOrNull() ?: return
         val notes             = etNotes.text.toString().trim().ifEmpty { null }
-
-        val physicalAssetId   = if (selectedAssetIdx > 0) physicalAssets[selectedAssetIdx - 1].id else null
 
         btnSave.isEnabled = false
         btnSave.text = "Saving..."
@@ -431,7 +508,7 @@ class AddEditLiabilityActivity : AppCompatActivity() {
                     emiDueDay            = calculatedEmiDueDay,
                     startDate            = selectedStartDate,
                     tenureMonths         = tenureMonths,
-                    physicalAssetId      = physicalAssetId,
+                    physicalAssetId      = selectedAssetId,
                     status               = status,
                     notes                = notes
                 )
@@ -450,7 +527,7 @@ class AddEditLiabilityActivity : AppCompatActivity() {
                     emiDueDay            = calculatedEmiDueDay,
                     startDate            = selectedStartDate,
                     tenureMonths         = tenureMonths,
-                    physicalAssetId      = physicalAssetId,
+                    physicalAssetId      = selectedAssetId,
                     notes                = notes
                 )
             )
@@ -487,7 +564,7 @@ class AddEditLiabilityActivity : AppCompatActivity() {
                         }
                         is LiabilitiesActionState.Error -> {
                             btnSave.isEnabled = true
-                            btnSave.text = "Save Liability"
+                            btnSave.text = if (editLiabilityId != null) "Update Liability" else "Save Liability"
                             Toast.makeText(this@AddEditLiabilityActivity, state.message, Toast.LENGTH_LONG).show()
                             viewModel.resetActionState()
                         }

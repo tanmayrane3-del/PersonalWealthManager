@@ -140,14 +140,14 @@ class OtherAssetsFragment : Fragment() {
         progressBar.visibility = View.GONE
         summaryCard.visibility = View.VISIBLE
 
-        // Total value
-        tvTotalValue.text = currencyFormat.format(summary.totalCurrentValue)
-
         // CAGR projections
         val assets = summary.assets
         if (assets.isNotEmpty()) {
-            val totalCurrent = summary.totalCurrentValue.takeIf { it > 0 }
-                ?: assets.sumOf { PhysicalAssetCagrCalculator.getAssetCurrentValue(it) }
+            // Always use device-computed current value — backend stores purchase price for vehicles
+            val totalCurrent = assets.sumOf { PhysicalAssetCagrCalculator.getAssetCurrentValue(it) }
+
+            // Total value uses same device-computed base so it matches CAGR math
+            tvTotalValue.text = currencyFormat.format(totalCurrent)
 
             val proj1y = assets.sumOf { PhysicalAssetCagrCalculator.getProjectedValue(it, 1) }
             val proj3y = assets.sumOf { PhysicalAssetCagrCalculator.getProjectedValue(it, 3) }
@@ -175,6 +175,7 @@ class OtherAssetsFragment : Fragment() {
                 cagrSection.visibility = View.VISIBLE
             }
         } else {
+            tvTotalValue.text = currencyFormat.format(0.0)
             cagrSection.visibility = View.GONE
         }
 

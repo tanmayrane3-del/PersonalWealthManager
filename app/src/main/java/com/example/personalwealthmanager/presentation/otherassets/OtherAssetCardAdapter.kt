@@ -81,8 +81,7 @@ class OtherAssetCardAdapter(
         } else {
             holder.tvLastUpdated.visibility = View.GONE
             holder.tvDepreciation.visibility = View.VISIBLE
-            val deprRate = asset.depreciationRatePct ?: 10.0
-            holder.tvDepreciation.text = "Depreciation: -${deprRate.toInt()}%/yr"
+            holder.tvDepreciation.text = "Depreciation: −15% WDV/yr"
         }
 
         // Purchase info

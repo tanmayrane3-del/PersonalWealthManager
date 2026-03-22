@@ -7,17 +7,14 @@ import kotlin.math.pow
 
 object PhysicalAssetCagrCalculator {
 
+    private const val VEHICLE_DEPRECIATION_RATE = 0.15  // 15% WDV per year
+
     fun getCarCurrentValue(purchasePrice: Double, purchaseDateStr: String): Double {
         return try {
-            val purchaseDate = LocalDate.parse(purchaseDateStr)
-            val yearsHeld = ChronoUnit.DAYS.between(purchaseDate, LocalDate.now()) / 365.0
-            if (yearsHeld <= 0) {
-                purchasePrice
-            } else if (yearsHeld <= 1) {
-                purchasePrice * (1 - 0.15 * yearsHeld)
-            } else {
-                purchasePrice * 0.85 * (0.90.pow(yearsHeld - 1))
-            }
+            val purchaseDate = LocalDate.parse(purchaseDateStr.take(10))
+            val daysHeld = ChronoUnit.DAYS.between(purchaseDate, LocalDate.now())
+            if (daysHeld <= 0) purchasePrice
+            else purchasePrice * (1.0 - VEHICLE_DEPRECIATION_RATE).pow(daysHeld / 365.25)
         } catch (e: Exception) {
             purchasePrice
         }
@@ -33,26 +30,27 @@ object PhysicalAssetCagrCalculator {
             getHomeCurrentValue(asset)
         }
 
-    fun getAssetCagr(asset: PhysicalAsset): Double {
-        return if (asset.assetType == "vehicle") {
-            -((asset.depreciationRatePct ?: 10.0) / 100.0)
+    fun getAssetCagr(asset: PhysicalAsset): Double =
+        if (asset.assetType == "vehicle") {
+            -VEHICLE_DEPRECIATION_RATE
         } else {
-            val currentValue = getHomeCurrentValue(asset)
-            return try {
-                val purchaseDate = LocalDate.parse(asset.purchaseDate)
-                val yearsHeld = ChronoUnit.DAYS.between(purchaseDate, LocalDate.now()) / 365.0
-                if (yearsHeld <= 0 || asset.purchasePrice <= 0) return 0.0
-                (currentValue / asset.purchasePrice).pow(1.0 / yearsHeld) - 1.0
+            try {
+                val purchaseDate = LocalDate.parse(asset.purchaseDate.take(10))
+                val yearsHeld = ChronoUnit.DAYS.between(purchaseDate, LocalDate.now()) / 365.25
+                if (yearsHeld <= 0 || asset.purchasePrice <= 0) 0.0
+                else {
+                    val currentValue = getHomeCurrentValue(asset)
+                    (currentValue / asset.purchasePrice).pow(1.0 / yearsHeld) - 1.0
+                }
             } catch (e: Exception) {
                 0.0
             }
         }
-    }
 
     fun getProjectedValue(asset: PhysicalAsset, years: Int): Double {
         val currentValue = getAssetCurrentValue(asset)
         val cagr = getAssetCagr(asset)
-        return currentValue * (1 + cagr).pow(years.toDouble())
+        return currentValue * (1.0 + cagr).pow(years.toDouble())
     }
 
     fun getOverallCagr(assets: List<PhysicalAsset>, years: Int): Double {

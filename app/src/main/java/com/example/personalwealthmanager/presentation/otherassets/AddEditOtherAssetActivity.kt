@@ -36,6 +36,9 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
         const val EXTRA_DEPRECIATION_RATE = "extra_depreciation_rate"
         const val EXTRA_NOTES = "extra_notes"
         const val EXTRA_HAS_ACTIVE_LOAN = "extra_has_active_loan"
+        // When launched from liability flow: lock asset type and return RESULT_OK on save
+        const val EXTRA_LOCKED_ASSET_TYPE = "extra_locked_asset_type"
+        const val EXTRA_FROM_LIABILITY_FLOW = "extra_from_liability_flow"
     }
 
     private val viewModel: OtherAssetsViewModel by viewModels()
@@ -48,7 +51,6 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
     private lateinit var layoutRealEstate: LinearLayout
     private lateinit var etCurrentMarketValue: EditText
     private lateinit var layoutVehicle: LinearLayout
-    private lateinit var etDepreciationRate: EditText
     private lateinit var etNotes: EditText
     private lateinit var btnSave: Button
     private lateinit var btnDelete: Button
@@ -73,7 +75,6 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
         layoutRealEstate = findViewById(R.id.layoutRealEstate)
         etCurrentMarketValue = findViewById(R.id.etCurrentMarketValue)
         layoutVehicle = findViewById(R.id.layoutVehicle)
-        etDepreciationRate = findViewById(R.id.etDepreciationRate)
         etNotes = findViewById(R.id.etNotes)
         btnSave = findViewById(R.id.btnSave)
         btnDelete = findViewById(R.id.btnDelete)
@@ -83,6 +84,16 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
         val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, assetTypeLabels)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerAssetType.adapter = spinnerAdapter
+
+        // Handle locked asset type (when launched from liability flow)
+        val lockedAssetType = intent.getStringExtra(EXTRA_LOCKED_ASSET_TYPE)
+        if (lockedAssetType != null) {
+            val typeIdx = assetTypeValues.indexOf(lockedAssetType).coerceAtLeast(0)
+            spinnerAssetType.setSelection(typeIdx)
+            spinnerAssetType.isEnabled = false
+            val assetLabel = if (lockedAssetType == "vehicle") "Add Car / Vehicle" else "Add Home / Property"
+            tvTitle.text = assetLabel
+        }
 
         // Populate edit mode data
         editAssetId = intent.getStringExtra(EXTRA_ASSET_ID)
@@ -101,20 +112,17 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
             if (price > 0) etPurchasePrice.setText(price.toLong().toString())
 
             selectedDate = intent.getStringExtra(EXTRA_PURCHASE_DATE) ?: ""
-            tvPurchaseDate.text = if (selectedDate.isNotEmpty()) selectedDate else "Tap to select date"
-            tvPurchaseDate.setTextColor(
-                if (selectedDate.isNotEmpty())
-                    getColor(android.R.color.white)
-                else
-                    0x88FFFFFF.toInt()
-            )
+            if (selectedDate.isNotEmpty()) {
+                tvPurchaseDate.text = selectedDate
+                tvPurchaseDate.setTextColor(0xFF1A1A1A.toInt())
+            } else {
+                tvPurchaseDate.text = "Tap to select date"
+                tvPurchaseDate.setTextColor(0x88000000.toInt())
+            }
 
             if (assetType == "real_estate") {
                 val cmv = intent.getDoubleExtra(EXTRA_CURRENT_MARKET_VALUE, 0.0)
                 if (cmv > 0) etCurrentMarketValue.setText(cmv.toLong().toString())
-            } else {
-                val dr = intent.getDoubleExtra(EXTRA_DEPRECIATION_RATE, 10.0)
-                etDepreciationRate.setText(dr.toInt().toString())
             }
             etNotes.setText(intent.getStringExtra(EXTRA_NOTES) ?: "")
 
@@ -180,7 +188,7 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
             { _, year, month, day ->
                 selectedDate = "%04d-%02d-%02d".format(year, month + 1, day)
                 tvPurchaseDate.text = selectedDate
-                tvPurchaseDate.setTextColor(getColor(android.R.color.white))
+                tvPurchaseDate.setTextColor(0xFF1A1A1A.toInt())
             },
             cal.get(Calendar.YEAR),
             cal.get(Calendar.MONTH),
@@ -200,7 +208,6 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
         if (selectedDate.isEmpty()) { Toast.makeText(this, "Please select a purchase date", Toast.LENGTH_SHORT).show(); return }
 
         var currentMarketValue: Double? = null
-        var depreciationRate: Double? = null
 
         if (assetType == "real_estate") {
             val cmvStr = etCurrentMarketValue.text.toString().trim()
@@ -209,10 +216,8 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
                 etCurrentMarketValue.error = "Enter a valid market value"
                 return
             }
-        } else {
-            val drStr = etDepreciationRate.text.toString().trim()
-            depreciationRate = drStr.toDoubleOrNull() ?: 10.0
         }
+        // Vehicle depreciation is auto-computed per IRDAI — no user input needed
 
         btnSave.isEnabled = false
         btnSave.text = "Saving..."
@@ -226,7 +231,7 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
                     purchasePrice = price,
                     purchaseDate = selectedDate,
                     currentMarketValue = currentMarketValue,
-                    depreciationRatePct = depreciationRate,
+                    depreciationRatePct = null,
                     notes = notes
                 )
             )
@@ -238,7 +243,7 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
                     purchasePrice = price,
                     purchaseDate = selectedDate,
                     currentMarketValue = currentMarketValue,
-                    depreciationRatePct = depreciationRate,
+                    depreciationRatePct = null,
                     notes = notes
                 )
             )
@@ -267,6 +272,9 @@ class AddEditOtherAssetActivity : AppCompatActivity() {
                         }
                         is OtherAssetsActionState.Saved -> {
                             viewModel.resetActionState()
+                            if (intent.getBooleanExtra(EXTRA_FROM_LIABILITY_FLOW, false)) {
+                                setResult(RESULT_OK)
+                            }
                             finish()
                         }
                         is OtherAssetsActionState.Error -> {

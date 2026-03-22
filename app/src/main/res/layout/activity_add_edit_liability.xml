@@ -133,35 +133,6 @@
             android:background="@drawable/spinner_background_teal"
             android:paddingHorizontal="12dp" />
 
-        <!-- Linked Asset (prominent here for car/home loans) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Linked Asset"
-            android:textColor="#B3FFFFFF"
-            android:textSize="13sp"
-            android:layout_marginBottom="6dp" />
-
-        <Spinner
-            android:id="@+id/spinnerLinkedAsset"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/spinner_background_teal"
-            android:paddingHorizontal="12dp" />
-
-        <!-- Tip banner shown for car/home loan types -->
-        <TextView
-            android:id="@+id/tvLinkedAssetTip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:padding="10dp"
-            android:background="#1A00BFA5"
-            android:text="💡 Link this loan to a car/property in Other Assets for complete wealth tracking"
-            android:textColor="#00BFA5"
-            android:textSize="12sp"
-            android:visibility="gone" />
 
         <!-- Section divider -->
         <View
@@ -473,6 +444,74 @@
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
+        <!-- ── ASSET LINKING SECTION (shown after Calculate for car/home loans) ── -->
+        <LinearLayout
+            android:id="@+id/layoutAssetLinking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvAssetLinkingTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🚗 LINK YOUR CAR (Required *)"
+                android:textColor="#FFB74D"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Existing assets spinner (shown only when matching assets exist) -->
+            <LinearLayout
+                android:id="@+id/layoutExistingAssets"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select existing asset:"
+                    android:textColor="#80FFFFFF"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="6dp" />
+
+                <Spinner
+                    android:id="@+id/spExistingAssets"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/spinner_background_teal"
+                    android:paddingHorizontal="12dp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnAddNewAsset"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/button_secondary"
+                android:text="＋ Add New Car"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvLinkedAssetChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="6dp"
+                android:paddingHorizontal="14dp"
+                android:background="#1A00E5CC"
+                android:text="✓ Linked to: Asset Name"
+                android:textColor="#00E5CC"
+                android:textSize="13sp"
+                android:visibility="gone" />
+
+        </LinearLayout>
 
         <!-- Section divider -->
         <View

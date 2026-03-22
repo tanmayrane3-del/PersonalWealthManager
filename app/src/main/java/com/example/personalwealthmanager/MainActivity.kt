@@ -46,6 +46,7 @@ import com.example.personalwealthmanager.presentation.otherassets.OtherAssetsAct
 import com.example.personalwealthmanager.presentation.liabilities.LiabilitiesActivity
 import com.example.personalwealthmanager.core.utils.PhysicalAssetCagrCalculator
 import com.example.personalwealthmanager.domain.model.PhysicalAsset
+import com.example.personalwealthmanager.domain.model.Liability
 
 class MainActivity : AppCompatActivity() {
 
@@ -92,6 +93,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var assetsContainer: LinearLayout
     private lateinit var ivAssetsChevron: ImageView
     private var isAssetsExpanded = false
+    private lateinit var liabilitiesContainer: LinearLayout
+    private lateinit var ivLiabilitiesChevron: ImageView
+    private lateinit var tvLiabilitiesEmpty: TextView
+    private var isLiabilitiesExpanded = false
 
     private val fromCalendar = Calendar.getInstance()
     private val toCalendar = Calendar.getInstance()
@@ -141,10 +146,15 @@ class MainActivity : AppCompatActivity() {
         otherAssetsProjectionsColumn = findViewById(R.id.otherAssetsProjectionsColumn)
         assetsContainer = findViewById(R.id.assetsContainer)
         ivAssetsChevron = findViewById(R.id.ivAssetsChevron)
+        liabilitiesContainer = findViewById(R.id.liabilitiesContainer)
+        ivLiabilitiesChevron = findViewById(R.id.ivLiabilitiesChevron)
+        tvLiabilitiesEmpty = findViewById(R.id.tvLiabilitiesEmpty)
 
         // Start collapsed
         assetsContainer.visibility = View.GONE
         ivAssetsChevron.rotation = -90f
+        liabilitiesContainer.visibility = View.GONE
+        ivLiabilitiesChevron.rotation = -90f
 
         val fromDateContainer = findViewById<View>(R.id.fromDateContainer)
         val toDateContainer = findViewById<View>(R.id.toDateContainer)
@@ -179,6 +189,11 @@ class MainActivity : AppCompatActivity() {
         // Assets section collapse/expand
         findViewById<View>(R.id.assetsHeader).setOnClickListener {
             if (isAssetsExpanded) collapseAssets() else expandAssets()
+        }
+
+        // Liabilities section collapse/expand
+        findViewById<View>(R.id.liabilitiesHeader).setOnClickListener {
+            if (isLiabilitiesExpanded) collapseLiabilities() else expandLiabilities()
         }
 
         // Refresh button click listeners
@@ -255,6 +270,7 @@ class MainActivity : AppCompatActivity() {
         refreshMetals()
         refreshMutualFunds()
         refreshOtherAssets()
+        refreshLiabilities()
     }
 
     private fun refreshIncome() {
@@ -791,6 +807,185 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun refreshLiabilities() {
+        val sessionToken = getSessionToken() ?: return
+        CoroutineScope(Dispatchers.IO).launch {
+            val liabilities = fetchActiveLiabilities(sessionToken)
+            withContext(Dispatchers.Main) { displayLiabilityCards(liabilities) }
+        }
+    }
+
+    private fun fetchActiveLiabilities(sessionToken: String): List<Liability> {
+        return try {
+            val url = URL("${ApiConfig.BASE_URL}/api/liabilities")
+            val connection = url.openConnection() as HttpURLConnection
+            connection.requestMethod = "GET"
+            connection.setRequestProperty(ApiConfig.HEADER_SESSION_TOKEN, sessionToken)
+            connection.connectTimeout = 10000
+            connection.readTimeout = 10000
+
+            val responseCode = connection.responseCode
+            val response = if (responseCode == HttpURLConnection.HTTP_OK)
+                connection.inputStream.bufferedReader().readText()
+            else
+                connection.errorStream?.bufferedReader()?.readText() ?: ""
+
+            if (responseCode != HttpURLConnection.HTTP_OK) return emptyList()
+            val json = JSONObject(response)
+            if (json.optString("status") != "success") return emptyList()
+
+            val dataObj = json.getJSONObject("data")
+            val dataArray = dataObj.getJSONArray("liabilities")
+            val result = mutableListOf<Liability>()
+            for (i in 0 until dataArray.length()) {
+                val l = dataArray.getJSONObject(i)
+                val status = l.optString("status", "active")
+                if (status != "active") continue
+                result.add(
+                    Liability(
+                        id = l.getString("id"),
+                        loanType = l.getString("loan_type"),
+                        lenderName = l.getString("lender_name"),
+                        loanAccountNumber = if (l.isNull("loan_account_number")) null else l.optString("loan_account_number"),
+                        interestType = l.optString("interest_type", "fixed"),
+                        interestRate = l.getDouble("interest_rate"),
+                        originalAmount = l.getDouble("original_amount"),
+                        outstandingPrincipal = l.getDouble("outstanding_principal"),
+                        emiAmount = l.getDouble("emi_amount"),
+                        emiDueDay = if (l.isNull("emi_due_day")) null else l.optInt("emi_due_day"),
+                        startDate = l.getString("start_date"),
+                        tenureMonths = l.getInt("tenure_months"),
+                        physicalAssetId = if (l.isNull("physical_asset_id")) null else l.optString("physical_asset_id"),
+                        assetLabel = if (l.isNull("asset_label")) null else l.optString("asset_label"),
+                        assetType = if (l.isNull("asset_type")) null else l.optString("asset_type"),
+                        status = status,
+                        notes = if (l.isNull("notes")) null else l.optString("notes")
+                    )
+                )
+            }
+            result
+        } catch (_: Exception) { emptyList() }
+    }
+
+    private fun displayLiabilityCards(liabilities: List<Liability>) {
+        // Remove dynamically added card views (index 1+), keep tvLiabilitiesEmpty at index 0
+        while (liabilitiesContainer.childCount > 1) {
+            liabilitiesContainer.removeViewAt(liabilitiesContainer.childCount - 1)
+        }
+
+        if (liabilities.isEmpty()) {
+            tvLiabilitiesEmpty.visibility = View.VISIBLE
+            return
+        }
+
+        tvLiabilitiesEmpty.visibility = View.GONE
+
+        for (liability in liabilities) {
+            val cardView = layoutInflater.inflate(R.layout.item_liability_dashboard_card, liabilitiesContainer, false)
+
+            val tvIcon = cardView.findViewById<TextView>(R.id.tvLoanTypeIcon)
+            val tvLender = cardView.findViewById<TextView>(R.id.tvLenderName)
+            val tvBadge = cardView.findViewById<TextView>(R.id.tvLoanTypeBadge)
+            val tvOutstanding = cardView.findViewById<TextView>(R.id.tvOutstanding)
+            val tvOriginal = cardView.findViewById<TextView>(R.id.tvOriginalAmount)
+            val tvEmi = cardView.findViewById<TextView>(R.id.tvEmi)
+            val tvRate = cardView.findViewById<TextView>(R.id.tvInterestRate)
+            val tvLinked = cardView.findViewById<TextView>(R.id.tvLinkedAsset)
+
+            tvIcon.text = when (liability.loanType) {
+                "home" -> "🏠"
+                "car" -> "🚗"
+                "education" -> "🎓"
+                "business" -> "💼"
+                else -> "💳"
+            }
+            tvLender.text = liability.lenderName
+            tvBadge.text = when (liability.loanType) {
+                "home" -> "Home Loan"
+                "car" -> "Car Loan"
+                "personal" -> "Personal Loan"
+                "education" -> "Education Loan"
+                "business" -> "Business Loan"
+                else -> "Loan"
+            }
+            tvOutstanding.text = formatCompact(liability.outstandingPrincipal)
+            tvOriginal.text = "of ${formatCompact(liability.originalAmount)}"
+            tvEmi.text = formatCompact(liability.emiAmount)
+            tvRate.text = "${liability.interestRate}% ${if (liability.interestType == "floating") "(floating)" else "p.a."}"
+
+            if (liability.assetLabel != null) {
+                val assetIcon = if (liability.assetType == "vehicle") "🚗" else "🏠"
+                tvLinked.text = "🔗 $assetIcon ${liability.assetLabel}"
+                tvLinked.visibility = View.VISIBLE
+            } else {
+                tvLinked.visibility = View.GONE
+            }
+
+            cardView.setOnClickListener {
+                startActivity(Intent(this, LiabilitiesActivity::class.java))
+            }
+
+            liabilitiesContainer.addView(cardView)
+        }
+    }
+
+    private fun expandLiabilities() {
+        isLiabilitiesExpanded = true
+        val parentWidth = (liabilitiesContainer.parent as? android.view.View)?.width
+            ?: resources.displayMetrics.widthPixels
+        liabilitiesContainer.measure(
+            View.MeasureSpec.makeMeasureSpec(parentWidth, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        )
+        val targetHeight = liabilitiesContainer.measuredHeight
+        liabilitiesContainer.layoutParams.height = 0
+        liabilitiesContainer.scaleY = 0f
+        liabilitiesContainer.pivotY = 0f
+        liabilitiesContainer.alpha = 0f
+        liabilitiesContainer.visibility = View.VISIBLE
+
+        val heightAnim = ValueAnimator.ofInt(0, targetHeight).apply {
+            addUpdateListener {
+                liabilitiesContainer.layoutParams.height = it.animatedValue as Int
+                liabilitiesContainer.requestLayout()
+            }
+        }
+        val scaleAnim = ObjectAnimator.ofFloat(liabilitiesContainer, "scaleY", 0f, 1f)
+        val alphaAnim = ObjectAnimator.ofFloat(liabilitiesContainer, "alpha", 0f, 1f)
+        val chevronAnim = ObjectAnimator.ofFloat(ivLiabilitiesChevron, "rotation", -90f, 0f)
+
+        AnimatorSet().apply {
+            playTogether(heightAnim, scaleAnim, alphaAnim, chevronAnim)
+            interpolator = DecelerateInterpolator()
+            duration = 350
+            start()
+        }
+    }
+
+    private fun collapseLiabilities() {
+        isLiabilitiesExpanded = false
+        val initialHeight = liabilitiesContainer.measuredHeight
+        liabilitiesContainer.pivotY = 0f
+
+        val heightAnim = ValueAnimator.ofInt(initialHeight, 0).apply {
+            addUpdateListener {
+                liabilitiesContainer.layoutParams.height = it.animatedValue as Int
+                liabilitiesContainer.requestLayout()
+                if (it.animatedValue as Int == 0) liabilitiesContainer.visibility = View.GONE
+            }
+        }
+        val scaleAnim = ObjectAnimator.ofFloat(liabilitiesContainer, "scaleY", 1f, 0f)
+        val alphaAnim = ObjectAnimator.ofFloat(liabilitiesContainer, "alpha", 1f, 0f)
+        val chevronAnim = ObjectAnimator.ofFloat(ivLiabilitiesChevron, "rotation", 0f, -90f)
+
+        AnimatorSet().apply {
+            playTogether(heightAnim, scaleAnim, alphaAnim, chevronAnim)
+            interpolator = DecelerateInterpolator()
+            duration = 350
+            start()
+        }
+    }
+
     private fun formatCurrency(amount: Double): String {
         return currencyFormat.format(amount)
     }
@@ -1050,8 +1245,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun expandAssets() {
         isAssetsExpanded = true
+        val parentWidth = (assetsContainer.parent as? android.view.View)?.width
+            ?: resources.displayMetrics.widthPixels
         assetsContainer.measure(
-            View.MeasureSpec.makeMeasureSpec(assetsContainer.width, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(parentWidth, View.MeasureSpec.EXACTLY),
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         )
         val targetHeight = assetsContainer.measuredHeight

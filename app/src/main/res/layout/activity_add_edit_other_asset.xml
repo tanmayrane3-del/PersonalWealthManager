@@ -177,7 +177,7 @@
                 android:inputType="numberDecimal" />
         </LinearLayout>
 
-        <!-- Vehicle Fields -->
+        <!-- Vehicle Info Banner (depreciation is automatic at 15% WDV) -->
         <LinearLayout
             android:id="@+id/layoutVehicle"
             android:layout_width="match_parent"
@@ -186,24 +186,14 @@
             android:visibility="gone">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Depreciation Rate (%/yr)"
-                android:textColor="#B3FFFFFF"
-                android:textSize="13sp"
-                android:layout_marginBottom="6dp" />
-
-            <EditText
-                android:id="@+id/etDepreciationRate"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/edittext_background"
-                android:text="10"
-                android:textColor="#1A1A1A"
-                android:textSize="15sp"
-                android:paddingHorizontal="12dp"
-                android:inputType="numberDecimal" />
+                android:padding="12dp"
+                android:background="#1A00BFA5"
+                android:text="📋 Vehicle value depreciates at 15% per year (Written Down Value method)"
+                android:textColor="@android:color/white"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <!-- Notes -->
