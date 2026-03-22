@@ -76,7 +76,7 @@ class NetWorthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_net_worth)
 
-        drawerLayout      = findViewById(R.id.drawerLayout)
+        drawerLayout = findViewById(R.id.drawerLayout)
         swipeRefresh      = findViewById(R.id.swipeRefresh)
         tvNetWorthValue   = findViewById(R.id.tvNetWorthValue)
         tvTotalAssets     = findViewById(R.id.tvTotalAssets)

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:openDrawer="end">
@@ -44,38 +45,51 @@
                 android:id="@+id/netWorthCard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="12dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardBackgroundColor="@color/card_dark_teal"
+                app:cardBackgroundColor="@color/card_light_teal"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btnMenu">
+                app:layout_constraintTop_toBottomOf="@id/sectionDivider">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp">
 
-                    <!-- Title row -->
+                    <!-- Title + value + refresh on one row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:layout_marginBottom="4dp">
+                        android:layout_marginBottom="8dp">
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Net Worth"
-                            android:textColor="#B3FFFFFF"
-                            android:textSize="13sp"
-                            android:letterSpacing="0.06" />
+                            android:textColor="@color/text_dark"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvNetWorthValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textColor="#4CAF50"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="8dp" />
 
                         <ImageView
                             android:id="@+id/ivRefreshNetWorth"
@@ -87,83 +101,55 @@
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:clickable="true"
                             android:focusable="true"
-                            android:tint="#80FFFFFF" />
+                            android:tint="@color/text_dark" />
                     </LinearLayout>
 
-                    <!-- Net Worth value -->
-                    <TextView
-                        android:id="@+id/tvNetWorthValue"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:text="--"
-                        android:textColor="#4CAF50"
-                        android:textSize="32sp"
-                        android:textStyle="bold"
-                        android:gravity="center_horizontal" />
-
-                    <!-- Assets | Liabilities -->
+                    <!-- Assets | Liabilities breakdown -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginBottom="8dp">
+                        android:gravity="center_vertical">
 
-                        <LinearLayout
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Assets "
+                            android:textColor="@color/text_dark"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/tvNetWorthAssets"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center_horizontal">
+                            android:text="--"
+                            android:textColor="#4CAF50"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Assets"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="11sp" />
-
-                            <TextView
-                                android:id="@+id/tvNetWorthAssets"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="--"
-                                android:textColor="#4CAF50"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <!-- Vertical divider -->
                         <View
                             android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:background="#33FFFFFF" />
+                            android:layout_height="16dp"
+                            android:background="@color/text_dark"
+                            android:alpha="0.2"
+                            android:layout_marginEnd="12dp" />
 
-                        <LinearLayout
-                            android:layout_width="0dp"
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center_horizontal">
+                            android:text="Liabilities "
+                            android:textColor="@color/text_dark"
+                            android:textSize="12sp" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Liabilities"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="11sp" />
-
-                            <TextView
-                                android:id="@+id/tvNetWorthLiabilities"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="--"
-                                android:textColor="#F44336"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/tvNetWorthLiabilities"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--"
+                            android:textColor="#F44336"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <!-- Since yesterday delta -->
@@ -174,7 +160,8 @@
                         android:text=""
                         android:textColor="#4CAF50"
                         android:textSize="12sp"
-                        android:gravity="center_horizontal"
+                        android:gravity="end"
+                        android:layout_marginTop="4dp"
                         android:visibility="gone" />
 
                 </LinearLayout>
@@ -191,7 +178,7 @@
                 app:cardElevation="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/netWorthCard">
+                app:layout_constraintTop_toBottomOf="@id/btnMenu">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -405,7 +392,7 @@
                 android:id="@+id/sectionDivider"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="24dp"
                 android:background="@color/text_muted"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -418,7 +405,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="12dp"
                 android:paddingTop="12dp"
@@ -428,7 +415,7 @@
                 android:background="@drawable/bg_assets_header"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sectionDivider">
+                app:layout_constraintTop_toBottomOf="@id/netWorthCard">
 
                 <TextView
                     android:layout_width="0dp"
@@ -1056,17 +1043,6 @@
 
             </LinearLayout>
 
-            <!-- Liabilities Section Divider -->
-            <View
-                android:id="@+id/liabilitiesDivider"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/text_muted"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/assetsContainer" />
-
             <!-- Liabilities Section Header (collapsible toggle) -->
             <LinearLayout
                 android:id="@+id/liabilitiesHeader"
@@ -1074,7 +1050,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="12dp"
                 android:paddingTop="12dp"
@@ -1084,7 +1060,7 @@
                 android:background="@drawable/bg_assets_header"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/liabilitiesDivider">
+                app:layout_constraintTop_toBottomOf="@id/assetsContainer">
 
                 <TextView
                     android:layout_width="0dp"
