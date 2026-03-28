@@ -1,329 +1,375 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/card_medium_teal"
-    android:paddingStart="10dp"
-    android:paddingEnd="10dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="12dp">
+    android:background="@android:color/transparent">
 
-    <!-- User Email Header -->
-    <TextView
-        android:id="@+id/tvUserEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="user@example.com"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:paddingBottom="14dp"
-        android:paddingStart="4dp" />
-
-    <!-- Dashboard Button -->
-    <Button
-        android:id="@+id/btnDashboard"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:text="@string/dashboard"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:background="@drawable/drawer_item_bg"
-        android:gravity="start|center_vertical"
-        android:paddingStart="16dp"
-        android:layout_marginBottom="6dp" />
-
-    <!-- Transactions Button -->
-    <Button
-        android:id="@+id/btnTransactions"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:text="@string/transactions"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:background="@drawable/drawer_item_bg"
-        android:gravity="start|center_vertical"
-        android:paddingStart="16dp"
-        android:layout_marginBottom="6dp" />
-
-    <!-- Management Header Button (expandable) -->
+    <!-- ── Profile Section ── -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="6dp"
-        android:background="@drawable/drawer_item_bg"
-        android:paddingStart="16dp"
-        android:paddingEnd="8dp"
-        android:gravity="center_vertical">
-
-        <Button
-            android:id="@+id/btnManagement"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="44dp"
-            android:text="@string/management"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:background="@android:color/transparent"
-            android:gravity="start|center_vertical" />
-
-        <ImageView
-            android:id="@+id/ivManagementExpand"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_expand_more"
-            android:contentDescription="@string/expand_collapse"
-            android:layout_marginEnd="4dp" />
-    </LinearLayout>
-
-    <!-- Management Child Items Container -->
-    <LinearLayout
-        android:id="@+id/managementChildItems"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:paddingStart="12dp"
-        android:layout_marginBottom="6dp">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="16dp">
 
-        <Button
-            android:id="@+id/btnCategoryManagement"
+        <!-- Avatar + Name/Email row -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:text="@string/categories"
-            android:textColor="@android:color/white"
-            android:textSize="13sp"
-            android:background="@drawable/drawer_item_bg"
-            android:gravity="start|center_vertical"
-            android:paddingStart="16dp"
-            android:layout_marginBottom="4dp" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp">
 
-        <Button
-            android:id="@+id/btnSourceManagement"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:text="@string/income_source_management"
-            android:textColor="@android:color/white"
-            android:textSize="13sp"
-            android:background="@drawable/drawer_item_bg"
-            android:gravity="start|center_vertical"
-            android:paddingStart="16dp"
-            android:layout_marginBottom="4dp" />
+            <!-- Avatar circle -->
+            <FrameLayout
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:background="@drawable/bg_avatar_circle">
+                <TextView
+                    android:id="@+id/tvUserInitials"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="P"
+                    android:textColor="@color/teal_700"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
 
-        <Button
-            android:id="@+id/btnRecipientManagement"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:text="@string/recipient_management"
-            android:textColor="@android:color/white"
-            android:textSize="13sp"
-            android:background="@drawable/drawer_item_bg"
-            android:gravity="start|center_vertical"
-            android:paddingStart="16dp" />
-    </LinearLayout>
+            <!-- Name + Email -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="12dp">
 
-    <!-- Net Worth Button -->
-    <Button
-        android:id="@+id/btnNetWorth"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:text="Net Worth"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:background="@drawable/drawer_item_bg"
-        android:gravity="start|center_vertical"
-        android:paddingStart="16dp"
-        android:layout_marginBottom="6dp" />
+                <TextView
+                    android:id="@+id/tvUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="User"
+                    android:textColor="@color/text_dark"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
 
-    <!-- Assets Header Button (expandable) -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="6dp"
-        android:background="@drawable/drawer_item_bg"
-        android:paddingStart="16dp"
-        android:paddingEnd="8dp"
-        android:gravity="center_vertical">
+                <TextView
+                    android:id="@+id/tvUserEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="user@example.com"
+                    android:textColor="@color/text_muted"
+                    android:textSize="11sp"
+                    android:layout_marginTop="2dp"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+            </LinearLayout>
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/btnAssets"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="44dp"
-            android:text="@string/assets"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
+        <!-- Premium badge -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Premium Member"
+            android:textColor="@color/drawer_premium_text"
+            android:textSize="10sp"
             android:textStyle="bold"
-            android:background="@android:color/transparent"
-            android:gravity="start|center_vertical" />
-
-        <ImageView
-            android:id="@+id/ivAssetsExpand"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_expand_more"
-            android:contentDescription="@string/expand_collapse"
-            android:layout_marginEnd="4dp" />
+            android:letterSpacing="0.06"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:background="@drawable/bg_premium_badge" />
     </LinearLayout>
 
-    <!-- Assets Child Items -->
+    <!-- Top divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/drawer_divider" />
+
+    <!-- ── Scrollable Nav Body ── -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:overScrollMode="never"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <!-- Dashboard -->
+            <LinearLayout
+                android:id="@+id/btnDashboard"
+                style="@style/DrawerNavRow"
+                android:layout_marginTop="2dp">
+                <ImageView
+                    android:id="@+id/icDashboard"
+                    style="@style/DrawerNavIcon"
+                    android:src="@drawable/ic_nav_dashboard"
+                    android:tint="@color/drawer_item_text" />
+                <TextView
+                    style="@style/DrawerNavLabel"
+                    android:text="Dashboard" />
+            </LinearLayout>
+
+            <!-- Transactions -->
+            <LinearLayout
+                android:id="@+id/btnTransactions"
+                style="@style/DrawerNavRow">
+                <ImageView
+                    android:id="@+id/icTransactions"
+                    style="@style/DrawerNavIcon"
+                    android:src="@drawable/ic_drawer_receipt"
+                    android:tint="@color/drawer_item_text" />
+                <TextView
+                    style="@style/DrawerNavLabel"
+                    android:text="@string/transactions" />
+            </LinearLayout>
+
+            <!-- Categories -->
+            <LinearLayout
+                android:id="@+id/btnCategoryManagement"
+                style="@style/DrawerNavRow">
+                <ImageView
+                    android:id="@+id/icCategories"
+                    style="@style/DrawerNavIcon"
+                    android:src="@drawable/ic_drawer_category"
+                    android:tint="@color/drawer_item_text" />
+                <TextView
+                    style="@style/DrawerNavLabel"
+                    android:text="@string/categories" />
+            </LinearLayout>
+
+            <!-- Income Sources -->
+            <LinearLayout
+                android:id="@+id/btnSourceManagement"
+                style="@style/DrawerNavRow">
+                <ImageView
+                    android:id="@+id/icSources"
+                    style="@style/DrawerNavIcon"
+                    android:src="@drawable/ic_drawer_wallet"
+                    android:tint="@color/drawer_item_text" />
+                <TextView
+                    style="@style/DrawerNavLabel"
+                    android:text="Income Sources" />
+            </LinearLayout>
+
+            <!-- Recipients -->
+            <LinearLayout
+                android:id="@+id/btnRecipientManagement"
+                style="@style/DrawerNavRow">
+                <ImageView
+                    android:id="@+id/icRecipients"
+                    style="@style/DrawerNavIcon"
+                    android:src="@drawable/ic_drawer_group"
+                    android:tint="@color/drawer_item_text" />
+                <TextView
+                    style="@style/DrawerNavLabel"
+                    android:text="@string/recipient_management" />
+            </LinearLayout>
+
+            <!-- Divider 1 -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:background="@color/drawer_divider" />
+
+            <!-- Net Worth -->
+            <LinearLayout
+                android:id="@+id/btnNetWorth"
+                style="@style/DrawerNavRow">
+                <ImageView
+                    android:id="@+id/icNetWorth"
+                    style="@style/DrawerNavIcon"
+                    android:src="@drawable/ic_drawer_bank"
+                    android:tint="@color/drawer_item_text" />
+                <TextView
+                    style="@style/DrawerNavLabel"
+                    android:text="Net Worth" />
+            </LinearLayout>
+
+            <!-- Assets (expandable) -->
+            <LinearLayout
+                android:id="@+id/btnAssets"
+                style="@style/DrawerNavRow">
+                <ImageView
+                    android:id="@+id/icAssets"
+                    style="@style/DrawerNavIcon"
+                    android:src="@drawable/ic_drawer_wallet"
+                    android:tint="@color/drawer_item_text" />
+                <TextView
+                    style="@style/DrawerNavLabel"
+                    android:text="@string/assets" />
+                <ImageView
+                    android:id="@+id/ivAssetsExpand"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_expand_more"
+                    android:tint="@color/drawer_item_text"
+                    android:layout_marginEnd="4dp"
+                    android:contentDescription="@string/expand_collapse" />
+            </LinearLayout>
+
+            <!-- Assets Children -->
+            <LinearLayout
+                android:id="@+id/assetsChildItems"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:paddingStart="8dp">
+
+                <!-- Stocks -->
+                <LinearLayout
+                    android:id="@+id/btnStocks"
+                    style="@style/DrawerNavRowChild">
+                    <ImageView
+                        style="@style/DrawerNavIconChild"
+                        android:src="@drawable/ic_asset_stocks"
+                        android:tint="@color/drawer_item_text" />
+                    <TextView
+                        style="@style/DrawerNavLabelChild"
+                        android:text="@string/stocks" />
+                </LinearLayout>
+
+                <!-- Metals -->
+                <LinearLayout
+                    android:id="@+id/btnMetals"
+                    style="@style/DrawerNavRowChild">
+                    <ImageView
+                        style="@style/DrawerNavIconChild"
+                        android:src="@drawable/ic_asset_gold"
+                        android:tint="@color/drawer_item_text" />
+                    <TextView
+                        style="@style/DrawerNavLabelChild"
+                        android:text="Metals" />
+                </LinearLayout>
+
+                <!-- Mutual Funds -->
+                <LinearLayout
+                    android:id="@+id/btnMutualFunds"
+                    style="@style/DrawerNavRowChild">
+                    <ImageView
+                        style="@style/DrawerNavIconChild"
+                        android:src="@drawable/ic_asset_mf"
+                        android:tint="@color/drawer_item_text" />
+                    <TextView
+                        style="@style/DrawerNavLabelChild"
+                        android:text="@string/mutual_funds" />
+                </LinearLayout>
+
+                <!-- Other Assets -->
+                <LinearLayout
+                    android:id="@+id/btnOtherAssets"
+                    style="@style/DrawerNavRowChild">
+                    <ImageView
+                        style="@style/DrawerNavIconChild"
+                        android:src="@drawable/ic_asset_other"
+                        android:tint="@color/drawer_item_text" />
+                    <TextView
+                        style="@style/DrawerNavLabelChild"
+                        android:text="Other Assets" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Liabilities -->
+            <LinearLayout
+                android:id="@+id/btnLiabilities"
+                style="@style/DrawerNavRow">
+                <ImageView
+                    android:id="@+id/icLiabilities"
+                    style="@style/DrawerNavIcon"
+                    android:src="@drawable/ic_drawer_liabilities"
+                    android:tint="@color/drawer_item_text" />
+                <TextView
+                    style="@style/DrawerNavLabel"
+                    android:text="Liabilities" />
+            </LinearLayout>
+
+            <!-- Divider 2 -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:background="@color/drawer_divider" />
+
+            <!-- Connect Zerodha -->
+            <LinearLayout
+                android:id="@+id/btnConnectZerodha"
+                style="@style/DrawerNavRow"
+                android:layout_marginBottom="2dp">
+                <ImageView
+                    android:id="@+id/icZerodha"
+                    style="@style/DrawerNavIcon"
+                    android:src="@drawable/ic_drawer_link"
+                    android:tint="@color/drawer_item_text" />
+                <TextView
+                    style="@style/DrawerNavLabel"
+                    android:text="@string/connect_zerodha" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Footer divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/drawer_divider" />
+
+    <!-- ── Footer ── -->
     <LinearLayout
-        android:id="@+id/assetsChildItems"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:paddingStart="12dp"
-        android:layout_marginBottom="6dp">
+        android:paddingTop="6dp"
+        android:paddingBottom="12dp">
 
-        <Button
-            android:id="@+id/btnStocks"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:text="@string/stocks"
-            android:textColor="@android:color/white"
-            android:textSize="13sp"
-            android:background="@drawable/drawer_item_bg"
-            android:gravity="start|center_vertical"
-            android:paddingStart="16dp"
-            android:layout_marginBottom="4dp" />
+        <!-- Settings -->
+        <LinearLayout
+            android:id="@+id/btnSettings"
+            style="@style/DrawerNavRow">
+            <ImageView
+                android:id="@+id/icSettings"
+                style="@style/DrawerNavIcon"
+                android:src="@drawable/ic_drawer_settings"
+                android:tint="@color/drawer_item_text" />
+            <TextView
+                style="@style/DrawerNavLabel"
+                android:text="@string/settings" />
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/btnMetals"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:text="Metals"
-            android:textColor="@android:color/white"
-            android:textSize="13sp"
-            android:background="@drawable/drawer_item_bg"
-            android:gravity="start|center_vertical"
-            android:paddingStart="16dp"
-            android:layout_marginBottom="4dp" />
-
-        <Button
-            android:id="@+id/btnMutualFunds"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:text="@string/mutual_funds"
-            android:textColor="@android:color/white"
-            android:textSize="13sp"
-            android:background="@drawable/drawer_item_bg"
-            android:gravity="start|center_vertical"
-            android:paddingStart="16dp"
-            android:layout_marginBottom="4dp" />
-
-        <Button
-            android:id="@+id/btnOtherAssets"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:text="Other Assets"
-            android:textColor="@android:color/white"
-            android:textSize="13sp"
-            android:background="@drawable/drawer_item_bg"
-            android:gravity="start|center_vertical"
-            android:paddingStart="16dp" />
+        <!-- Logout -->
+        <LinearLayout
+            android:id="@+id/btnLogout"
+            style="@style/DrawerNavRow">
+            <ImageView
+                style="@style/DrawerNavIcon"
+                android:src="@drawable/ic_drawer_logout"
+                android:tint="@color/drawer_logout_red" />
+            <TextView
+                style="@style/DrawerNavLabel"
+                android:text="@string/logout"
+                android:textColor="@color/drawer_logout_red" />
+        </LinearLayout>
     </LinearLayout>
-
-    <!-- Liabilities Button -->
-    <Button
-        android:id="@+id/btnLiabilities"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:text="Liabilities"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:background="@drawable/drawer_item_bg"
-        android:gravity="start|center_vertical"
-        android:paddingStart="16dp"
-        android:layout_marginBottom="6dp" />
-
-    <!-- Setup Demat Header Button (expandable) -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="6dp"
-        android:background="@drawable/drawer_item_bg"
-        android:paddingStart="16dp"
-        android:paddingEnd="8dp"
-        android:gravity="center_vertical">
-
-        <Button
-            android:id="@+id/btnSetupDemat"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="44dp"
-            android:text="@string/setup_demat"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:background="@android:color/transparent"
-            android:gravity="start|center_vertical" />
-
-        <ImageView
-            android:id="@+id/ivSetupDematExpand"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_expand_more"
-            android:contentDescription="@string/expand_collapse"
-            android:layout_marginEnd="4dp" />
-    </LinearLayout>
-
-    <!-- Setup Demat Child Items -->
-    <LinearLayout
-        android:id="@+id/setupDematChildItems"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:paddingStart="12dp"
-        android:layout_marginBottom="6dp">
-
-        <Button
-            android:id="@+id/btnConnectZerodha"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:text="@string/connect_zerodha"
-            android:textColor="@android:color/white"
-            android:textSize="13sp"
-            android:background="@drawable/drawer_item_bg"
-            android:gravity="start|center_vertical"
-            android:paddingStart="16dp" />
-    </LinearLayout>
-
-    <!-- Settings Button -->
-    <Button
-        android:id="@+id/btnSettings"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:text="@string/settings"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:background="@drawable/drawer_item_bg"
-        android:gravity="start|center_vertical"
-        android:paddingStart="16dp"
-        android:layout_marginBottom="6dp" />
-
-    <!-- Logout Button -->
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:text="@string/logout"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:background="@drawable/drawer_item_bg"
-        android:gravity="start|center_vertical"
-        android:paddingStart="16dp" />
 
 </LinearLayout>

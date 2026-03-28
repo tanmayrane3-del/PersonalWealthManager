@@ -57,6 +57,7 @@ class RecipientManagementActivity : com.example.personalwealthmanager.presentati
         setupRecyclerViews()
         setupClickListeners()
         setupDrawerMenu()
+        setupBottomNav()
         observeState()
     }
 

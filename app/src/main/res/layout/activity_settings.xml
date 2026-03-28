@@ -100,15 +100,27 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
+        <!-- Spacer pushes bottom nav to the bottom -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <include
+            layout="@layout/layout_bottom_nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
     <!-- Navigation Drawer -->
-    <com.google.android.material.navigation.NavigationView
+
+<com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
-        android:layout_width="260dp"
+        android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:background="@color/card_medium_teal"
+        android:background="@color/drawer_bg"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/drawer_header" />
 

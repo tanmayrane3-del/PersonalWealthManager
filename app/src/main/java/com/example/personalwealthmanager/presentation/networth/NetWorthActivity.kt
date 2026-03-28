@@ -37,6 +37,9 @@ import androidx.lifecycle.Lifecycle
 @AndroidEntryPoint
 class NetWorthActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
+    override fun getActiveNavItem() = BottomNavItem.NETWORTH
+
+
     override fun getSelfButtonId() = R.id.btnNetWorth
 
     private val viewModel: NetWorthViewModel by viewModels()
@@ -51,6 +54,34 @@ class NetWorthActivity : com.example.personalwealthmanager.presentation.base.Bas
     private lateinit var tvNoData: TextView
     private lateinit var tvLastUpdated: TextView
     private lateinit var ivRefresh: ImageView
+
+    // Asset portfolio views
+    private lateinit var stocksLoadingBar: ProgressBar
+    private lateinit var stocksValueContainer: android.view.View
+    private lateinit var tvStocksValue: TextView
+    private lateinit var tvStocksPnl: TextView
+
+    private lateinit var metalsLoadingBar: ProgressBar
+    private lateinit var metalsValueContainer: android.view.View
+    private lateinit var tvMetalsValue: TextView
+    private lateinit var tvMetalsDayPnl: TextView
+    private lateinit var metalsCagrSection: android.view.View
+    private lateinit var tvMetalsCagr1y: TextView
+    private lateinit var tvMetalsCagr3y: TextView
+    private lateinit var tvMetalsCagr5y: TextView
+
+    private lateinit var mfLoadingBar: ProgressBar
+    private lateinit var mfValueContainer: android.view.View
+    private lateinit var tvMfValue: TextView
+    private lateinit var tvMfDayPnl: TextView
+    private lateinit var mfCagrSection: android.view.View
+    private lateinit var tvMfCagr1y: TextView
+    private lateinit var tvMfCagr3y: TextView
+    private lateinit var tvMfCagr5y: TextView
+
+    private lateinit var otherLoadingBar: ProgressBar
+    private lateinit var otherValueContainer: android.view.View
+    private lateinit var tvOtherValue: TextView
 
     private val currencyFormat = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
     private var snapshotDates: List<String> = emptyList()
@@ -70,18 +101,47 @@ class NetWorthActivity : com.example.personalwealthmanager.presentation.base.Bas
         tvLastUpdated     = findViewById(R.id.tvLastUpdated)
         ivRefresh         = findViewById(R.id.ivRefresh)
 
+        // Asset portfolio views
+        stocksLoadingBar      = findViewById(R.id.stocksLoadingBar)
+        stocksValueContainer  = findViewById(R.id.stocksValueContainer)
+        tvStocksValue         = findViewById(R.id.tvStocksValue)
+        tvStocksPnl           = findViewById(R.id.tvStocksPnl)
+
+        metalsLoadingBar      = findViewById(R.id.metalsLoadingBar)
+        metalsValueContainer  = findViewById(R.id.metalsValueContainer)
+        tvMetalsValue         = findViewById(R.id.tvMetalsValue)
+        tvMetalsDayPnl        = findViewById(R.id.tvMetalsDayPnl)
+        metalsCagrSection     = findViewById(R.id.metalsCagrSection)
+        tvMetalsCagr1y        = findViewById(R.id.tvMetalsCagr1y)
+        tvMetalsCagr3y        = findViewById(R.id.tvMetalsCagr3y)
+        tvMetalsCagr5y        = findViewById(R.id.tvMetalsCagr5y)
+
+        mfLoadingBar          = findViewById(R.id.mfLoadingBar)
+        mfValueContainer      = findViewById(R.id.mfValueContainer)
+        tvMfValue             = findViewById(R.id.tvMfValue)
+        tvMfDayPnl            = findViewById(R.id.tvMfDayPnl)
+        mfCagrSection         = findViewById(R.id.mfCagrSection)
+        tvMfCagr1y            = findViewById(R.id.tvMfCagr1y)
+        tvMfCagr3y            = findViewById(R.id.tvMfCagr3y)
+        tvMfCagr5y            = findViewById(R.id.tvMfCagr5y)
+
+        otherLoadingBar       = findViewById(R.id.otherLoadingBar)
+        otherValueContainer   = findViewById(R.id.otherValueContainer)
+        tvOtherValue          = findViewById(R.id.tvOtherValue)
+
         setupChart()
         setupChipGroup()
 
         swipeRefresh.setOnRefreshListener { viewModel.refresh() }
 
-        ivRefresh.setOnClickListener { viewModel.fetchCurrent() }
+        ivRefresh.setOnClickListener { viewModel.refresh() }
 
         findViewById<ImageView>(R.id.btnMenu).setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.END)
         }
 
         setupDrawerMenu()
+        setupBottomNav()
         observeViewModel()
     }
 
@@ -140,8 +200,12 @@ class NetWorthActivity : com.example.personalwealthmanager.presentation.base.Bas
     private fun observeViewModel() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.currentState.collect   { handleCurrentState(it)   } }
-                launch { viewModel.snapshotsState.collect { handleSnapshotsState(it) } }
+                launch { viewModel.currentState.collect    { handleCurrentState(it)    } }
+                launch { viewModel.snapshotsState.collect  { handleSnapshotsState(it)  } }
+                launch { viewModel.stocksState.collect     { handleStocksState(it)     } }
+                launch { viewModel.metalsState.collect     { handleMetalsState(it)     } }
+                launch { viewModel.mfState.collect         { handleMfState(it)         } }
+                launch { viewModel.otherAssetsState.collect{ handleOtherAssetsState(it)} }
             }
         }
     }
@@ -171,6 +235,112 @@ class NetWorthActivity : com.example.personalwealthmanager.presentation.base.Bas
                 tvNetWorthValue.setTextColor(Color.parseColor("#F44336"))
             }
             is NetWorthCurrentState.Idle -> { /* no-op */ }
+        }
+    }
+
+    private fun handleStocksState(state: StocksWidgetState) {
+        when (state) {
+            is StocksWidgetState.Loading -> {
+                stocksLoadingBar.visibility     = View.VISIBLE
+                stocksValueContainer.visibility = View.GONE
+            }
+            is StocksWidgetState.Success -> {
+                stocksLoadingBar.visibility     = View.GONE
+                stocksValueContainer.visibility = View.VISIBLE
+                tvStocksValue.text = if (state.totalValue == 0.0) "No holdings" else formatCompact(state.totalValue)
+                val pnl = state.todayPnl
+                tvStocksPnl.text = if (pnl >= 0) "+${formatCompact(pnl)}" else formatCompact(pnl)
+                tvStocksPnl.setTextColor(if (pnl >= 0) Color.parseColor("#4CAF50") else Color.parseColor("#F44336"))
+            }
+            is StocksWidgetState.Error -> {
+                stocksLoadingBar.visibility     = View.GONE
+                stocksValueContainer.visibility = View.VISIBLE
+                tvStocksValue.text = "--"
+                tvStocksPnl.text   = ""
+            }
+            is StocksWidgetState.Idle -> { /* no-op */ }
+        }
+    }
+
+    private fun handleMetalsState(state: MetalsWidgetState) {
+        when (state) {
+            is MetalsWidgetState.Loading -> {
+                metalsLoadingBar.visibility     = View.VISIBLE
+                metalsValueContainer.visibility = View.GONE
+                metalsCagrSection.visibility    = View.GONE
+            }
+            is MetalsWidgetState.Success -> {
+                metalsLoadingBar.visibility     = View.GONE
+                metalsValueContainer.visibility = View.VISIBLE
+                tvMetalsValue.text = formatCompact(state.data.totalValue)
+                val pnl = state.data.totalDayPnl
+                tvMetalsDayPnl.text = if (pnl >= 0) "+${formatCompact(pnl)}" else formatCompact(pnl)
+                tvMetalsDayPnl.setTextColor(if (pnl >= 0) Color.parseColor("#4CAF50") else Color.parseColor("#F44336"))
+                if (state.data.hasCagr) {
+                    metalsCagrSection.visibility = View.VISIBLE
+                    tvMetalsCagr1y.text = "1Y: ${formatCompact(state.data.projected1y)}"
+                    tvMetalsCagr3y.text = "3Y: ${formatCompact(state.data.projected3y)}"
+                    tvMetalsCagr5y.text = "5Y: ${formatCompact(state.data.projected5y)}"
+                }
+            }
+            is MetalsWidgetState.Error -> {
+                metalsLoadingBar.visibility     = View.GONE
+                metalsValueContainer.visibility = View.VISIBLE
+                tvMetalsValue.text  = "--"
+                tvMetalsDayPnl.text = ""
+            }
+            is MetalsWidgetState.Idle -> { /* no-op */ }
+        }
+    }
+
+    private fun handleMfState(state: MfWidgetState) {
+        when (state) {
+            is MfWidgetState.Loading -> {
+                mfLoadingBar.visibility     = View.VISIBLE
+                mfValueContainer.visibility = View.GONE
+                mfCagrSection.visibility    = View.GONE
+            }
+            is MfWidgetState.Success -> {
+                mfLoadingBar.visibility     = View.GONE
+                mfValueContainer.visibility = View.VISIBLE
+                tvMfValue.text = formatCompact(state.data.currentValue)
+                val pnl = state.data.totalDayPnl
+                tvMfDayPnl.text = if (pnl >= 0) "+${formatCompact(pnl)}" else formatCompact(pnl)
+                tvMfDayPnl.setTextColor(if (pnl >= 0) Color.parseColor("#4CAF50") else Color.parseColor("#F44336"))
+                if (state.data.hasCagr) {
+                    mfCagrSection.visibility = View.VISIBLE
+                    tvMfCagr1y.text = "1Y: ${formatCompact(state.data.projected1y)}"
+                    tvMfCagr3y.text = "3Y: ${formatCompact(state.data.projected3y)}"
+                    tvMfCagr5y.text = "5Y: ${formatCompact(state.data.projected5y)}"
+                }
+            }
+            is MfWidgetState.Error -> {
+                mfLoadingBar.visibility     = View.GONE
+                mfValueContainer.visibility = View.VISIBLE
+                tvMfValue.text  = "--"
+                tvMfDayPnl.text = ""
+            }
+            is MfWidgetState.Idle -> { /* no-op */ }
+        }
+    }
+
+    private fun handleOtherAssetsState(state: OtherAssetsWidgetState) {
+        when (state) {
+            is OtherAssetsWidgetState.Loading -> {
+                otherLoadingBar.visibility     = View.VISIBLE
+                otherValueContainer.visibility = View.GONE
+            }
+            is OtherAssetsWidgetState.Success -> {
+                otherLoadingBar.visibility     = View.GONE
+                otherValueContainer.visibility = View.VISIBLE
+                tvOtherValue.text = formatCompact(state.totalValue)
+            }
+            is OtherAssetsWidgetState.Error -> {
+                otherLoadingBar.visibility     = View.GONE
+                otherValueContainer.visibility = View.VISIBLE
+                tvOtherValue.text = "--"
+            }
+            is OtherAssetsWidgetState.Idle -> { /* no-op */ }
         }
     }
 

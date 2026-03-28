@@ -3,177 +3,206 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="12dp"
+    android:layout_marginTop="8dp"
     android:layout_marginBottom="4dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
-    app:cardBackgroundColor="#5C1A2A"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="4dp">
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="horizontal">
 
-        <!-- Header: emoji icon + lender name + loan type badge -->
+        <!-- Left red accent border -->
+        <View
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:background="@color/expense_red" />
+
+        <!-- Main content -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp">
 
-            <TextView
-                android:id="@+id/tvLoanTypeIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="💳"
-                android:textSize="22sp"
-                android:layout_marginEnd="10dp" />
-
-            <TextView
-                android:id="@+id/tvLenderName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Lender Name"
-                android:textColor="@android:color/white"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvLoanTypeBadge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#33FFFFFF"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingTop="4dp"
-                android:paddingBottom="4dp"
-                android:text="Home Loan"
-                android:textColor="#FFFFFF"
-                android:textSize="11sp" />
-        </LinearLayout>
-
-        <!-- Body: outstanding | divider | EMI + interest rate -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="12dp">
-
-            <!-- Left: outstanding principal -->
+            <!-- Header: lender name + account number + badge -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- Loan type emoji icon -->
+                <TextView
+                    android:id="@+id/tvLoanTypeIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="💳"
+                    android:textSize="20sp"
+                    android:layout_marginEnd="8dp" />
+
+                <!-- Lender name + account number -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvLenderName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lender Name"
+                        android:textColor="@color/text_dark"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvLoanAccountNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:text=""
+                        android:textColor="@color/text_muted"
+                        android:textSize="11sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <!-- Loan type badge -->
+                <TextView
+                    android:id="@+id/tvLoanTypeBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_loan_type_badge"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:text="Loan"
+                    android:textColor="@color/on_error_container"
+                    android:textSize="9sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
+            </LinearLayout>
+
+            <!-- Outstanding label + amount -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="12dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Outstanding"
-                    android:textColor="#B3FFFFFF"
-                    android:textSize="11sp" />
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tvOutstanding"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
                     android:text="--"
-                    android:textColor="@color/expense_red"
-                    android:textSize="22sp"
+                    android:textColor="@color/text_dark"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Progress bar -->
+            <ProgressBar
+                android:id="@+id/pbLoanProgress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginTop="8dp"
+                android:progressDrawable="@drawable/bg_loan_progress"
+                android:max="100"
+                android:progress="0" />
+
+            <!-- Paid / Goal labels -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
 
                 <TextView
+                    android:id="@+id/tvPaidAmount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Original Amount"
-                    android:textColor="#B3FFFFFF"
-                    android:textSize="11sp" />
+                    android:text="Paid: --"
+                    android:textColor="@color/text_muted"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/tvOriginalAmount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="--"
-                    android:textColor="#B3FFFFFF"
-                    android:textSize="13sp" />
+                    android:text="Goal: --"
+                    android:textColor="@color/text_muted"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
             </LinearLayout>
 
-            <!-- Vertical divider -->
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="12dp"
-                android:layout_marginEnd="12dp"
-                android:background="#33FFFFFF" />
-
-            <!-- Right: EMI + interest rate -->
-            <LinearLayout
-                android:layout_width="0dp"
+            <!-- EMI / Interest (hidden by default, kept for code compat) -->
+            <TextView
+                android:id="@+id/tvEmi"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:text="--"
+                android:textColor="@color/text_muted"
+                android:textSize="11sp"
+                android:visibility="gone" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="EMI / Month"
-                    android:textColor="#B3FFFFFF"
-                    android:textSize="11sp" />
+            <TextView
+                android:id="@+id/tvInterestRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="--"
+                android:textColor="@color/text_muted"
+                android:textSize="11sp"
+                android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/tvEmi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="--"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Interest Rate"
-                    android:textColor="#B3FFFFFF"
-                    android:textSize="11sp" />
-
-                <TextView
-                    android:id="@+id/tvInterestRate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="--"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+            <!-- Linked asset chip -->
+            <TextView
+                android:id="@+id/tvLinkedAsset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_linked_asset"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text=""
+                android:textColor="@color/teal_700"
+                android:textSize="11sp"
+                android:visibility="gone" />
 
         </LinearLayout>
-
-        <!-- Linked asset chip (hidden when no asset linked) -->
-        <TextView
-            android:id="@+id/tvLinkedAsset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="#33FFD700"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:text="🔗 Linked: My Car"
-            android:textColor="#FFD700"
-            android:textSize="12sp"
-            android:visibility="gone" />
-
     </LinearLayout>
 </androidx.cardview.widget.CardView>

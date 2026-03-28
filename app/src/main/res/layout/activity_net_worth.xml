@@ -10,10 +10,16 @@
     tools:openDrawer="end">
 
     <!-- Main Content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -301,6 +307,465 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
+                <!-- ── Assets Portfolio ───────────────────────────────── -->
+                <LinearLayout
+                    android:id="@+id/assetsPortfolioSection"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/chartCard">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="Assets Portfolio"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <!-- Stock Holdings card -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:cardBackgroundColor="@color/card_dark_teal"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="14dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:padding="6dp"
+                                    android:src="@drawable/ic_asset_stocks"
+                                    android:background="@color/card_medium_teal"
+                                    android:contentDescription="Stocks" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Stock Holdings"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Direct Equities &amp; ETFs"
+                                        android:textColor="#B3FFFFFF"
+                                        android:textSize="11sp" />
+                                </LinearLayout>
+
+                                <!-- Loading / Value area -->
+                                <ProgressBar
+                                    android:id="@+id/stocksLoadingBar"
+                                    style="?android:attr/progressBarStyleSmall"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:indeterminateTint="@android:color/white"
+                                    android:visibility="visible" />
+
+                                <LinearLayout
+                                    android:id="@+id/stocksValueContainer"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="end"
+                                    android:orientation="vertical"
+                                    android:visibility="gone">
+
+                                    <TextView
+                                        android:id="@+id/tvStocksValue"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tvStocksPnl"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="11sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Gold & Bullion card -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:cardBackgroundColor="@color/card_dark_teal"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="14dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:padding="6dp"
+                                    android:src="@drawable/ic_asset_gold"
+                                    android:background="@color/card_medium_teal"
+                                    android:contentDescription="Gold" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Gold &amp; Bullion"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Digital &amp; Physical"
+                                        android:textColor="#B3FFFFFF"
+                                        android:textSize="11sp" />
+                                </LinearLayout>
+
+                                <ProgressBar
+                                    android:id="@+id/metalsLoadingBar"
+                                    style="?android:attr/progressBarStyleSmall"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:indeterminateTint="@android:color/white"
+                                    android:visibility="visible" />
+
+                                <LinearLayout
+                                    android:id="@+id/metalsValueContainer"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="end"
+                                    android:orientation="vertical"
+                                    android:visibility="gone">
+
+                                    <TextView
+                                        android:id="@+id/tvMetalsValue"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tvMetalsDayPnl"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="11sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <!-- Metals CAGR projections (hidden until loaded) -->
+                            <LinearLayout
+                                android:id="@+id/metalsCagrSection"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:orientation="vertical"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="CAGR PROJECTIONS"
+                                    android:textColor="#80FFFFFF"
+                                    android:textSize="10sp"
+                                    android:letterSpacing="0.08"
+                                    android:layout_marginBottom="4dp" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/tvMetalsCagr1y"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:textColor="#B3FFFFFF"
+                                        android:textSize="11sp" />
+
+                                    <TextView
+                                        android:id="@+id/tvMetalsCagr3y"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:textColor="#B3FFFFFF"
+                                        android:textSize="11sp" />
+
+                                    <TextView
+                                        android:id="@+id/tvMetalsCagr5y"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:textColor="#B3FFFFFF"
+                                        android:textSize="11sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Mutual Funds card -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:cardBackgroundColor="@color/card_dark_teal"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="14dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:padding="6dp"
+                                    android:src="@drawable/ic_asset_mf"
+                                    android:background="@color/card_medium_teal"
+                                    android:contentDescription="Mutual Funds" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Mutual Funds"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="SIP &amp; Lump-sum"
+                                        android:textColor="#B3FFFFFF"
+                                        android:textSize="11sp" />
+                                </LinearLayout>
+
+                                <ProgressBar
+                                    android:id="@+id/mfLoadingBar"
+                                    style="?android:attr/progressBarStyleSmall"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:indeterminateTint="@android:color/white"
+                                    android:visibility="visible" />
+
+                                <LinearLayout
+                                    android:id="@+id/mfValueContainer"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="end"
+                                    android:orientation="vertical"
+                                    android:visibility="gone">
+
+                                    <TextView
+                                        android:id="@+id/tvMfValue"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tvMfDayPnl"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="11sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <!-- MF CAGR projections -->
+                            <LinearLayout
+                                android:id="@+id/mfCagrSection"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:orientation="vertical"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="CAGR PROJECTIONS"
+                                    android:textColor="#80FFFFFF"
+                                    android:textSize="10sp"
+                                    android:letterSpacing="0.08"
+                                    android:layout_marginBottom="4dp" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/tvMfCagr1y"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:textColor="#B3FFFFFF"
+                                        android:textSize="11sp" />
+
+                                    <TextView
+                                        android:id="@+id/tvMfCagr3y"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:textColor="#B3FFFFFF"
+                                        android:textSize="11sp" />
+
+                                    <TextView
+                                        android:id="@+id/tvMfCagr5y"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:textColor="#B3FFFFFF"
+                                        android:textSize="11sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Other Assets card -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:cardBackgroundColor="@color/card_dark_teal"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="14dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:padding="6dp"
+                                    android:src="@drawable/ic_asset_other"
+                                    android:background="@color/card_medium_teal"
+                                    android:contentDescription="Other Assets" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Other Assets"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Real Estate, Private Equity, etc."
+                                        android:textColor="#B3FFFFFF"
+                                        android:textSize="11sp" />
+                                </LinearLayout>
+
+                                <ProgressBar
+                                    android:id="@+id/otherLoadingBar"
+                                    style="?android:attr/progressBarStyleSmall"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:indeterminateTint="@android:color/white"
+                                    android:visibility="visible" />
+
+                                <LinearLayout
+                                    android:id="@+id/otherValueContainer"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="end"
+                                    android:orientation="vertical"
+                                    android:visibility="gone">
+
+                                    <TextView
+                                        android:id="@+id/tvOtherValue"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@android:color/white"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
                 <!-- ── Footer: Last Updated + Refresh ─────────────────── -->
                 <LinearLayout
                     android:id="@+id/footerRow"
@@ -313,7 +778,7 @@
                     android:paddingEnd="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/chartCard">
+                    app:layout_constraintTop_toBottomOf="@id/assetsPortfolioSection">
 
                     <TextView
                         android:id="@+id/tvLastUpdated"
@@ -342,13 +807,21 @@
         </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+        <include
+            layout="@layout/layout_bottom_nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
     <!-- Navigation Drawer -->
-    <com.google.android.material.navigation.NavigationView
+
+<com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
-        android:layout_width="260dp"
+        android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:background="@color/card_medium_teal"
+        android:background="@color/drawer_bg"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/drawer_header" />
 

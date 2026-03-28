@@ -17,4 +17,72 @@
     </style>
 
     <style name="Theme.PersonalWealthManager" parent="Base.Theme.PersonalWealthManager" />
+
+    <!-- Drawer nav row (top-level item) -->
+    <style name="DrawerNavRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:layout_marginBottom">1dp</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:paddingEnd">14dp</item>
+        <item name="android:background">@drawable/drawer_item_ripple_bg</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <!-- Drawer nav icon (top-level) -->
+    <style name="DrawerNavIcon">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:contentDescription">@null</item>
+    </style>
+
+    <!-- Drawer nav label (top-level) -->
+    <style name="DrawerNavLabel">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:textColor">@color/drawer_item_text</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Drawer nav row (child/sub item) -->
+    <style name="DrawerNavRowChild">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">42dp</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:layout_marginBottom">1dp</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:paddingEnd">14dp</item>
+        <item name="android:background">@drawable/drawer_item_ripple_bg</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <!-- Drawer nav icon (child) -->
+    <style name="DrawerNavIconChild">
+        <item name="android:layout_width">18dp</item>
+        <item name="android:layout_height">18dp</item>
+        <item name="android:contentDescription">@null</item>
+    </style>
+
+    <!-- Drawer nav label (child) -->
+    <style name="DrawerNavLabelChild">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:textColor">@color/drawer_item_text</item>
+        <item name="android:textSize">13sp</item>
+    </style>
 </resources>

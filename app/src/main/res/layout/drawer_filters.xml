@@ -1,39 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/card_medium_teal">
+    android:background="#D9FFFFFF">
 
     <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center_vertical"
-        android:background="@color/card_dark_teal">
+        android:paddingStart="24dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="28dp"
+        android:paddingBottom="16dp"
+        android:gravity="center_vertical">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/filters"
-            android:textColor="@android:color/white"
+            android:text="Filter Transactions"
+            android:textColor="@color/tx_text_primary"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/btnCloseFilters"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:src="@drawable/ic_close"
-            android:contentDescription="@string/close"
-            android:padding="4dp"
+            android:contentDescription="Close"
+            android:padding="6dp"
             android:background="?attr/selectableItemBackgroundBorderless" />
 
     </LinearLayout>
+
+    <!-- Header divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/tx_divider" />
 
     <!-- Scrollable Filter Content -->
     <ScrollView
@@ -46,242 +53,509 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="8dp">
 
-            <!-- Time Filter Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/filter_time"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Date From -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+            <!-- ── DATE RANGE ──────────────────────────────────── -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/date_from"
-                app:boxBackgroundColor="@android:color/white"
-                app:boxCornerRadiusTopStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:hintTextColor="@color/text_dark"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:layout_marginBottom="12dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDateFrom"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_dark"
-                    android:textSize="16sp"
-                    android:focusable="false"
-                    android:clickable="true"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_filter_calendar"
+                    android:contentDescription="Date range"
+                    android:layout_marginEnd="8dp" />
 
-            <!-- Date To -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date Range"
+                    android:textColor="@color/tx_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/date_to"
-                app:boxBackgroundColor="@android:color/white"
-                app:boxCornerRadiusTopStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:hintTextColor="@color/text_dark"
+                android:orientation="horizontal"
                 android:layout_marginBottom="24dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDateTo"
-                    android:layout_width="match_parent"
+                <!-- FROM -->
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_dark"
-                    android:textSize="16sp"
-                    android:focusable="false"
-                    android:clickable="true"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="6dp">
 
-            <!-- Type Filter Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/filter_type"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="FROM"
+                        android:textColor="@color/tx_text_muted"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginBottom="4dp" />
 
-            <!-- Transaction Type Spinner -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/income_expense"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:alpha="0.85"
-                android:layout_marginBottom="8dp" />
+                    <EditText
+                        android:id="@+id/etDateFrom"
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_filter_input"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/tx_text_primary"
+                        android:textSize="13sp"
+                        android:hint="dd/mm/yy"
+                        android:textColorHint="@color/tx_text_muted"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:inputType="none" />
 
-            <Spinner
-                android:id="@+id/spinnerType"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="@drawable/spinner_background"
-                android:padding="12dp"
-                android:layout_marginBottom="16dp" />
+                </LinearLayout>
 
-            <!-- Category Spinner -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/category"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:alpha="0.85"
-                android:layout_marginBottom="8dp" />
+                <!-- TO -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="6dp">
 
-            <Spinner
-                android:id="@+id/spinnerCategory"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="@drawable/spinner_background"
-                android:padding="12dp"
-                android:layout_marginBottom="16dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TO"
+                        android:textColor="@color/tx_text_muted"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginBottom="4dp" />
 
-            <!-- Source Spinner -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/source"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:alpha="0.85"
-                android:layout_marginBottom="8dp" />
+                    <EditText
+                        android:id="@+id/etDateTo"
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_filter_input"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/tx_text_primary"
+                        android:textSize="13sp"
+                        android:hint="dd/mm/yy"
+                        android:textColorHint="@color/tx_text_muted"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:inputType="none" />
 
-            <Spinner
-                android:id="@+id/spinnerSource"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="@drawable/spinner_background"
-                android:padding="12dp"
-                android:layout_marginBottom="16dp" />
+                </LinearLayout>
 
-            <!-- Recipient Spinner -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/recipient"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:alpha="0.85"
-                android:layout_marginBottom="8dp" />
+            </LinearLayout>
 
-            <Spinner
-                android:id="@+id/spinnerRecipient"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="@drawable/spinner_background"
-                android:padding="12dp"
-                android:layout_marginBottom="24dp" />
-
-            <!-- Amount Filter Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/filter_amount"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="16dp" />
-
-            <!-- Min Amount -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+            <!-- ── TRANSACTION TYPE ────────────────────────────── -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/min_amount"
-                app:boxBackgroundColor="@android:color/white"
-                app:boxCornerRadiusTopStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:hintTextColor="@color/text_dark"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:layout_marginBottom="12dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etMinAmount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_dark"
-                    android:textSize="16sp"
-                    android:inputType="numberDecimal" />
-            </com.google.android.material.textfield.TextInputLayout>
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_filter_swap"
+                    android:contentDescription="Transaction type"
+                    android:layout_marginEnd="8dp" />
 
-            <!-- Max Amount -->
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Transaction Type"
+                    android:textColor="@color/tx_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Chip row -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/max_amount"
-                app:boxBackgroundColor="@android:color/white"
-                app:boxCornerRadiusTopStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:hintTextColor="@color/text_dark"
+                android:orientation="horizontal"
                 android:layout_marginBottom="24dp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etMaxAmount"
+                <Button
+                    android:id="@+id/btnTypeChipBoth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Both"
+                    android:textColor="@android:color/white"
+                    android:textSize="13sp"
+                    android:textAllCaps="false"
+                    android:background="@drawable/bg_filter_chip_active"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:stateListAnimator="@null" />
+
+                <Button
+                    android:id="@+id/btnTypeChipIncome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Income"
+                    android:textColor="@color/tx_text_secondary"
+                    android:textSize="13sp"
+                    android:textAllCaps="false"
+                    android:background="@drawable/bg_filter_chip_inactive"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:stateListAnimator="@null" />
+
+                <Button
+                    android:id="@+id/btnTypeChipExpense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Expense"
+                    android:textColor="@color/tx_text_secondary"
+                    android:textSize="13sp"
+                    android:textAllCaps="false"
+                    android:background="@drawable/bg_filter_chip_inactive"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:stateListAnimator="@null" />
+
+            </LinearLayout>
+
+            <!-- ── CATEGORIES ──────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_filter_category"
+                    android:contentDescription="Categories"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Categories"
+                    android:textColor="@color/tx_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_filter_input"
+                android:layout_marginBottom="24dp">
+
+                <Spinner
+                    android:id="@+id/spinnerCategory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_dark"
+                    android:background="@null"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="40dp"
+                    android:paddingTop="13dp"
+                    android:paddingBottom="13dp"
+                    android:popupBackground="@android:color/white" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_filter_chevron"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="12dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:contentDescription="Expand" />
+
+            </FrameLayout>
+
+            <!-- ── SOURCES ─────────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_filter_bank"
+                    android:contentDescription="Sources"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sources"
+                    android:textColor="@color/tx_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_filter_input"
+                android:layout_marginBottom="24dp">
+
+                <Spinner
+                    android:id="@+id/spinnerSource"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="40dp"
+                    android:paddingTop="13dp"
+                    android:paddingBottom="13dp"
+                    android:popupBackground="@android:color/white" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_filter_chevron"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="12dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:contentDescription="Expand" />
+
+            </FrameLayout>
+
+            <!-- ── RECIPIENTS ──────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_filter_person"
+                    android:contentDescription="Recipients"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recipients"
+                    android:textColor="@color/tx_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_filter_input"
+                android:layout_marginBottom="24dp">
+
+                <Spinner
+                    android:id="@+id/spinnerRecipient"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="40dp"
+                    android:paddingTop="13dp"
+                    android:paddingBottom="13dp"
+                    android:popupBackground="@android:color/white" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_filter_chevron"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="12dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:contentDescription="Expand" />
+
+            </FrameLayout>
+
+            <!-- ── AMOUNT RANGE ────────────────────────────────── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_filter_payments"
+                    android:contentDescription="Amount range"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Amount Range"
+                    android:textColor="@color/tx_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <!-- Min -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:background="@drawable/bg_filter_input"
+                    android:gravity="center_vertical"
+                    android:paddingStart="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₹"
+                        android:textColor="@color/tx_text_muted"
+                        android:textSize="13sp"
+                        android:layout_marginEnd="4dp" />
+
+                    <EditText
+                        android:id="@+id/etMinAmount"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:hint="Min"
+                        android:textColorHint="@color/tx_text_muted"
+                        android:textColor="@color/tx_text_primary"
+                        android:textSize="13sp"
+                        android:inputType="numberDecimal"
+                        android:paddingEnd="8dp" />
+
+                </LinearLayout>
+
+                <!-- Separator -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="—"
+                    android:textColor="@color/tx_text_muted"
                     android:textSize="16sp"
-                    android:inputType="numberDecimal" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp" />
+
+                <!-- Max -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:background="@drawable/bg_filter_input"
+                    android:gravity="center_vertical"
+                    android:paddingStart="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₹"
+                        android:textColor="@color/tx_text_muted"
+                        android:textSize="13sp"
+                        android:layout_marginEnd="4dp" />
+
+                    <EditText
+                        android:id="@+id/etMaxAmount"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:hint="Max"
+                        android:textColorHint="@color/tx_text_muted"
+                        android:textColor="@color/tx_text_primary"
+                        android:textSize="13sp"
+                        android:inputType="numberDecimal"
+                        android:paddingEnd="8dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </ScrollView>
 
-    <!-- Bottom Action Buttons -->
+    <!-- Footer divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/tx_divider" />
+
+    <!-- Footer Actions -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="@color/card_dark_teal"
-        android:gravity="center">
-
-        <Button
-            android:id="@+id/btnResetFilters"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_weight="1"
-            android:text="@string/reset_filters"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:background="@drawable/button_outline"
-            android:layout_marginEnd="8dp" />
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="20dp"
+        android:background="#D9FFFFFF">
 
         <Button
             android:id="@+id/btnApplyFilters"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_weight="1"
-            android:text="@string/apply_filters"
-            android:textColor="@color/text_dark"
-            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Apply Filters"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
             android:textStyle="bold"
-            android:background="@drawable/button_filled"
-            android:layout_marginStart="8dp" />
+            android:textAllCaps="false"
+            android:background="@drawable/bg_filter_apply"
+            android:stateListAnimator="@null"
+            android:layout_marginBottom="4dp" />
+
+        <Button
+            android:id="@+id/btnResetFilters"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:text="Reset to Default"
+            android:textColor="@color/tx_text_secondary"
+            android:textSize="13sp"
+            android:textAllCaps="false"
+            android:stateListAnimator="@null" />
 
     </LinearLayout>
 

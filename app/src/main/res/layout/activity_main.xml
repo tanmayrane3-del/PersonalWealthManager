@@ -8,1116 +8,1182 @@
     android:layout_height="match_parent"
     tools:openDrawer="end">
 
-    <!-- Main Content -->
-    <ScrollView
+    <!-- ── Main Content ── -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient_background"
-        android:fitsSystemWindows="true"
-        android:fillViewport="true">
+        android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="8dp"
-            android:paddingTop="24dp">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/background_light"
+            android:fitsSystemWindows="true"
+            android:fillViewport="true">
 
-            <!-- Burger Menu Button -->
-            <ImageView
-                android:id="@+id/btnMenu"
-                android:layout_width="58dp"
-                android:layout_height="58dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="8dp"
-                android:padding="14dp"
-                android:src="@drawable/ic_menu"
-                android:contentDescription="@string/menu"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <!-- Net Worth Summary Card -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/netWorthCard"
-                android:layout_width="0dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardBackgroundColor="@color/card_light_teal"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sectionDivider">
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="80dp">
 
+                <!-- ── App Bar ── -->
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/appBarRow"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:paddingTop="14dp"
-                    android:paddingBottom="14dp">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <!-- Title + value + refresh on one row -->
+                    <!-- Avatar placeholder -->
+                    <FrameLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_avatar_circle">
+                        <TextView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:gravity="center"
+                            android:text="P"
+                            android:textColor="@color/teal_700"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+
+                    <!-- App name -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="10dp"
+                        android:text="Personal Wealth Manager"
+                        android:textColor="@color/teal_700"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:ellipsize="end" />
+
+                    <!-- Notification bell -->
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_bell"
+                        android:tint="@color/text_muted"
+                        android:contentDescription="Notifications"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                    <!-- Burger menu -->
+                    <ImageView
+                        android:id="@+id/btnMenu"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_menu"
+                        android:tint="@color/text_muted"
+                        android:contentDescription="@string/menu"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+
+                <!-- ── Transaction Overview header + date chip ── -->
+                <LinearLayout
+                    android:id="@+id/transactionOverviewRow"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/appBarRow">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Transaction Overview"
+                        android:textColor="@color/text_dark"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins_bold" />
+
+                    <!-- Date range chip: tap left half = from, tap right half = to -->
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:layout_marginBottom="8dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Net Worth"
-                            android:textColor="@color/text_dark"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvNetWorthValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="--"
-                            android:textColor="#4CAF50"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:layout_marginEnd="8dp" />
+                        android:background="@drawable/bg_date_chip"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp">
 
                         <ImageView
-                            android:id="@+id/ivRefreshNetWorth"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:padding="4dp"
+                            android:id="@+id/ivCalendar"
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:layout_marginEnd="5dp"
+                            android:src="@drawable/ic_calendar"
+                            android:tint="@color/text_muted"
+                            android:contentDescription="@string/calendar_icon" />
+
+                        <LinearLayout
+                            android:id="@+id/fromDateContainer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless">
+                            <TextView
+                                android:id="@+id/tvFromDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/default_from_date"
+                                android:textColor="@color/text_muted"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" – "
+                            android:textColor="@color/text_muted"
+                            android:textSize="11sp" />
+
+                        <LinearLayout
+                            android:id="@+id/toDateContainer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless">
+                            <TextView
+                                android:id="@+id/tvToDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/default_to_date"
+                                android:textColor="@color/text_muted"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- ── Total Income Card ── -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/incomeCard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="2dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/transactionOverviewRow">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="18dp"
+                        android:paddingEnd="18dp"
+                        android:paddingTop="18dp"
+                        android:paddingBottom="18dp">
+
+                        <TextView
+                            android:id="@+id/tvIncomeLabel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="TOTAL INCOME"
+                            android:textColor="@color/text_muted"
+                            android:textSize="9sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.15"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/ivRefreshIncome"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tvIncomeAmount"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="@string/default_income"
+                            android:textColor="@color/text_dark"
+                            android:textSize="30sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/poppins_bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/ivRefreshIncome"
+                            app:layout_constraintTop_toBottomOf="@id/tvIncomeLabel"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/ivRefreshIncome"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:padding="8dp"
                             android:src="@drawable/ic_refresh"
-                            android:contentDescription="Refresh net worth"
+                            android:tint="@color/text_muted"
+                            android:contentDescription="@string/refresh"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:clickable="true"
                             android:focusable="true"
-                            android:tint="@color/text_dark" />
-                    </LinearLayout>
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
 
-                    <!-- Assets | Liabilities breakdown -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Assets "
-                            android:textColor="@color/text_dark"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/tvNetWorthAssets"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="--"
-                            android:textColor="#4CAF50"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="16dp"
-                            android:background="@color/text_dark"
-                            android:alpha="0.2"
-                            android:layout_marginEnd="12dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Liabilities "
-                            android:textColor="@color/text_dark"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/tvNetWorthLiabilities"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="--"
-                            android:textColor="#F44336"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <!-- Since yesterday delta -->
-                    <TextView
-                        android:id="@+id/tvNetWorthDelta"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:textColor="#4CAF50"
-                        android:textSize="12sp"
-                        android:gravity="end"
-                        android:layout_marginTop="4dp"
-                        android:visibility="gone" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Date Range Card -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/dateRangeCard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:cardBackgroundColor="@color/card_light_teal"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btnMenu">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <!-- From Date Section -->
-                    <LinearLayout
-                        android:id="@+id/fromDateContainer"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground"
-                        android:padding="8dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/from_label"
-                            android:textColor="@color/text_dark"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvFromDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="@string/default_from_date"
-                            android:textColor="@color/text_dark"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <!-- To Date Section -->
-                    <LinearLayout
-                        android:id="@+id/toDateContainer"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?attr/selectableItemBackground"
-                        android:padding="8dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/to_label"
-                            android:textColor="@color/text_dark"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvToDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="@string/default_to_date"
-                            android:textColor="@color/text_dark"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <!-- Calendar Icon -->
-                    <ImageView
-                        android:id="@+id/ivCalendar"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_calendar"
-                        android:contentDescription="@string/calendar_icon" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Total Income Card -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/incomeCard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardBackgroundColor="@color/card_income_teal"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/dateRangeCard">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
-
-                    <!-- Total Income Label -->
-                    <TextView
-                        android:id="@+id/tvIncomeLabel"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/total_income"
-                        android:textColor="@android:color/white"
-                        android:textSize="19sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@id/ivRefreshIncome"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <!-- Refresh Icon (Aligned with Label) -->
-                    <ImageView
-                        android:id="@+id/ivRefreshIncome"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="8dp"
-                        android:padding="12dp"
-                        android:src="@drawable/ic_refresh"
-                        android:contentDescription="@string/refresh"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:focusable="true"
-                        app:layout_constraintBottom_toBottomOf="@id/tvIncomeLabel"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/tvIncomeLabel" />
-
-                    <!-- Income Amount -->
-                    <TextView
-                        android:id="@+id/tvIncomeAmount"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/default_income"
-                        android:textColor="@android:color/white"
-                        android:textSize="34sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvIncomeLabel" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Total Expenses Card -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/expensesCard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardBackgroundColor="@color/card_dark_teal"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/incomeCard">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
-
-                    <!-- Total Expenses Label -->
-                    <TextView
-                        android:id="@+id/tvExpensesLabel"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/total_expenses"
-                        android:textColor="@android:color/white"
-                        android:textSize="19sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@id/ivRefreshExpenses"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <!-- Refresh Icon (Aligned with Label) -->
-                    <ImageView
-                        android:id="@+id/ivRefreshExpenses"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="8dp"
-                        android:padding="12dp"
-                        android:src="@drawable/ic_refresh"
-                        android:contentDescription="@string/refresh"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:focusable="true"
-                        app:layout_constraintBottom_toBottomOf="@id/tvExpensesLabel"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/tvExpensesLabel" />
-
-                    <!-- Expenses Amount -->
-                    <TextView
-                        android:id="@+id/tvExpensesAmount"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/default_expenses"
-                        android:textColor="@android:color/white"
-                        android:textSize="34sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvExpensesLabel" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Bifurcation Divider -->
-            <View
-                android:id="@+id/sectionDivider"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="24dp"
-                android:background="@color/text_muted"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/expensesCard" />
-
-            <!-- Assets Section Header (collapsible toggle) -->
-            <LinearLayout
-                android:id="@+id/assetsHeader"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="8dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="12dp"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@drawable/bg_assets_header"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/netWorthCard">
-
-                <TextView
+                <!-- ── Total Expenses Card ── -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/expensesCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/assets_section"
-                    android:textColor="@android:color/white"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.12" />
+                    android:layout_marginTop="10dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="2dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/incomeCard">
 
-                <ImageView
-                    android:id="@+id/ivAssetsChevron"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_expand_more"
-                    android:contentDescription="Toggle assets"
-                    android:tint="@android:color/white" />
-            </LinearLayout>
-
-            <!-- Assets Container (collapsible) -->
-            <LinearLayout
-                android:id="@+id/assetsContainer"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:clipToPadding="false"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/assetsHeader">
-
-            <!-- Stock Holdings Card -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/stocksCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#006e61"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <!-- Header: title + refresh -->
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                        android:paddingStart="18dp"
+                        android:paddingEnd="18dp"
+                        android:paddingTop="18dp"
+                        android:paddingBottom="18dp">
+
                         <TextView
-                            android:id="@+id/tvStockHoldingsLabel"
+                            android:id="@+id/tvExpensesLabel"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/stock_holdings_label"
-                            android:textColor="@android:color/white"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:text="TOTAL EXPENSES"
+                            android:textColor="@color/text_muted"
+                            android:textSize="9sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.15"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/ivRefreshExpenses"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tvExpensesAmount"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="@string/default_expenses"
+                            android:textColor="@color/text_dark"
+                            android:textSize="30sp"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/poppins_bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/ivRefreshExpenses"
+                            app:layout_constraintTop_toBottomOf="@id/tvExpensesLabel"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
                         <ImageView
-                            android:id="@+id/ivRefreshStocks"
+                            android:id="@+id/ivRefreshExpenses"
                             android:layout_width="36dp"
                             android:layout_height="36dp"
                             android:padding="8dp"
                             android:src="@drawable/ic_refresh"
-                            android:contentDescription="@string/refresh_stocks"
+                            android:tint="@color/expense_red"
+                            android:contentDescription="@string/refresh"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:clickable="true"
-                            android:focusable="true" />
-                    </LinearLayout>
+                            android:focusable="true"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
 
-                    <!-- Body: left (value + P&L) | vertical divider | right (projections) -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="12dp">
-
-                        <!-- Left column: portfolio value + today P&L -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Total Portfolio Value"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="11sp" />
-                            <TextView
-                                android:id="@+id/tvStockValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="@string/stocks_not_connected"
-                                android:textColor="@android:color/white"
-                                android:textSize="22sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:text="Today's P&amp;L"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="11sp" />
-                            <TextView
-                                android:id="@+id/tvStockDayPnl"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text=""
-                                android:textColor="@android:color/white"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <!-- Vertical divider -->
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginEnd="12dp"
-                            android:background="#33FFFFFF" />
-
-                        <!-- Right column: CAGR projections (hidden until data available) -->
-                        <LinearLayout
-                            android:id="@+id/stockProjectionsColumn"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="CAGR Projections"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="11sp" />
-                            <TextView
-                                android:id="@+id/tvStockProjection1y"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="--"
-                                android:textColor="@android:color/white"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:id="@+id/tvStockProjection3y"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:text="--"
-                                android:textColor="@android:color/white"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:id="@+id/tvStockProjection5y"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:text="--"
-                                android:textColor="@android:color/white"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Gold Holdings Card -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/goldCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#006e61"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <!-- Header: title + sync button -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-                        <TextView
-                            android:id="@+id/tvGoldHoldingsLabel"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Gold Holdings"
-                            android:textColor="#F5A623"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                        <ImageView
-                            android:id="@+id/ivRefreshGold"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:padding="8dp"
-                            android:src="@drawable/ic_refresh"
-                            android:contentDescription="Sync gold CAGR"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:clickable="true"
-                            android:focusable="true" />
-                    </LinearLayout>
-
-                    <!-- Body: left (value + P&L) | vertical divider | right (projections) -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="12dp">
-
-                        <!-- Left column: total value + today P&L -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Total Metals Value"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="11sp" />
-                            <TextView
-                                android:id="@+id/tvGoldValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="--"
-                                android:textColor="@android:color/white"
-                                android:textSize="22sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:text="Today's P&amp;L"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="11sp" />
-                            <TextView
-                                android:id="@+id/tvGoldDayPnl"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text=""
-                                android:textColor="@android:color/white"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <!-- Vertical divider -->
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginEnd="12dp"
-                            android:background="#33FFFFFF" />
-
-                        <!-- Right column: CAGR projections (hidden until data available) -->
-                        <LinearLayout
-                            android:id="@+id/goldProjectionsColumn"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="CAGR Projections"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="11sp" />
-                            <TextView
-                                android:id="@+id/tvGoldProjection1y"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="--"
-                                android:textColor="@android:color/white"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:id="@+id/tvGoldProjection3y"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:text="--"
-                                android:textColor="@android:color/white"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:id="@+id/tvGoldProjection5y"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:text="--"
-                                android:textColor="@android:color/white"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Mutual Funds Card -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/mfCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#006e61"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <!-- Header: title + sync button -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Mutual Funds"
-                            android:textColor="@android:color/white"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                        <ImageView
-                            android:id="@+id/ivRefreshMf"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:padding="8dp"
-                            android:src="@drawable/ic_refresh"
-                            android:contentDescription="Sync MF CAGR"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:clickable="true"
-                            android:focusable="true" />
-                    </LinearLayout>
-
-                    <!-- Body: left (value + returns) | vertical divider | right (projections) -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="12dp">
-
-                        <!-- Left column: total value + absolute return -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Total MF Value"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="11sp" />
-                            <TextView
-                                android:id="@+id/tvMfValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="--"
-                                android:textColor="@android:color/white"
-                                android:textSize="22sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:text="Today's P&amp;L"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="11sp" />
-                            <TextView
-                                android:id="@+id/tvMfReturn"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text=""
-                                android:textColor="@android:color/white"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <!-- Vertical divider -->
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginEnd="12dp"
-                            android:background="#33FFFFFF" />
-
-                        <!-- Right column: CAGR projections (hidden until data available) -->
-                        <LinearLayout
-                            android:id="@+id/mfProjectionsColumn"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="CAGR Projections"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="11sp" />
-                            <TextView
-                                android:id="@+id/tvMfProjection1y"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="--"
-                                android:textColor="@android:color/white"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:id="@+id/tvMfProjection3y"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:text="--"
-                                android:textColor="@android:color/white"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:id="@+id/tvMfProjection5y"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:text="--"
-                                android:textColor="@android:color/white"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Other Assets Card -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/otherAssetsCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#006e61"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <!-- Header: title + refresh -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Other Assets"
-                            android:textColor="@android:color/white"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                        <ImageView
-                            android:id="@+id/ivRefreshOtherAssets"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:padding="8dp"
-                            android:src="@drawable/ic_refresh"
-                            android:contentDescription="Refresh other assets"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:clickable="true"
-                            android:focusable="true" />
-                    </LinearLayout>
-
-                    <!-- Body: left (value + CAGR) | vertical divider | right (projections) -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="12dp">
-
-                        <!-- Left column: total value + overall CAGR -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Total Assets Value"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="11sp" />
-                            <TextView
-                                android:id="@+id/tvOtherAssetsValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="--"
-                                android:textColor="@android:color/white"
-                                android:textSize="22sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:text="CAGR"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="11sp" />
-                            <TextView
-                                android:id="@+id/tvOtherAssetsCagr"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text=""
-                                android:textColor="@android:color/white"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <!-- Vertical divider -->
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginEnd="12dp"
-                            android:background="#33FFFFFF" />
-
-                        <!-- Right column: projections (hidden until data available) -->
-                        <LinearLayout
-                            android:id="@+id/otherAssetsProjectionsColumn"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="CAGR Projections"
-                                android:textColor="#B3FFFFFF"
-                                android:textSize="11sp" />
-                            <TextView
-                                android:id="@+id/tvOtherAssetsProjection1y"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="--"
-                                android:textColor="@android:color/white"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:id="@+id/tvOtherAssetsProjection3y"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:text="--"
-                                android:textColor="@android:color/white"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-                            <TextView
-                                android:id="@+id/tvOtherAssetsProjection5y"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:text="--"
-                                android:textColor="@android:color/white"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            </LinearLayout>
-
-            <!-- Liabilities Section Header (collapsible toggle) -->
-            <LinearLayout
-                android:id="@+id/liabilitiesHeader"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="8dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="12dp"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@drawable/bg_assets_header"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/assetsContainer">
-
-                <TextView
+                <!-- ── Divider ── -->
+                <View
+                    android:id="@+id/sectionDivider"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Liabilities"
-                    android:textColor="@android:color/white"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.12" />
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/gray_200"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/expensesCard" />
 
-                <ImageView
-                    android:id="@+id/ivLiabilitiesChevron"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_expand_more"
-                    android:contentDescription="Toggle liabilities"
-                    android:tint="@android:color/white" />
-            </LinearLayout>
-
-            <!-- Liabilities Container (collapsible, cards added dynamically) -->
-            <LinearLayout
-                android:id="@+id/liabilitiesContainer"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:clipToPadding="false"
-                android:paddingBottom="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/liabilitiesHeader">
-
-                <!-- Empty state - shown when no active loans -->
-                <TextView
-                    android:id="@+id/tvLiabilitiesEmpty"
-                    android:layout_width="match_parent"
+                <!-- ── Net Worth Hero Card ── -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/netWorthCard"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center"
-                    android:text="No active loans"
-                    android:textColor="#B3FFFFFF"
-                    android:textSize="14sp"
-                    android:visibility="gone" />
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/sectionDivider">
 
-            </LinearLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_networth_card"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:paddingTop="22dp"
+                        android:paddingBottom="22dp">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+                        <!-- "NET WORTH" label -->
+                        <TextView
+                            android:id="@+id/tvNetWorthLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="NET WORTH"
+                            android:textColor="#CCFFFFFF"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.12"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Navigation Drawer (Slide Menu) -->
+                        <!-- "LIVE" badge -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="LIVE"
+                            android:textColor="@android:color/white"
+                            android:textSize="8sp"
+                            android:textStyle="bold"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:paddingTop="3dp"
+                            android:paddingBottom="3dp"
+                            android:background="@drawable/bg_live_badge"
+                            app:layout_constraintStart_toEndOf="@id/tvNetWorthLabel"
+                            app:layout_constraintTop_toTopOf="@id/tvNetWorthLabel"
+                            app:layout_constraintBottom_toBottomOf="@id/tvNetWorthLabel" />
+
+                        <!-- Refresh -->
+                        <ImageView
+                            android:id="@+id/ivRefreshNetWorth"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_refresh"
+                            android:tint="#99FFFFFF"
+                            android:contentDescription="Refresh net worth"
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <!-- Net Worth value -->
+                        <TextView
+                            android:id="@+id/tvNetWorthValue"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="--"
+                            android:textColor="@android:color/white"
+                            android:textSize="36sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="-0.03"
+                            android:fontFamily="@font/poppins_bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvNetWorthLabel" />
+
+                        <!-- Delta (since yesterday) -->
+                        <LinearLayout
+                            android:id="@+id/netWorthDeltaRow"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginTop="6dp"
+                            android:visibility="gone"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tvNetWorthValue">
+
+                            <ImageView
+                                android:id="@+id/ivNetWorthTrend"
+                                android:layout_width="14dp"
+                                android:layout_height="10dp"
+                                android:layout_marginEnd="7dp"
+                                android:src="@drawable/ic_trending_up"
+                                android:tint="#D1EBE7"
+                                android:contentDescription="Trend direction" />
+
+                            <TextView
+                                android:id="@+id/tvNetWorthDelta"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=""
+                                android:textColor="#D1EBE7"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <!-- Assets / Liabilities row -->
+                        <View
+                            android:id="@+id/netWorthDivider"
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="16dp"
+                            android:background="#33FFFFFF"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/netWorthDeltaRow" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="14dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/netWorthDivider">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="ASSETS"
+                                    android:textColor="#99FFFFFF"
+                                    android:textSize="9sp"
+                                    android:textStyle="bold"
+                                    android:letterSpacing="0.1" />
+                                <TextView
+                                    android:id="@+id/tvNetWorthAssets"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="--"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold"
+                                    android:fontFamily="@font/poppins_bold" />
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="@android:color/transparent"
+                                android:layout_marginEnd="16dp" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="LIABILITIES"
+                                    android:textColor="#99FFFFFF"
+                                    android:textSize="9sp"
+                                    android:textStyle="bold"
+                                    android:letterSpacing="0.1" />
+                                <TextView
+                                    android:id="@+id/tvNetWorthLiabilities"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="--"
+                                    android:textColor="#FFB3B3"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold"
+                                    android:fontFamily="@font/poppins_bold" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- ── Assets Section Header ── -->
+                <LinearLayout
+                    android:id="@+id/assetsHeader"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="24dp"
+                    android:paddingBottom="12dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/netWorthCard">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Assets Portfolio"
+                        android:textColor="#005F55"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins_bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="4 Categories"
+                        android:textColor="@color/text_muted"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:id="@+id/ivAssetsChevron"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_expand_more"
+                        android:contentDescription="Toggle assets"
+                        android:tint="@color/teal_700" />
+                </LinearLayout>
+
+                <!-- ── Assets Container ── -->
+                <LinearLayout
+                    android:id="@+id/assetsContainer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:clipToPadding="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/assetsHeader">
+
+                    <!-- Stock Holdings Card -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/stocksCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="4dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <!-- Header row: icon | title+subtitle | value+pnl -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+
+                                <FrameLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/bg_stock_badge">
+                                    <ImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_asset_stocks"
+                                        android:tint="@color/teal_700"
+                                        android:contentDescription="Stocks" />
+                                </FrameLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginStart="12dp"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/stock_holdings_label"
+                                        android:textColor="@color/text_dark"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold"
+                                        android:fontFamily="@font/inter_bold" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Direct Equities &amp; ETFs"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="11sp"
+                                        android:layout_marginTop="2dp" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="end">
+                                    <TextView
+                                        android:id="@+id/tvStockValue"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/stocks_not_connected"
+                                        android:textColor="@color/text_dark"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold"
+                                        android:fontFamily="@font/poppins_bold"
+                                        android:gravity="end" />
+                                    <TextView
+                                        android:id="@+id/tvStockDayPnl"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
+                                        android:textColor="@color/income_green"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold"
+                                        android:gravity="end"
+                                        android:layout_marginTop="2dp" />
+                                </LinearLayout>
+
+                                <!-- Hidden: kept for code compatibility -->
+                                <ImageView
+                                    android:id="@+id/ivRefreshStocks"
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:src="@drawable/ic_refresh"
+                                    android:contentDescription="@string/refresh_stocks"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+
+                            <!-- CAGR Projections -->
+                            <LinearLayout
+                                android:id="@+id/stockProjectionsColumn"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginTop="10dp"
+                                android:visibility="gone">
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:background="@color/gray_200" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="CAGR PROJECTIONS"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="8sp"
+                                    android:textStyle="bold"
+                                    android:letterSpacing="0.12"
+                                    android:layout_marginTop="8dp" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_marginTop="4dp">
+                                    <TextView android:id="@+id/tvStockProjection1y" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="--" android:textColor="@color/teal_700" android:textSize="11sp" android:textStyle="bold" />
+                                    <TextView android:id="@+id/tvStockProjection3y" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="--" android:textColor="@color/teal_700" android:textSize="11sp" android:textStyle="bold" />
+                                    <TextView android:id="@+id/tvStockProjection5y" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="--" android:textColor="@color/teal_700" android:textSize="11sp" android:textStyle="bold" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Gold & Bullion Card -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/goldCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="4dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+
+                                <FrameLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/bg_gold_badge">
+                                    <ImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_asset_gold"
+                                        android:tint="#B08D3E"
+                                        android:contentDescription="Gold" />
+                                </FrameLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginStart="12dp"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Gold &amp; Bullion"
+                                        android:textColor="@color/text_dark"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold"
+                                        android:fontFamily="@font/inter_bold" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Digital &amp; Physical"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="11sp"
+                                        android:layout_marginTop="2dp" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="end">
+                                    <TextView
+                                        android:id="@+id/tvGoldValue"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="--"
+                                        android:textColor="@color/text_dark"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold"
+                                        android:fontFamily="@font/poppins_bold"
+                                        android:gravity="end" />
+                                    <TextView
+                                        android:id="@+id/tvGoldDayPnl"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
+                                        android:textColor="@color/income_green"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold"
+                                        android:gravity="end"
+                                        android:layout_marginTop="2dp" />
+                                </LinearLayout>
+
+                                <ImageView android:id="@+id/ivRefreshGold" android:layout_width="0dp" android:layout_height="0dp" android:src="@drawable/ic_refresh" android:contentDescription="Refresh gold" android:visibility="gone" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/goldProjectionsColumn"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginTop="10dp"
+                                android:visibility="gone">
+
+                                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/gray_200" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CAGR PROJECTIONS" android:textColor="@color/text_muted" android:textSize="8sp" android:textStyle="bold" android:letterSpacing="0.12" android:layout_marginTop="8dp" />
+                                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="4dp">
+                                    <TextView android:id="@+id/tvGoldProjection1y" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="--" android:textColor="@color/teal_700" android:textSize="11sp" android:textStyle="bold" />
+                                    <TextView android:id="@+id/tvGoldProjection3y" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="--" android:textColor="@color/teal_700" android:textSize="11sp" android:textStyle="bold" />
+                                    <TextView android:id="@+id/tvGoldProjection5y" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="--" android:textColor="@color/teal_700" android:textSize="11sp" android:textStyle="bold" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Mutual Funds Card -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/mfCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="4dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+
+                                <FrameLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/bg_mf_badge">
+                                    <ImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_asset_mf"
+                                        android:tint="#3D7AB8"
+                                        android:contentDescription="Mutual Funds" />
+                                </FrameLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginStart="12dp"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Mutual Funds"
+                                        android:textColor="@color/text_dark"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold"
+                                        android:fontFamily="@font/inter_bold" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="SIP &amp; Lump-sum"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="11sp"
+                                        android:layout_marginTop="2dp" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="end">
+                                    <TextView
+                                        android:id="@+id/tvMfValue"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="--"
+                                        android:textColor="@color/text_dark"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold"
+                                        android:fontFamily="@font/poppins_bold"
+                                        android:gravity="end" />
+                                    <TextView
+                                        android:id="@+id/tvMfReturn"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
+                                        android:textColor="@color/income_green"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold"
+                                        android:gravity="end"
+                                        android:layout_marginTop="2dp" />
+                                </LinearLayout>
+
+                                <ImageView android:id="@+id/ivRefreshMf" android:layout_width="0dp" android:layout_height="0dp" android:src="@drawable/ic_refresh" android:contentDescription="Refresh mutual funds" android:visibility="gone" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/mfProjectionsColumn"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginTop="10dp"
+                                android:visibility="gone">
+
+                                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/gray_200" />
+                                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CAGR PROJECTIONS" android:textColor="@color/text_muted" android:textSize="8sp" android:textStyle="bold" android:letterSpacing="0.12" android:layout_marginTop="8dp" />
+                                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="4dp">
+                                    <TextView android:id="@+id/tvMfProjection1y" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="--" android:textColor="@color/teal_700" android:textSize="11sp" android:textStyle="bold" />
+                                    <TextView android:id="@+id/tvMfProjection3y" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="--" android:textColor="@color/teal_700" android:textSize="11sp" android:textStyle="bold" />
+                                    <TextView android:id="@+id/tvMfProjection5y" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="--" android:textColor="@color/teal_700" android:textSize="11sp" android:textStyle="bold" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Other Assets Card -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/otherAssetsCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical">
+
+                                <FrameLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/bg_other_badge">
+                                    <ImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_asset_other"
+                                        android:tint="@color/text_muted"
+                                        android:contentDescription="Other assets" />
+                                </FrameLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_marginStart="12dp"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Other Assets"
+                                        android:textColor="@color/text_dark"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold"
+                                        android:fontFamily="@font/inter_bold" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Real Estate, Private Equity, etc."
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="11sp"
+                                        android:layout_marginTop="2dp" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="end"
+                                    android:layout_marginEnd="4dp">
+                                    <TextView
+                                        android:id="@+id/tvOtherAssetsValue"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="--"
+                                        android:textColor="@color/text_dark"
+                                        android:textSize="14sp"
+                                        android:fontFamily="@font/poppins_bold"
+                                        android:textStyle="bold"
+                                        android:gravity="end" />
+                                    <TextView
+                                        android:id="@+id/tvOtherAssetsCagr"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
+                                        android:textColor="@color/income_green"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold"
+                                        android:gravity="end"
+                                        android:layout_marginTop="2dp" />
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:id="@+id/ivRefreshOtherAssets"
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:visibility="gone"
+                                    android:src="@drawable/ic_refresh"
+                                    android:contentDescription="Refresh other assets" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/otherAssetsProjectionsColumn"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginTop="12dp"
+                                android:visibility="gone">
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:background="@color/gray_200" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="CAGR PROJECTIONS"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="9sp"
+                                    android:textStyle="bold"
+                                    android:letterSpacing="0.1"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginBottom="4dp" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+                                    <TextView
+                                        android:id="@+id/tvOtherAssetsProjection1y"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="--"
+                                        android:textColor="@color/teal_700"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold" />
+                                    <TextView
+                                        android:id="@+id/tvOtherAssetsProjection3y"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="--"
+                                        android:textColor="@color/teal_700"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold" />
+                                    <TextView
+                                        android:id="@+id/tvOtherAssetsProjection5y"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:text="--"
+                                        android:textColor="@color/teal_700"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout><!-- end assetsContainer -->
+
+                <!-- ── Liabilities Section Header ── -->
+                <LinearLayout
+                    android:id="@+id/liabilitiesHeader"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="20dp"
+                    android:paddingBottom="12dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/assetsContainer">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Liabilities"
+                        android:textColor="#B01B1B"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/poppins_bold" />
+
+                    <TextView
+                        android:id="@+id/tvLiabilitiesCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="Active Loans"
+                        android:textColor="@color/text_muted"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:id="@+id/ivLiabilitiesChevron"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_expand_more"
+                        android:contentDescription="Toggle liabilities"
+                        android:tint="@color/expense_red" />
+                </LinearLayout>
+
+                <!-- ── Liabilities Container (cards added dynamically) ── -->
+                <LinearLayout
+                    android:id="@+id/liabilitiesContainer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:clipToPadding="false"
+                    android:paddingBottom="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/liabilitiesHeader">
+
+                    <TextView
+                        android:id="@+id/tvLiabilitiesEmpty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center"
+                        android:text="No active loans"
+                        android:textColor="@color/text_muted"
+                        android:textSize="14sp"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+
+
+        <include
+        layout="@layout/layout_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+    </LinearLayout><!-- end main content wrapper -->
+    <!-- ── Navigation Drawer ── -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
-        android:layout_width="260dp"
+        android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:background="@color/card_medium_teal"
+        android:background="@color/drawer_bg"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/drawer_header" />
 

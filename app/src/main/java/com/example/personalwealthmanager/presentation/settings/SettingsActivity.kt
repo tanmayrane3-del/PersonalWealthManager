@@ -14,6 +14,7 @@ class SettingsActivity : BaseDrawerActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         setupDrawerMenu()
+        setupBottomNav()
 
         findViewById<CardView>(R.id.cardSmsLogs).setOnClickListener {
             startActivity(Intent(this, SmsLogActivity::class.java))

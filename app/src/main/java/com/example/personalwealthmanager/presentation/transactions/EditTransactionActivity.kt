@@ -51,7 +51,8 @@ class EditTransactionActivity : AppCompatActivity() {
     @Inject
     lateinit var smsQueueDao: SmsQueueDao
 
-    private lateinit var actvTransactionType: AutoCompleteTextView
+    private lateinit var btnToggleExpense: TextView
+    private lateinit var btnToggleIncome: TextView
     private lateinit var etAmount: EditText
     private lateinit var actvCategory: AutoCompleteTextView
     private lateinit var actvSourceRecipient: AutoCompleteTextView
@@ -64,11 +65,13 @@ class EditTransactionActivity : AppCompatActivity() {
     private lateinit var etTransactionReference: EditText
     private lateinit var etNotes: EditText
     private lateinit var btnUpdate: Button
-    private lateinit var btnCancel: Button
     private lateinit var btnDelete: Button
+    private lateinit var btnDeleteTop: ImageView
     private lateinit var progressBar: ProgressBar
     private lateinit var contentCard: View
-    private lateinit var btnFetchFromInbox: LinearLayout
+    private lateinit var btnFetchFromInbox: View
+    private lateinit var orDivider: View
+    private lateinit var tvTitle: TextView
 
     private val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
     private val apiDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -108,22 +111,28 @@ class EditTransactionActivity : AppCompatActivity() {
 
         if (mode == "edit" && transactionId != null) {
             // Edit mode: hide content, show loader, fetch data
+            tvTitle.text = "Edit Transaction"
             contentCard.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             btnDelete.visibility = View.VISIBLE
+            btnDeleteTop.visibility = View.VISIBLE
             btnFetchFromInbox.visibility = View.GONE
+            orDivider.visibility = View.GONE
             viewModel.loadTransaction(transactionId!!, isIncome)
         } else {
             // Add mode: hide content, show loader, fetch metadata
+            tvTitle.text = "Add Transaction"
             contentCard.visibility = View.GONE
             progressBar.visibility = View.VISIBLE
             btnDelete.visibility = View.GONE
+            btnDeleteTop.visibility = View.GONE
             viewModel.loadMetadata(if (isIncome) "income" else "expense")
         }
     }
 
     private fun initViews() {
-        actvTransactionType = findViewById(R.id.actvTransactionType)
+        btnToggleExpense = findViewById(R.id.btnToggleExpense)
+        btnToggleIncome = findViewById(R.id.btnToggleIncome)
         etAmount = findViewById(R.id.etAmount)
         actvCategory = findViewById(R.id.actvCategory)
         actvSourceRecipient = findViewById(R.id.actvSourceRecipient)
@@ -136,11 +145,13 @@ class EditTransactionActivity : AppCompatActivity() {
         etTransactionReference = findViewById(R.id.etTransactionReference)
         etNotes = findViewById(R.id.etNotes)
         btnUpdate = findViewById(R.id.btnUpdate)
-        btnCancel = findViewById(R.id.btnCancel)
         btnDelete = findViewById(R.id.btnDelete)
+        btnDeleteTop = findViewById(R.id.btnDeleteTop)
         progressBar = findViewById(R.id.progressBar)
         contentCard = findViewById(R.id.contentCard)
         btnFetchFromInbox = findViewById(R.id.btnFetchFromInbox)
+        orDivider = findViewById(R.id.orDivider)
+        tvTitle = findViewById(R.id.tvTitle)
 
         // Set initial date and time
         tvSelectedDate.text = dateFormat.format(selectedDate.time)
@@ -148,18 +159,8 @@ class EditTransactionActivity : AppCompatActivity() {
     }
 
     private fun setupDropdowns() {
-        // Type dropdown
-        val typeOptions = arrayOf("Income", "Expense")
-        val typeAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, typeOptions)
-        actvTransactionType.setAdapter(typeAdapter)
-        actvTransactionType.setText(if (isIncome) "Income" else "Expense", false)
-
-        actvTransactionType.setOnItemClickListener { _, _, position, _ ->
-            isIncome = position == 0
-            currentCategoryType = null  // Reset so new categories can be loaded
-            viewModel.loadMetadata(if (isIncome) "income" else "expense")
-            updateUIForType()
-        }
+        // Type toggle
+        updateToggleUI()
 
         // Payment method dropdown
         val paymentMethods = arrayOf("Cash", "Credit Card", "Debit Card", "UPI", "Net Banking", "Other")
@@ -167,7 +168,6 @@ class EditTransactionActivity : AppCompatActivity() {
         actvPaymentMethod.setAdapter(paymentAdapter)
 
         // Setup dropdown behavior - show on focus and click
-        setupAutoCompleteDropdown(actvTransactionType)
         setupAutoCompleteDropdown(actvPaymentMethod)
     }
 
@@ -206,12 +206,32 @@ class EditTransactionActivity : AppCompatActivity() {
             saveTransaction()
         }
 
-        btnCancel.setOnClickListener {
-            finish()
-        }
-
         btnDelete.setOnClickListener {
             showDeleteConfirmation()
+        }
+
+        btnDeleteTop.setOnClickListener {
+            showDeleteConfirmation()
+        }
+
+        btnToggleExpense.setOnClickListener {
+            if (isIncome) {
+                isIncome = false
+                currentCategoryType = null
+                viewModel.loadMetadata("expense")
+                updateUIForType()
+                updateToggleUI()
+            }
+        }
+
+        btnToggleIncome.setOnClickListener {
+            if (!isIncome) {
+                isIncome = true
+                currentCategoryType = null
+                viewModel.loadMetadata("income")
+                updateUIForType()
+                updateToggleUI()
+            }
         }
 
         btnFetchFromInbox.setOnClickListener {
@@ -224,8 +244,22 @@ class EditTransactionActivity : AppCompatActivity() {
     }
 
     private fun updateUIForType() {
-        tvSourceRecipientLabel.text = if (isIncome) "Source *" else "Recipient *"
+        tvSourceRecipientLabel.text = if (isIncome) "SOURCE" else "RECIPIENT"
         actvSourceRecipient.hint = if (isIncome) "Select Source" else "Select Recipient"
+    }
+
+    private fun updateToggleUI() {
+        if (isIncome) {
+            btnToggleIncome.setBackgroundResource(R.drawable.bg_filter_pill_primary)
+            btnToggleIncome.setTextColor(Color.WHITE)
+            btnToggleExpense.setBackgroundColor(Color.TRANSPARENT)
+            btnToggleExpense.setTextColor(ContextCompat.getColor(this, R.color.tx_text_secondary))
+        } else {
+            btnToggleExpense.setBackgroundResource(R.drawable.bg_filter_pill_primary)
+            btnToggleExpense.setTextColor(Color.WHITE)
+            btnToggleIncome.setBackgroundColor(Color.TRANSPARENT)
+            btnToggleIncome.setTextColor(ContextCompat.getColor(this, R.color.tx_text_secondary))
+        }
     }
 
     private fun showDatePicker() {
@@ -446,7 +480,9 @@ class EditTransactionActivity : AppCompatActivity() {
         Log.d("EditTransaction", "Populating form with: $transaction")
 
         // Transaction type
-        actvTransactionType.setText(if (transaction.type == "income") "Income" else "Expense", false)
+        isIncome = (transaction.type == "income")
+        updateToggleUI()
+        updateUIForType()
 
         // Amount
         etAmount.setText(transaction.amount)

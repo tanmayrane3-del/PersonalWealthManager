@@ -9,6 +9,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LiabilitiesActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
+    override fun getActiveNavItem() = BottomNavItem.NETWORTH
+
+
     override fun getSelfButtonId() = R.id.btnLiabilities
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,5 +29,6 @@ class LiabilitiesActivity : com.example.personalwealthmanager.presentation.base.
         }
 
         setupDrawerMenu()
+        setupBottomNav()
     }
 }

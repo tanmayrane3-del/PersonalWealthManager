@@ -54,6 +54,7 @@ class SourceManagementActivity : com.example.personalwealthmanager.presentation.
         setupRecyclerViews()
         setupClickListeners()
         setupDrawerMenu()
+        setupBottomNav()
         observeState()
     }
 

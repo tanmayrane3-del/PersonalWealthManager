@@ -9,6 +9,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MutualFundsActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
+    override fun getActiveNavItem() = BottomNavItem.NETWORTH
+
+
     override fun getSelfButtonId() = R.id.btnMutualFunds
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +29,7 @@ class MutualFundsActivity : com.example.personalwealthmanager.presentation.base.
         }
 
         setupDrawerMenu()
+        setupBottomNav()
     }
 
     override fun onResume() {

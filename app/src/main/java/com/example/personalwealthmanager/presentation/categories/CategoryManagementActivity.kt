@@ -61,6 +61,7 @@ class CategoryManagementActivity : com.example.personalwealthmanager.presentatio
         setupRecyclerViews()
         setupClickListeners()
         setupDrawerMenu()
+        setupBottomNav()
         observeState()
     }
 

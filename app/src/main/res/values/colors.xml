@@ -60,6 +60,35 @@
     <!-- SMS Transaction Highlight - light red for unmatched (Other) transactions -->
     <color name="card_other_highlight">#FFEBEE</color>
 
+    <!-- Liability card badge -->
+    <color name="on_error_container">#7C1111</color>
+
+    <!-- Transactions screen — Figma redesign tokens -->
+    <color name="tx_bg">#F8F9FA</color>
+    <color name="tx_primary">#005C4B</color>
+    <color name="tx_text_primary">#111827</color>
+    <color name="tx_text_secondary">#6B7280</color>
+    <color name="tx_text_muted">#9CA3AF</color>
+    <color name="tx_text_dark">#1F2937</color>
+    <color name="tx_divider">#E5E7EB</color>
+    <color name="tx_icon_bg_expense">#E6F4F1</color>
+    <color name="tx_icon_bg_income">#E8F5E9</color>
+    <color name="tx_icon_bg_other">#FFF3E0</color>
+    <color name="tx_card_border">#F3F4F6</color>
+    <color name="tx_amount_income">#005C4B</color>
+    <color name="tx_amount_expense">#111827</color>
+    <color name="tx_filter_pill_bg">#E5E7EB</color>
+
     <!-- Stocks / Assets Dashboard Card -->
     <color name="card_stocks_indigo">#3F51B5</color>
+
+    <!-- Drawer Menu -->
+    <color name="drawer_bg">#CCFFFFFF</color>
+    <color name="drawer_item_text">#3E4946</color>
+    <color name="drawer_item_subtext">#6E7976</color>
+    <color name="drawer_divider">#F2F4F5</color>
+    <color name="drawer_active_bg">#00695C</color>
+    <color name="drawer_logout_red">#BA1A1A</color>
+    <color name="drawer_premium_bg">#CCE8E5</color>
+    <color name="drawer_premium_text">#005046</color>
 </resources>

@@ -63,6 +63,7 @@ class SetupZerodhaActivity : com.example.personalwealthmanager.presentation.base
         }
 
         setupDrawerMenu()
+        setupBottomNav()
         observeState()
 
         // Prefill existing credentials if available

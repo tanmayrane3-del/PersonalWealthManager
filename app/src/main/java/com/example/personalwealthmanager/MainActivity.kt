@@ -52,6 +52,9 @@ import com.example.personalwealthmanager.domain.model.Liability
 
 class MainActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
+    override fun getActiveNavItem() = BottomNavItem.DASHBOARD
+
+
     override fun getSelfButtonId() = R.id.btnDashboard
 
     companion object {
@@ -107,6 +110,8 @@ private lateinit var tvStockValue: TextView
     private lateinit var tvNetWorthLiabilities: TextView
     private lateinit var tvNetWorthDelta: TextView
     private lateinit var ivRefreshNetWorth: ImageView
+    private lateinit var netWorthDeltaRow: LinearLayout
+    private lateinit var ivNetWorthTrend: ImageView
 
     private val fromCalendar = Calendar.getInstance()
     private val toCalendar = Calendar.getInstance()
@@ -166,11 +171,20 @@ private lateinit var tvStockValue: TextView
         tvNetWorthLiabilities = findViewById(R.id.tvNetWorthLiabilities)
         tvNetWorthDelta      = findViewById(R.id.tvNetWorthDelta)
         ivRefreshNetWorth    = findViewById(R.id.ivRefreshNetWorth)
+        netWorthDeltaRow     = findViewById(R.id.netWorthDeltaRow)
+        ivNetWorthTrend      = findViewById(R.id.ivNetWorthTrend)
 
         findViewById<androidx.cardview.widget.CardView>(R.id.netWorthCard).setOnClickListener {
             startActivity(Intent(this, NetWorthActivity::class.java))
         }
-        ivRefreshNetWorth.setOnClickListener { refreshNetWorth() }
+        ivRefreshNetWorth.setOnClickListener {
+            refreshNetWorth()
+            refreshStocks()
+            refreshMetals()
+            refreshMutualFunds()
+            refreshOtherAssets()
+            refreshLiabilities()
+        }
 
         // Start collapsed
         assetsContainer.visibility = View.GONE
@@ -259,8 +273,9 @@ private lateinit var tvStockValue: TextView
             startActivity(Intent(this, OtherAssetsActivity::class.java))
         }
 
-        // Setup drawer menu
+        // Setup drawer menu and bottom nav
         setupDrawerMenu()
+        setupBottomNav()
 
         // Request SMS permissions at runtime
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
@@ -835,7 +850,7 @@ private lateinit var tvStockValue: TextView
         tvNetWorthValue.text = getString(R.string.loading)
         tvNetWorthAssets.text = "--"
         tvNetWorthLiabilities.text = "--"
-        tvNetWorthDelta.visibility = View.GONE
+        netWorthDeltaRow.visibility = View.GONE
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -848,10 +863,8 @@ private lateinit var tvStockValue: TextView
                     val assets      = data?.getDouble("total_assets") ?: 0.0
                     val liabilities = data?.getDouble("total_liabilities") ?: 0.0
 
-                    tvNetWorthValue.text = formatCompact(netWorth)
-                    tvNetWorthValue.setTextColor(
-                        if (netWorth >= 0) Color.parseColor("#4CAF50") else Color.parseColor("#F44336")
-                    )
+                    tvNetWorthValue.text = currencyFormat.format(netWorth)
+                    tvNetWorthValue.setTextColor(Color.WHITE)
                     tvNetWorthAssets.text     = formatCompact(assets)
                     tvNetWorthLiabilities.text = formatCompact(liabilities)
 
@@ -860,12 +873,25 @@ private lateinit var tvStockValue: TextView
                     if (snapshots != null && snapshots.length() >= 2) {
                         val yesterday = snapshots.getJSONObject(snapshots.length() - 2).getDouble("net_worth")
                         val delta = netWorth - yesterday
-                        val sign = if (delta >= 0) "▲ +" else "▼ "
-                        tvNetWorthDelta.text = "$sign${formatCompact(kotlin.math.abs(delta))} since yesterday"
-                        tvNetWorthDelta.setTextColor(
-                            if (delta >= 0) Color.parseColor("#4CAF50") else Color.parseColor("#F44336")
+                        val isPositive = delta >= 0
+                        val deltaBaseColor = if (isPositive) Color.parseColor("#D1EBE7") else Color.parseColor("#FFCDD2")
+                        val trendIcon = if (isPositive) R.drawable.ic_trending_up else R.drawable.ic_trending_down
+                        ivNetWorthTrend.setImageResource(trendIcon)
+                        ivNetWorthTrend.setColorFilter(deltaBaseColor)
+                        val amountPart = "${if (isPositive) "+" else "-"}${formatCompact(kotlin.math.abs(delta))}"
+                        val sincePart = "  since yesterday"
+                        val full = "$amountPart$sincePart"
+                        val spannable = android.text.SpannableString(full)
+                        val dimColor = Color.argb(153,
+                            Color.red(deltaBaseColor), Color.green(deltaBaseColor), Color.blue(deltaBaseColor))
+                        spannable.setSpan(
+                            android.text.style.ForegroundColorSpan(dimColor),
+                            amountPart.length, full.length,
+                            android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                         )
-                        tvNetWorthDelta.visibility = View.VISIBLE
+                        tvNetWorthDelta.setTextColor(deltaBaseColor)
+                        tvNetWorthDelta.text = spannable
+                        netWorthDeltaRow.visibility = View.VISIBLE
                     }
                 }
             } catch (e: Exception) {
@@ -974,11 +1000,12 @@ private lateinit var tvStockValue: TextView
 
             val tvIcon = cardView.findViewById<TextView>(R.id.tvLoanTypeIcon)
             val tvLender = cardView.findViewById<TextView>(R.id.tvLenderName)
+            val tvAccountNumber = cardView.findViewById<TextView>(R.id.tvLoanAccountNumber)
             val tvBadge = cardView.findViewById<TextView>(R.id.tvLoanTypeBadge)
             val tvOutstanding = cardView.findViewById<TextView>(R.id.tvOutstanding)
             val tvOriginal = cardView.findViewById<TextView>(R.id.tvOriginalAmount)
-            val tvEmi = cardView.findViewById<TextView>(R.id.tvEmi)
-            val tvRate = cardView.findViewById<TextView>(R.id.tvInterestRate)
+            val tvPaid = cardView.findViewById<TextView>(R.id.tvPaidAmount)
+            val pbProgress = cardView.findViewById<android.widget.ProgressBar>(R.id.pbLoanProgress)
             val tvLinked = cardView.findViewById<TextView>(R.id.tvLinkedAsset)
 
             tvIcon.text = when (liability.loanType) {
@@ -989,6 +1016,10 @@ private lateinit var tvStockValue: TextView
                 else -> "💳"
             }
             tvLender.text = liability.lenderName
+            if (!liability.loanAccountNumber.isNullOrBlank()) {
+                tvAccountNumber.text = "#${liability.loanAccountNumber}"
+                tvAccountNumber.visibility = View.VISIBLE
+            }
             tvBadge.text = when (liability.loanType) {
                 "home" -> "Home Loan"
                 "car" -> "Car Loan"
@@ -998,9 +1029,15 @@ private lateinit var tvStockValue: TextView
                 else -> "Loan"
             }
             tvOutstanding.text = formatCompact(liability.outstandingPrincipal)
-            tvOriginal.text = "of ${formatCompact(liability.originalAmount)}"
-            tvEmi.text = formatCompact(liability.emiAmount)
-            tvRate.text = "${liability.interestRate}% ${if (liability.interestType == "floating") "(floating)" else "p.a."}"
+
+            // Progress: how much has been paid vs original
+            val amountPaid = liability.originalAmount - liability.outstandingPrincipal
+            val progressPct = if (liability.originalAmount > 0)
+                ((amountPaid / liability.originalAmount) * 100).toInt().coerceIn(0, 100)
+            else 0
+            pbProgress.progress = progressPct
+            tvPaid.text = "Paid: ${formatCompact(amountPaid)}"
+            tvOriginal.text = "Goal: ${formatCompact(liability.originalAmount)}"
 
             if (liability.assetLabel != null) {
                 val assetIcon = if (liability.assetType == "vehicle") "🚗" else "🏠"

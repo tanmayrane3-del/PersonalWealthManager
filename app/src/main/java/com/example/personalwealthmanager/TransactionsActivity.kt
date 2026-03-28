@@ -147,25 +147,6 @@ class TransactionsActivity : AppCompatActivity() {
             drawerLayout.closeDrawer(GravityCompat.END)
         }
 
-        // Management expandable menu
-        val btnManagement = headerView.findViewById<Button>(R.id.btnManagement)
-        val ivManagementExpand = headerView.findViewById<ImageView>(R.id.ivManagementExpand)
-        val managementChildItems = headerView.findViewById<LinearLayout>(R.id.managementChildItems)
-
-        btnManagement?.setOnClickListener {
-            if (managementChildItems?.visibility == View.VISIBLE) {
-                managementChildItems.visibility = View.GONE
-                ivManagementExpand?.setImageResource(R.drawable.ic_expand_more)
-            } else {
-                managementChildItems?.visibility = View.VISIBLE
-                ivManagementExpand?.setImageResource(R.drawable.ic_expand_less)
-            }
-        }
-
-        ivManagementExpand?.setOnClickListener {
-            btnManagement?.performClick()
-        }
-
         // Category management button
         headerView.findViewById<Button>(R.id.btnCategoryManagement)?.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)

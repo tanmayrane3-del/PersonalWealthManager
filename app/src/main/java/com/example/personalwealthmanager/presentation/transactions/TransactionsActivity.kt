@@ -1,14 +1,18 @@
 package com.example.personalwealthmanager.presentation.transactions
 
+import android.app.ActivityOptions
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.viewModels
-import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,14 +33,17 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 @AndroidEntryPoint
 class TransactionsActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
+    override fun getActiveNavItem() = BottomNavItem.TRANSACTIONS
     override fun getSelfButtonId() = R.id.btnTransactions
 
     private val viewModel: TransactionListViewModel by viewModels()
@@ -48,9 +55,17 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
     private lateinit var fabAddTransaction: FloatingActionButton
     private lateinit var adapter: TransactionsAdapter
 
+    // Summary cards
+    private lateinit var cardSummaryRow: LinearLayout
+    private lateinit var tvCurrentLedgerBalance: TextView
+    private lateinit var tvCurrentLedgerUpdated: TextView
+    private lateinit var cardAnalysis: LinearLayout
+
     private lateinit var spinnerCategory: Spinner
     private lateinit var spinnerSource: Spinner
     private lateinit var spinnerRecipient: Spinner
+
+    private var selectedTypeFilter = "both"
 
     // Chart views
     private lateinit var chartContainer: LinearLayout
@@ -69,6 +84,7 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
 
     private val displayDateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
     private val apiDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    private val currencyFormat = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +94,7 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
         setupRecyclerView()
         setupClickListeners()
         setupDrawerMenu()
+        setupBottomNav()
         setupFilterDrawer()
         observeState()
 
@@ -91,6 +108,11 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
         progressBar = findViewById(R.id.progressBar)
         filterDrawer = findViewById(R.id.filterDrawer)
         fabAddTransaction = findViewById(R.id.fabAddTransaction)
+
+        cardSummaryRow = findViewById(R.id.cardSummaryRow)
+        tvCurrentLedgerBalance = findViewById(R.id.tvCurrentLedgerBalance)
+        tvCurrentLedgerUpdated = findViewById(R.id.tvCurrentLedgerUpdated)
+        cardAnalysis = findViewById(R.id.cardAnalysis)
 
         chartContainer = findViewById(R.id.chartContainer)
         tvChartTitle = findViewById(R.id.tvChartTitle)
@@ -106,7 +128,6 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
 
     private fun setupRecyclerView() {
         adapter = TransactionsAdapter(
-            transactions = emptyList(),
             onItemClick = { transaction ->
                 val intent = Intent(this, EditTransactionActivity::class.java)
                 intent.putExtra("transaction_id", transaction.transactionId)
@@ -123,55 +144,79 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
     }
 
     private fun setupClickListeners() {
-        findViewById<ImageView>(R.id.btnMenu).setOnClickListener {
-            if (isFilterDrawerOpen()) closeFilterDrawer()
-            drawerLayout.openDrawer(GravityCompat.END)
+        // Back button — if in chart mode go back to list, else finish
+        findViewById<View>(R.id.btnBack).setOnClickListener {
+            when {
+                currentViewMode != ViewMode.LIST -> backToListView()
+                isFilterDrawerOpen() -> closeFilterDrawer()
+                else -> finish()
+            }
         }
 
-        findViewById<Button>(R.id.btnFilters).setOnClickListener {
+        // Filter button (icon + label) — open filter drawer
+        findViewById<View>(R.id.btnFilters).setOnClickListener {
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) drawerLayout.closeDrawer(GravityCompat.END)
             openFilterDrawer()
         }
 
-        findViewById<Button>(R.id.btnView).setOnClickListener { anchor ->
+        // Analysis card — show chart mode popup (Weekly / Daily / Monthly / Source & Recipient)
+        cardAnalysis.setOnClickListener { anchor ->
             showViewPopupMenu(anchor)
         }
 
-        fabAddTransaction.setOnClickListener {
+        fabAddTransaction.setOnClickListener { view ->
             val intent = Intent(this, EditTransactionActivity::class.java)
             intent.putExtra("mode", "add")
-            startActivity(intent)
+            val options = ActivityOptions.makeScaleUpAnimation(
+                view, 0, 0, view.width, view.height
+            )
+            startActivity(intent, options.toBundle())
         }
 
         findViewById<FrameLayout>(R.id.filterDrawerContainer).setOnClickListener {
             closeFilterDrawer()
         }
 
-        filterDrawer.setOnClickListener { /* consume */ }
+        filterDrawer.setOnClickListener { /* consume touches inside drawer */ }
 
         findViewById<Button>(R.id.btnBackToList).setOnClickListener {
             backToListView()
         }
     }
 
-    // ─── View mode popup ───────────────────────────────────────────────────────
+    // ─── View mode popup (custom white dropdown matching Figma) ──────────────
 
     private fun showViewPopupMenu(anchor: View) {
-        val popup = PopupMenu(this, anchor)
-        popup.menu.add(0, 1, 0, getString(R.string.weekly_view))
-        popup.menu.add(0, 2, 0, getString(R.string.daily_view))
-        popup.menu.add(0, 3, 0, getString(R.string.monthly_view))
-        popup.menu.add(0, 4, 0, getString(R.string.source_recipient_view))
-        popup.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                1 -> activateChartView(ViewMode.WEEKLY)
-                2 -> activateChartView(ViewMode.DAILY)
-                3 -> activateChartView(ViewMode.MONTHLY)
-                4 -> activateChartView(ViewMode.SOURCE_RECIPIENT)
-            }
+        val popupView = LayoutInflater.from(this)
+            .inflate(R.layout.dropdown_chart_options, null)
+
+        val widthPx = (200 * resources.displayMetrics.density).toInt()
+        val popup = PopupWindow(
+            popupView,
+            widthPx,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
             true
+        ).apply {
+            elevation = 12f
+            setBackgroundDrawable(ColorDrawable(Color.WHITE))
+            isOutsideTouchable = true
         }
-        popup.show()
+
+        popupView.findViewById<TextView>(R.id.optionWeekly).setOnClickListener {
+            popup.dismiss(); activateChartView(ViewMode.WEEKLY)
+        }
+        popupView.findViewById<TextView>(R.id.optionDaily).setOnClickListener {
+            popup.dismiss(); activateChartView(ViewMode.DAILY)
+        }
+        popupView.findViewById<TextView>(R.id.optionMonthly).setOnClickListener {
+            popup.dismiss(); activateChartView(ViewMode.MONTHLY)
+        }
+        popupView.findViewById<TextView>(R.id.optionSourceRecipient).setOnClickListener {
+            popup.dismiss(); activateChartView(ViewMode.SOURCE_RECIPIENT)
+        }
+
+        // Position below the anchor (Analysis card), aligned to its right edge
+        popup.showAsDropDown(anchor, 0, 0, Gravity.END)
     }
 
     private fun activateChartView(mode: ViewMode) {
@@ -179,10 +224,10 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
 
         rvTransactions.visibility = View.GONE
         tvEmptyState.visibility = View.GONE
+        cardSummaryRow.visibility = View.GONE
         chartContainer.visibility = View.VISIBLE
         fabAddTransaction.hide()
 
-        // Title
         tvChartTitle.text = when (mode) {
             ViewMode.WEEKLY -> getString(R.string.weekly_view)
             ViewMode.DAILY -> getString(R.string.daily_view)
@@ -191,29 +236,15 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
             ViewMode.LIST -> ""
         }
 
-        // Date range
         val filter = viewModel.state.value.filter
         tvChartDateRange.text = buildDateRangeText(filter)
 
         val transactions = viewModel.state.value.transactions
-
         when (mode) {
-            ViewMode.WEEKLY -> {
-                showLineChartSection()
-                populateWeeklyChart(transactions)
-            }
-            ViewMode.DAILY -> {
-                showLineChartSection()
-                populateDailyChart(transactions)
-            }
-            ViewMode.MONTHLY -> {
-                showLineChartSection()
-                populateMonthlyChart(transactions)
-            }
-            ViewMode.SOURCE_RECIPIENT -> {
-                showPieChartSection()
-                populatePieCharts(transactions)
-            }
+            ViewMode.WEEKLY -> { showLineChartSection(); populateWeeklyChart(transactions) }
+            ViewMode.DAILY -> { showLineChartSection(); populateDailyChart(transactions) }
+            ViewMode.MONTHLY -> { showLineChartSection(); populateMonthlyChart(transactions) }
+            ViewMode.SOURCE_RECIPIENT -> { showPieChartSection(); populatePieCharts(transactions) }
             ViewMode.LIST -> {}
         }
     }
@@ -221,6 +252,7 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
     private fun backToListView() {
         currentViewMode = ViewMode.LIST
         chartContainer.visibility = View.GONE
+        cardSummaryRow.visibility = View.VISIBLE
         fabAddTransaction.show()
 
         val state = viewModel.state.value
@@ -291,7 +323,6 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
             else expenseMap[label] = (expenseMap[label] ?: 0f) + amount
         }
 
-        // Sort by actual date
         val sortedLabels = dateOrder.sortedWith(Comparator { a, b ->
             val da = runCatching { ddMMyyyy.parse(a)!! }.getOrNull()
             val db = runCatching { ddMMyyyy.parse(b)!! }.getOrNull()
@@ -350,6 +381,10 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
         tvLineChartEmpty.visibility = View.GONE
         lineChart.visibility = View.VISIBLE
 
+        val chartTextColor = Color.parseColor("#333333")
+        val chartGridColor = Color.parseColor("#DDDDDD")
+        val chartAxisColor = Color.parseColor("#AAAAAA")
+
         val incomeSet = LineDataSet(incomeEntries, getString(R.string.income_line)).apply {
             color = Color.parseColor("#4CAF50")
             setCircleColor(Color.parseColor("#4CAF50"))
@@ -368,10 +403,9 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
             mode = LineDataSet.Mode.CUBIC_BEZIER
         }
 
-        // Extra bottom padding so vertical labels don't get clipped
         val extraBottom = when {
-            labelRotation <= -80f -> 90f  // vertical (-90°)
-            labelRotation <= -40f -> 50f  // diagonal (-45°)
+            labelRotation <= -80f -> 90f
+            labelRotation <= -40f -> 50f
             else -> 10f
         }
 
@@ -381,18 +415,17 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
             setBackgroundColor(Color.TRANSPARENT)
             setExtraBottomOffset(extraBottom)
 
-            // Pinch zoom on Y-axis to adjust amount intervals; drag for horizontal scroll
-            setPinchZoom(false)         // false = independent X/Y scaling
-            isScaleXEnabled = false     // horizontal scroll via drag, not scale
-            isScaleYEnabled = true      // pinch adjusts Y (amount intervals)
+            setPinchZoom(false)
+            isScaleXEnabled = false
+            isScaleYEnabled = true
             isDragEnabled = true
             setDoubleTapToZoomEnabled(true)
 
             xAxis.apply {
                 position = XAxis.XAxisPosition.BOTTOM
-                textColor = Color.WHITE
-                gridColor = Color.parseColor("#44FFFFFF")
-                axisLineColor = Color.parseColor("#88FFFFFF")
+                textColor = chartTextColor
+                gridColor = chartGridColor
+                axisLineColor = chartAxisColor
                 granularity = 1f
                 labelRotationAngle = labelRotation
                 setLabelCount(minOf(labels.size, visibleXCount), false)
@@ -405,9 +438,9 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
             }
 
             axisLeft.apply {
-                textColor = Color.WHITE
-                gridColor = Color.parseColor("#44FFFFFF")
-                axisLineColor = Color.parseColor("#88FFFFFF")
+                textColor = chartTextColor
+                gridColor = chartGridColor
+                axisLineColor = chartAxisColor
                 axisMinimum = 0f
                 valueFormatter = object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String =
@@ -418,20 +451,18 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
             axisRight.isEnabled = false
 
             legend.apply {
-                textColor = Color.WHITE
+                textColor = chartTextColor
                 textSize = 12f
                 form = Legend.LegendForm.LINE
                 verticalAlignment = Legend.LegendVerticalAlignment.TOP
                 horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
             }
 
-            // Limit visible X range → enables horizontal drag-scroll when data > window
             if (labels.size > visibleXCount) {
                 setVisibleXRangeMaximum(visibleXCount.toFloat())
-                moveViewToX(data.entryCount.toFloat()) // start at the most recent end
+                moveViewToX(data.entryCount.toFloat())
             }
 
-            // Animate: lines draw left-to-right, values rise from zero
             animateXY(900, 600, Easing.EaseInOutCubic, Easing.EaseOutQuad)
         }
     }
@@ -442,35 +473,27 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
         val income = transactions.filter { it.type == "income" }
         val expense = transactions.filter { it.type == "expense" }
 
-        setupPieChart(
-            pieIncomeByCategory,
+        setupPieChart(pieIncomeByCategory,
             income.groupBy { it.categoryName }
-                .mapValues { (_, list) -> list.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }.toFloat() }
-        )
-        setupPieChart(
-            pieExpenseByCategory,
+                .mapValues { (_, list) -> list.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }.toFloat() })
+        setupPieChart(pieExpenseByCategory,
             expense.groupBy { it.categoryName }
-                .mapValues { (_, list) -> list.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }.toFloat() }
-        )
-        setupPieChart(
-            pieIncomeBySource,
+                .mapValues { (_, list) -> list.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }.toFloat() })
+        setupPieChart(pieIncomeBySource,
             income.groupBy { it.sourceName ?: getString(R.string.no_data) }
-                .mapValues { (_, list) -> list.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }.toFloat() }
-        )
-        setupPieChart(
-            pieExpenseByRecipient,
+                .mapValues { (_, list) -> list.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }.toFloat() })
+        setupPieChart(pieExpenseByRecipient,
             expense.groupBy { it.recipientName ?: getString(R.string.no_data) }
-                .mapValues { (_, list) -> list.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }.toFloat() }
-        )
+                .mapValues { (_, list) -> list.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }.toFloat() })
     }
 
     private fun setupPieChart(chart: PieChart, data: Map<String, Float>) {
-        // Helper to format raw amount for legend labels
-        fun fmt(v: Float) = if (v >= 1000f) "₹${(v / 1000f).let { if (it == it.toLong().toFloat()) it.toLong().toString() else "%.1f".format(it) }}k" else "₹${v.toInt()}"
+        fun fmt(v: Float) = if (v >= 1000f) "₹${(v / 1000f).let {
+            if (it == it.toLong().toFloat()) it.toLong().toString() else "%.1f".format(it)
+        }}k" else "₹${v.toInt()}"
 
+        val chartTextColor = Color.parseColor("#333333")
         val sorted = data.entries.sortedByDescending { it.value }
-        // Embed ₹k amount in the PieEntry label → legend shows "Name  ₹Xk"
-        // setDrawEntryLabels(false) keeps names off the slices themselves
         val entries = sorted.map { PieEntry(it.value, "${it.key}  ${fmt(it.value)}") }
 
         val colors = mutableListOf<Int>().apply {
@@ -481,30 +504,27 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
 
         val dataSet = PieDataSet(entries, "").apply {
             setColors(colors)
-            valueTextColor = Color.WHITE
+            valueTextColor = chartTextColor
             valueTextSize = 11f
-            // setUsePercentValues(true) passes percentage to this formatter
             valueFormatter = object : ValueFormatter() {
-                override fun getFormattedValue(value: Float): String =
-                    "%.1f%%".format(value)
+                override fun getFormattedValue(value: Float) = "%.1f%%".format(value)
             }
         }
 
         chart.apply {
             this.data = if (entries.isEmpty()) null else PieData(dataSet)
-            notifyDataSetChanged()      // sync legend entries before any draw
+            notifyDataSetChanged()
             description.isEnabled = false
-            setUsePercentValues(true)   // slice labels show %; formatter receives 0–100
-            setDrawEntryLabels(false)   // names stay off slices; legend shows them
+            setUsePercentValues(true)
+            setDrawEntryLabels(false)
             setHoleColor(Color.TRANSPARENT)
             holeRadius = 35f
             transparentCircleRadius = 40f
-            setTransparentCircleColor(Color.parseColor("#22FFFFFF"))
+            setTransparentCircleColor(Color.parseColor("#22000000"))
             isRotationEnabled = true
 
-            // Auto-generated legend follows PieDataSet entry order (already sorted descending)
             legend.apply {
-                textColor = Color.WHITE
+                textColor = chartTextColor
                 textSize = 11f
                 isWordWrapEnabled = true
                 form = Legend.LegendForm.CIRCLE
@@ -512,10 +532,10 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
 
             if (entries.isEmpty()) {
                 setNoDataText(getString(R.string.no_data_for_period))
-                setNoDataTextColor(Color.WHITE)
+                setNoDataTextColor(Color.parseColor("#666666"))
                 invalidate()
             } else {
-                invalidate()            // stable first draw before animation starts
+                invalidate()
                 animateY(900, Easing.EaseInOutQuart)
             }
         }
@@ -541,17 +561,37 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
         }
     }
 
+    private fun updateLedgerCard(transactions: List<Transaction>) {
+        val income = transactions.filter { it.type == "income" }
+            .sumOf { it.amount.toDoubleOrNull() ?: 0.0 }
+        val expense = transactions.filter { it.type == "expense" }
+            .sumOf { it.amount.toDoubleOrNull() ?: 0.0 }
+        val balance = income - expense
+
+        val prefix = if (balance < 0) "− " else ""
+        tvCurrentLedgerBalance.text = prefix + currencyFormat.format(Math.abs(balance))
+
+        val timeStr = SimpleDateFormat("h:mm a", Locale.getDefault()).format(Date())
+        tvCurrentLedgerUpdated.text = "Updated at $timeStr"
+    }
+
     // ─── Filter drawer ─────────────────────────────────────────────────────────
 
     private fun setupFilterDrawer() {
         val etDateFrom = filterDrawer.findViewById<EditText>(R.id.etDateFrom)
         val etDateTo = filterDrawer.findViewById<EditText>(R.id.etDateTo)
-        val spinnerType = filterDrawer.findViewById<Spinner>(R.id.spinnerType)
         val etMinAmount = filterDrawer.findViewById<EditText>(R.id.etMinAmount)
         val etMaxAmount = filterDrawer.findViewById<EditText>(R.id.etMaxAmount)
         val btnReset = filterDrawer.findViewById<Button>(R.id.btnResetFilters)
         val btnApply = filterDrawer.findViewById<Button>(R.id.btnApplyFilters)
-        val btnClose = filterDrawer.findViewById<ImageView>(R.id.btnCloseFilters)
+        val btnClose = filterDrawer.findViewById<View>(R.id.btnCloseFilters)
+        val btnTypeChipBoth = filterDrawer.findViewById<Button>(R.id.btnTypeChipBoth)
+        val btnTypeChipIncome = filterDrawer.findViewById<Button>(R.id.btnTypeChipIncome)
+        val btnTypeChipExpense = filterDrawer.findViewById<Button>(R.id.btnTypeChipExpense)
+
+        // Clear Material tint on initial render so XML backgrounds show correctly
+        listOf(btnTypeChipBoth, btnTypeChipIncome, btnTypeChipExpense)
+            .forEach { it.backgroundTintList = null }
 
         spinnerCategory = filterDrawer.findViewById(R.id.spinnerCategory)
         spinnerSource = filterDrawer.findViewById(R.id.spinnerSource)
@@ -559,10 +599,28 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
 
         btnClose.setOnClickListener { closeFilterDrawer() }
 
-        val typeOptions = listOf("Both", "Income", "Expense")
-        spinnerType.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, typeOptions).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        fun updateTypeChips(selected: String) {
+            selectedTypeFilter = selected
+            listOf(
+                btnTypeChipBoth to "both",
+                btnTypeChipIncome to "income",
+                btnTypeChipExpense to "expense"
+            ).forEach { (btn, type) ->
+                val isActive = selected == type
+                btn.backgroundTintList = null  // clear Material primary tint
+                btn.background = ContextCompat.getDrawable(
+                    this,
+                    if (isActive) R.drawable.bg_filter_chip_active else R.drawable.bg_filter_chip_inactive
+                )
+                btn.setTextColor(
+                    if (isActive) Color.WHITE else getColor(R.color.tx_text_secondary)
+                )
+            }
         }
+
+        btnTypeChipBoth.setOnClickListener { updateTypeChips("both") }
+        btnTypeChipIncome.setOnClickListener { updateTypeChips("income") }
+        btnTypeChipExpense.setOnClickListener { updateTypeChips("expense") }
 
         val allOnlyAdapter = {
             ArrayAdapter(this, android.R.layout.simple_spinner_item, listOf("All")).apply {
@@ -579,7 +637,7 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
         btnReset.setOnClickListener {
             etDateFrom.setText("")
             etDateTo.setText("")
-            spinnerType.setSelection(0)
+            updateTypeChips("both")
             spinnerCategory.setSelection(0)
             spinnerSource.setSelection(0)
             spinnerRecipient.setSelection(0)
@@ -599,10 +657,6 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
                 runCatching { apiDateFormat.format(displayDateFormat.parse(etDateTo.text.toString())!!) }.getOrNull()
             } else null
 
-            val type = when (spinnerType.selectedItemPosition) {
-                1 -> "income"; 2 -> "expense"; else -> "both"
-            }
-
             val metadata = viewModel.state.value.metadata
             val allCategories = metadata.incomeCategories + metadata.expenseCategories
             val categoryId = if (spinnerCategory.selectedItemPosition > 0)
@@ -616,7 +670,7 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
 
             viewModel.updateFilter(
                 FilterState(
-                    dateFrom = dateFrom, dateTo = dateTo, type = type,
+                    dateFrom = dateFrom, dateTo = dateTo, type = selectedTypeFilter,
                     categoryId = categoryId, sourceId = sourceId, recipientId = recipientId,
                     minAmount = etMinAmount.text.toString().ifEmpty { null },
                     maxAmount = etMaxAmount.text.toString().ifEmpty { null }
@@ -646,20 +700,30 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
 
     private fun openFilterDrawer() {
         findViewById<FrameLayout>(R.id.filterDrawerContainer).visibility = View.VISIBLE
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            findViewById<FrameLayout>(R.id.mainContentWrapper).setRenderEffect(
+                android.graphics.RenderEffect.createBlurEffect(18f, 18f, android.graphics.Shader.TileMode.CLAMP)
+            )
+        }
         filterDrawer.translationX = -filterDrawer.width.toFloat()
         filterDrawer.animate().translationX(0f).setDuration(300).start()
     }
 
     private fun closeFilterDrawer() {
         filterDrawer.animate().translationX(-filterDrawer.width.toFloat()).setDuration(300)
-            .withEndAction { findViewById<FrameLayout>(R.id.filterDrawerContainer).visibility = View.GONE }
+            .withEndAction {
+                findViewById<FrameLayout>(R.id.filterDrawerContainer).visibility = View.GONE
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                    findViewById<FrameLayout>(R.id.mainContentWrapper).setRenderEffect(null)
+                }
+            }
             .start()
     }
 
     private fun isFilterDrawerOpen() =
         findViewById<FrameLayout>(R.id.filterDrawerContainer).visibility == View.VISIBLE
 
-    private fun showDeleteConfirmation(transaction: com.example.personalwealthmanager.domain.model.Transaction) {
+    private fun showDeleteConfirmation(transaction: Transaction) {
         AlertDialog.Builder(this)
             .setTitle("Delete Transaction")
             .setMessage("Are you sure you want to delete this transaction?")
@@ -687,7 +751,6 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
                         adapter.updateTransactions(state.transactions)
                     }
                 } else if (!state.isLoading) {
-                    // Refresh chart when filter changes while in chart view
                     tvChartDateRange.text = buildDateRangeText(state.filter)
                     when (currentViewMode) {
                         ViewMode.WEEKLY -> { showLineChartSection(); populateWeeklyChart(state.transactions) }
@@ -696,6 +759,11 @@ class TransactionsActivity : com.example.personalwealthmanager.presentation.base
                         ViewMode.SOURCE_RECIPIENT -> { showPieChartSection(); populatePieCharts(state.transactions) }
                         ViewMode.LIST -> {}
                     }
+                }
+
+                // Update Current Ledger balance card
+                if (!state.isLoading) {
+                    updateLedgerCard(state.transactions)
                 }
 
                 state.error?.let { error ->

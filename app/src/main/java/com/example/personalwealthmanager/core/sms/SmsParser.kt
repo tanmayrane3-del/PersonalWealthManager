@@ -36,7 +36,7 @@ object SmsParser {
         val amountRegex = Regex("""Rs\.(\d+(?:\.\d+)?)\s+Dr\.""")
         val amount = amountRegex.find(body)?.groupValues?.get(1) ?: return null
 
-        val identifierRegex = Regex("""Cr\.\s+to\s+([^\s.]+)""")
+        val identifierRegex = Regex("""Cr\.\s+to\s+(\S+?)(?=\.\s)""")
         val paymentIdentifier = identifierRegex.find(body)?.groupValues?.get(1) ?: return null
 
         val refRegex = Regex("""Ref:(\d+)""")

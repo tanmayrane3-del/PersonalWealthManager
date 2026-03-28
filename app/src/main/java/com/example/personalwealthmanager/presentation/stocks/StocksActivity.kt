@@ -23,6 +23,9 @@ import android.widget.ImageView
 @AndroidEntryPoint
 class StocksActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
+    override fun getActiveNavItem() = BottomNavItem.NETWORTH
+
+
     override fun getSelfButtonId() = R.id.btnStocks
 
     private val viewModel: StocksViewModel by viewModels()
@@ -55,6 +58,7 @@ class StocksActivity : com.example.personalwealthmanager.presentation.base.BaseD
         }
 
         setupDrawerMenu()
+        setupBottomNav()
         observeState()
 
         viewModel.loadHoldings()

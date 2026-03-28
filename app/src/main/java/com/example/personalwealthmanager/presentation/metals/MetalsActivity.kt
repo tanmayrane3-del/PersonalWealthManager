@@ -9,6 +9,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MetalsActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
+    override fun getActiveNavItem() = BottomNavItem.NETWORTH
+
+
     override fun getSelfButtonId() = R.id.btnMetals
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,5 +30,6 @@ class MetalsActivity : com.example.personalwealthmanager.presentation.base.BaseD
         }
 
         setupDrawerMenu()
+        setupBottomNav()
     }
 }
