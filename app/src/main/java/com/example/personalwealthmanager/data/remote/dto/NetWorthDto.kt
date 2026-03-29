@@ -12,6 +12,8 @@ data class NetWorthCurrentDto(
     @SerializedName("projected_3y")        val projected3y: Double = 0.0,
     @SerializedName("projected_5y")        val projected5y: Double = 0.0,
     @SerializedName("cagr_1y")             val cagr1y: Double = 0.0,
+    @SerializedName("cagr_3y")             val cagr3y: Double = 0.0,
+    @SerializedName("cagr_5y")             val cagr5y: Double = 0.0,
     @SerializedName("stocks_count")        val stocksCount: Int = 0,
     @SerializedName("stocks_proj_1y")      val stocksProj1y: Double = 0.0,
     @SerializedName("stocks_proj_3y")      val stocksProj3y: Double = 0.0,
