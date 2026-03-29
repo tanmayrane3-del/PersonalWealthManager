@@ -135,8 +135,15 @@ class NetWorthViewModel @Inject constructor(
             }
             launch {
                 otherAssetsRepository.getSummary(token).fold(
-                    onSuccess = { summary -> _otherAssetsState.value = OtherAssetsWidgetState.Success(summary.totalCurrentValue) },
-                    onFailure = { e      -> _otherAssetsState.value = OtherAssetsWidgetState.Error(e.message ?: "Failed to load other assets") }
+                    onSuccess = { summary ->
+                        _otherAssetsState.value = OtherAssetsWidgetState.Success(
+                            totalValue = summary.totalCurrentValue,
+                            proj1y     = summary.proj1y,
+                            proj3y     = summary.proj3y,
+                            proj5y     = summary.proj5y,
+                        )
+                    },
+                    onFailure = { e -> _otherAssetsState.value = OtherAssetsWidgetState.Error(e.message ?: "Failed to load other assets") }
                 )
             }
         }

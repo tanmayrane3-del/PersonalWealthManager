@@ -196,6 +196,9 @@ data class PhysicalAsset(
 
 data class PhysicalAssetSummary(
     val totalCurrentValue: Double,
+    val proj1y: Double = 0.0,
+    val proj3y: Double = 0.0,
+    val proj5y: Double = 0.0,
     val assets: List<PhysicalAsset>
 )
 

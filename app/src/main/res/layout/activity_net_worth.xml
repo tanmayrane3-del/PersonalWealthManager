@@ -1104,6 +1104,87 @@
                                 android:background="@color/gray_200"
                                 android:layout_marginBottom="8dp" />
 
+                            <!-- CAGR projection row (GONE until loaded) -->
+                            <LinearLayout
+                                android:id="@+id/otherCagrSection"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:visibility="gone"
+                                android:layout_marginBottom="8dp">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="center">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="1Y"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="10sp" />
+                                    <TextView
+                                        android:id="@+id/tvOtherCagr1y"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/text_dark"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="center">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="3Y"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="10sp" />
+                                    <TextView
+                                        android:id="@+id/tvOtherCagr3y"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/text_dark"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="center">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="5Y"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="10sp" />
+                                    <TextView
+                                        android:id="@+id/tvOtherCagr5y"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/text_dark"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <View
+                                android:id="@+id/dividerOtherCagr"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/gray_200"
+                                android:layout_marginBottom="8dp"
+                                android:visibility="gone" />
+
                             <!-- Footer (GONE until loaded) -->
                             <LinearLayout
                                 android:id="@+id/otherValueContainer"

@@ -43,6 +43,11 @@ sealed class MfWidgetState {
 sealed class OtherAssetsWidgetState {
     object Idle    : OtherAssetsWidgetState()
     object Loading : OtherAssetsWidgetState()
-    data class Success(val totalValue: Double) : OtherAssetsWidgetState()
+    data class Success(
+        val totalValue: Double,
+        val proj1y: Double = 0.0,
+        val proj3y: Double = 0.0,
+        val proj5y: Double = 0.0,
+    ) : OtherAssetsWidgetState()
     data class Error(val message: String) : OtherAssetsWidgetState()
 }

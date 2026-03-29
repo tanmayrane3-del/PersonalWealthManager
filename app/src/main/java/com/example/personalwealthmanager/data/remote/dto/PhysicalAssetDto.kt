@@ -21,6 +21,9 @@ data class PhysicalAssetDto(
 
 data class PhysicalAssetSummaryDto(
     @SerializedName("total_current_value") val totalCurrentValue: Double,
+    @SerializedName("proj_1y")             val proj1y: Double = 0.0,
+    @SerializedName("proj_3y")             val proj3y: Double = 0.0,
+    @SerializedName("proj_5y")             val proj5y: Double = 0.0,
     val assets: List<PhysicalAssetDto>
 )
 

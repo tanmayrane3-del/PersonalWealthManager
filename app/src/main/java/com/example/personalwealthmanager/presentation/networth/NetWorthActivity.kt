@@ -109,6 +109,11 @@ class NetWorthActivity : com.example.personalwealthmanager.presentation.base.Bas
     private lateinit var otherValueContainer: View
     private lateinit var tvOtherValue: TextView
     private lateinit var tvOtherCount: TextView
+    private lateinit var otherCagrSection: View
+    private lateinit var dividerOtherCagr: View
+    private lateinit var tvOtherCagr1y: TextView
+    private lateinit var tvOtherCagr3y: TextView
+    private lateinit var tvOtherCagr5y: TextView
 
     private val currencyFormat = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
     private var snapshotDates: List<String> = emptyList()
@@ -182,6 +187,11 @@ class NetWorthActivity : com.example.personalwealthmanager.presentation.base.Bas
         otherValueContainer = findViewById(R.id.otherValueContainer)
         tvOtherValue       = findViewById(R.id.tvOtherValue)
         tvOtherCount       = findViewById(R.id.tvOtherCount)
+        otherCagrSection   = findViewById(R.id.otherCagrSection)
+        dividerOtherCagr   = findViewById(R.id.dividerOtherCagr)
+        tvOtherCagr1y      = findViewById(R.id.tvOtherCagr1y)
+        tvOtherCagr3y      = findViewById(R.id.tvOtherCagr3y)
+        tvOtherCagr5y      = findViewById(R.id.tvOtherCagr5y)
 
         setupChart()
         setupChipGroup()
@@ -474,6 +484,13 @@ class NetWorthActivity : com.example.personalwealthmanager.presentation.base.Bas
                 otherLoadingBar.visibility = View.GONE
                 tvOtherValue.text = if (state.totalValue == 0.0) "No assets"
                                     else formatCompact(state.totalValue)
+                if (state.proj1y > 0) {
+                    tvOtherCagr1y.text = formatCompact(state.proj1y)
+                    tvOtherCagr3y.text = formatCompact(state.proj3y)
+                    tvOtherCagr5y.text = formatCompact(state.proj5y)
+                    otherCagrSection.visibility  = View.VISIBLE
+                    dividerOtherCagr.visibility  = View.VISIBLE
+                }
                 otherValueContainer.visibility = View.VISIBLE
                 refreshOtherFooter()
             }

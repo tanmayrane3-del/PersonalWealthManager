@@ -37,6 +37,9 @@ class PhysicalAssetRepositoryImpl @Inject constructor(
                     ?: return Result.failure(Exception("No summary data returned"))
                 Result.success(PhysicalAssetSummary(
                     totalCurrentValue = data.totalCurrentValue,
+                    proj1y = data.proj1y,
+                    proj3y = data.proj3y,
+                    proj5y = data.proj5y,
                     assets = data.assets.map { it.toDomain() }
                 ))
             } else {
