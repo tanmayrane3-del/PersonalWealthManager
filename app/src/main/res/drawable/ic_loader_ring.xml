@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="60dp"
+    android:height="60dp"
+    android:viewportWidth="60"
+    android:viewportHeight="60">
+
+    <!-- Background track ring -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M30,5 A25,25 0 1,1 29.99,5"
+        android:strokeColor="#E0F2F1"
+        android:strokeWidth="4.5"
+        android:strokeLineCap="round" />
+
+    <!-- Animated arc group (3/4 arc) -->
+    <group
+        android:name="rotation_group"
+        android:pivotX="30"
+        android:pivotY="30">
+        <path
+            android:fillColor="@android:color/transparent"
+            android:pathData="M30,5 A25,25 0 1,1 5,30"
+            android:strokeColor="#009688"
+            android:strokeWidth="4.5"
+            android:strokeLineCap="round" />
+    </group>
+</vector>

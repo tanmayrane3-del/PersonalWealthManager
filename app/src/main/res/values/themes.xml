@@ -85,4 +85,7 @@
         <item name="android:textColor">@color/drawer_item_text</item>
         <item name="android:textSize">13sp</item>
     </style>
+
+    <!-- Full-screen transparent theme for AppLoader dialog -->
+    <style name="LoaderDialogTheme" parent="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
 </resources>
