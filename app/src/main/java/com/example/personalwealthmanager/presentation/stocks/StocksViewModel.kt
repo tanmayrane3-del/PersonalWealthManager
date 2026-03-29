@@ -3,6 +3,7 @@ package com.example.personalwealthmanager.presentation.stocks
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.personalwealthmanager.core.utils.SessionManager
+import com.example.personalwealthmanager.domain.model.StocksPortfolioSummary
 import com.example.personalwealthmanager.domain.repository.HoldingsRepository
 import com.example.personalwealthmanager.domain.repository.ZerodhaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +28,9 @@ class StocksViewModel @Inject constructor(
     private val _authUrlState = MutableStateFlow<String?>(null)
     val authUrlState: StateFlow<String?> = _authUrlState
 
+    private val _summary = MutableStateFlow<StocksPortfolioSummary?>(null)
+    val summary: StateFlow<StocksPortfolioSummary?> = _summary
+
     private var pollingJob: Job? = null
 
     fun loadHoldings() {
@@ -47,6 +51,14 @@ class StocksViewModel @Inject constructor(
                 }
             )
         }
+        loadSummary()
+    }
+
+    fun loadSummary() {
+        val token = sessionManager.getSessionToken() ?: return
+        viewModelScope.launch {
+            holdingsRepository.getSummary(token).onSuccess { _summary.value = it }
+        }
     }
 
     fun syncHoldings() {
@@ -57,17 +69,21 @@ class StocksViewModel @Inject constructor(
             result.fold(
                 onSuccess = { holdings ->
                     _state.value = StocksState.Success(holdings)
+                    loadSummary()
                     // CAGR is computed in the background by the backend after sync.
                     // Yahoo Finance chart API: ~2 s/stock → ~34 s for 17 stocks.
                     // Poll every 10 s (up to 20 attempts = ~3.5 min) until CAGR values appear.
                     if (holdings.any { it.cagr1y == null }) {
                         launch {
-                            repeat(20) { attempt ->
+                            repeat(20) { _ ->
                                 delay(10_000L)
                                 val updated = holdingsRepository.getHoldings(token).getOrNull()
                                     ?: return@repeat
                                 _state.value = StocksState.Success(updated)
-                                if (updated.all { it.cagr1y != null }) return@launch
+                                if (updated.all { it.cagr1y != null }) {
+                                    loadSummary()
+                                    return@launch
+                                }
                             }
                         }
                     }
@@ -115,17 +131,17 @@ class StocksViewModel @Inject constructor(
 
     fun getSessionToken(): String? = sessionManager.getSessionToken()
 
-    // Silently refreshes holdings from DB every 5 minutes while the screen is visible.
-    // Does not show a loading spinner — existing data stays on screen until new data arrives.
+    // Silently refreshes holdings and summary every 5 minutes while the screen is visible.
     fun startPolling() {
         pollingJob?.cancel()
         pollingJob = viewModelScope.launch {
             while (isActive) {
                 delay(5 * 60 * 1000L)
                 val token = sessionManager.getSessionToken() ?: break
-                val result = holdingsRepository.getHoldings(token)
-                result.onSuccess { holdings -> _state.value = StocksState.Success(holdings) }
-                // On failure: keep showing existing data — don't change state
+                holdingsRepository.getHoldings(token)
+                    .onSuccess { holdings -> _state.value = StocksState.Success(holdings) }
+                holdingsRepository.getSummary(token)
+                    .onSuccess { _summary.value = it }
             }
         }
     }

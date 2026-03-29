@@ -1,93 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="16dp"
-    android:layout_marginBottom="10dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="4dp"
-    app:cardBackgroundColor="@color/card_medium_teal">
+    android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!-- Collapsed row — always visible, toggles expand on click -->
+    <LinearLayout
+        android:id="@+id/rowCollapsed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="14dp">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground">
 
-        <!-- Top-left: Qty & Avg -->
-        <TextView
-            android:id="@+id/tvQtyAvg"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="#CCFFFFFF"
-            android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvPnlPercent"
-            android:text="Qty. 10 • Avg. 1,500.00" />
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <!-- Top-right: P&L % -->
+            <TextView
+                android:id="@+id/tvSymbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_dark"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:text="INFY" />
+
+            <TextView
+                android:id="@+id/tvQtyLtp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_muted"
+                android:textSize="11sp"
+                android:layout_marginTop="2dp"
+                android:text="Qty: 10 • LTP: ₹1,500.00" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/tvPnlPercent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="13sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="10dp"
             android:text="+6.67%" />
 
-        <!-- Middle-left: Stock symbol -->
-        <TextView
-            android:id="@+id/tvSymbol"
-            android:layout_width="0dp"
+        <ImageView
+            android:id="@+id/ivChevron"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_expand_more"
+            android:tint="@color/text_muted"
+            android:contentDescription="Expand" />
+    </LinearLayout>
+
+    <!-- Expanded detail — hidden by default -->
+    <LinearLayout
+        android:id="@+id/expandedDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="12dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginTop="4dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvQtyAvg"
-            app:layout_constraintEnd_toStartOf="@+id/tvPnlAmount"
-            android:text="INFY" />
+            android:orientation="vertical"
+            android:background="@drawable/bg_holding_detail"
+            android:padding="14dp">
 
-        <!-- Middle-right: P&L amount -->
-        <TextView
-            android:id="@+id/tvPnlAmount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:layout_marginTop="4dp"
-            app:layout_constraintTop_toBottomOf="@id/tvPnlPercent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="+₹1,000.00" />
+            <!-- Row 1: Invested + P&L -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        <!-- Bottom-left: Invested -->
-        <TextView
-            android:id="@+id/tvInvested"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textColor="#CCFFFFFF"
-            android:textSize="12sp"
-            android:layout_marginTop="6dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvSymbol"
-            app:layout_constraintEnd_toStartOf="@+id/tvLtp"
-            android:text="Invested 15,000.00" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-        <!-- Bottom-right: LTP + day change -->
-        <TextView
-            android:id="@+id/tvLtp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#CCFFFFFF"
-            android:textSize="12sp"
-            android:layout_marginTop="6dp"
-            app:layout_constraintTop_toBottomOf="@id/tvPnlAmount"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="LTP 1,600.00 (+10.00)" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="INVESTED"
+                        android:textSize="9sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08"
+                        android:textColor="@color/text_muted" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:id="@+id/tvInvested"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_dark"
+                        android:layout_marginTop="2dp"
+                        android:text="₹15,000.00" />
+                </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="end">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="P/L"
+                        android:textSize="9sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08"
+                        android:textColor="@color/text_muted" />
+
+                    <TextView
+                        android:id="@+id/tvPnlAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="2dp"
+                        android:text="+₹1,000.00" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#1A000000"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Row 2: 1Y/3Y/5Y returns + today's change -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- CAGR labels -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvCagr1y"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        android:textColor="@color/text_muted"
+                        android:layout_marginEnd="10dp"
+                        android:text="1Y —" />
+
+                    <TextView
+                        android:id="@+id/tvCagr3y"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        android:textColor="@color/text_muted"
+                        android:layout_marginEnd="10dp"
+                        android:text="3Y —" />
+
+                    <TextView
+                        android:id="@+id/tvCagr5y"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        android:textColor="@color/text_muted"
+                        android:text="5Y —" />
+                </LinearLayout>
+
+                <!-- Today's change -->
+                <TextView
+                    android:id="@+id/tvDayChange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:text="₹0.00 today" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

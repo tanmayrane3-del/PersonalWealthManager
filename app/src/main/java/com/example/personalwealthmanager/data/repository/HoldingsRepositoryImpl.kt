@@ -3,6 +3,7 @@ package com.example.personalwealthmanager.data.repository
 import com.example.personalwealthmanager.data.remote.api.HoldingsApi
 import com.example.personalwealthmanager.data.remote.dto.StockHoldingDto
 import com.example.personalwealthmanager.domain.model.StockHolding
+import com.example.personalwealthmanager.domain.model.StocksPortfolioSummary
 import com.example.personalwealthmanager.domain.repository.HoldingsRepository
 import org.json.JSONObject
 import javax.inject.Inject
@@ -50,6 +51,26 @@ class HoldingsRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getSummary(sessionToken: String): Result<StocksPortfolioSummary> {
+        return try {
+            val response = holdingsApi.getSummary(sessionToken)
+            if (response.isSuccessful && response.body()?.status == "success") {
+                val dto = response.body()?.data ?: return Result.failure(Exception("Empty summary"))
+                Result.success(StocksPortfolioSummary(
+                    totalPortfolioValue = dto.totalPortfolioValue,
+                    todayPnl = dto.todayPnl,
+                    projected1y = dto.projected1y,
+                    projected3y = dto.projected3y,
+                    projected5y = dto.projected5y
+                ))
+            } else {
+                Result.failure(Exception(parseReason(response.errorBody()?.string(), "Failed to fetch summary")))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     private fun StockHoldingDto.toDomain() = StockHolding(
         id = id,
         tradingSymbol = tradingSymbol,
@@ -64,6 +85,8 @@ class HoldingsRepositoryImpl @Inject constructor(
         dayChangePercentage = dayChangePercentage,
         closePrice = closePrice,
         lastSyncedAt = lastSyncedAt,
-        cagr1y = cagr1y
+        cagr1y = cagr1y,
+        cagr3y = cagr3y,
+        cagr5y = cagr5y
     )
 }

@@ -4,28 +4,32 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.personalwealthmanager.R
+import com.example.personalwealthmanager.domain.model.StockHolding
+import com.example.personalwealthmanager.domain.model.StocksPortfolioSummary
 import com.example.personalwealthmanager.presentation.zerodha.SetupZerodhaActivity
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import android.widget.ImageView
+import java.text.NumberFormat
+import java.util.Locale
+import kotlin.math.abs
+import kotlin.math.pow
 
 @AndroidEntryPoint
 class StocksActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
     override fun getActiveNavItem() = BottomNavItem.NETWORTH
-
-
     override fun getSelfButtonId() = R.id.btnStocks
 
     private val viewModel: StocksViewModel by viewModels()
@@ -33,33 +37,62 @@ class StocksActivity : com.example.personalwealthmanager.presentation.base.BaseD
     private lateinit var rvHoldings: RecyclerView
     private lateinit var tvEmptyState: TextView
     private lateinit var progressBar: ProgressBar
-    private lateinit var fabSync: FloatingActionButton
     private lateinit var adapter: StocksAdapter
+
+    // Summary views
+    private lateinit var tvPortfolioValue: TextView
+    private lateinit var tvTrendBadge: TextView
+    private lateinit var ivTrendIcon: ImageView
+    private lateinit var tvTotalInvested: TextView
+    private lateinit var tvTotalPnl: TextView
+    private lateinit var tvDayChange: TextView
+    private lateinit var tvPersonalCagr: TextView
+    private lateinit var tvProjected1y: TextView
+    private lateinit var tvProjected3y: TextView
+    private lateinit var tvProjected5y: TextView
+    private lateinit var tvCagr1yPct: TextView
+    private lateinit var tvCagr3yPct: TextView
+    private lateinit var tvCagr5yPct: TextView
+    private lateinit var sparkline1y: SparklineView
+    private lateinit var sparkline3y: SparklineView
+    private lateinit var sparkline5y: SparklineView
+
+    // Collapsible section views
+    private lateinit var headerSecondaryStats: LinearLayout
+    private lateinit var contentSecondaryStats: LinearLayout
+    private lateinit var ivExpandSecondary: ImageView
+    private lateinit var headerProjections: LinearLayout
+    private lateinit var contentProjections: LinearLayout
+    private lateinit var ivExpandProjections: ImageView
+    private lateinit var tvHoldingsTitle: TextView
+
+    private val currencyFormat = NumberFormat.getNumberInstance(Locale("en", "IN")).apply {
+        minimumFractionDigits = 2
+        maximumFractionDigits = 2
+    }
+
+    private val currencyFormatNoDecimal = NumberFormat.getNumberInstance(Locale("en", "IN")).apply {
+        minimumFractionDigits = 0
+        maximumFractionDigits = 0
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stocks)
 
-        rvHoldings = findViewById(R.id.rvHoldings)
-        tvEmptyState = findViewById(R.id.tvEmptyState)
-        progressBar = findViewById(R.id.progressBar)
-        fabSync = findViewById(R.id.fabSync)
+        bindViews()
 
         adapter = StocksAdapter(emptyList())
         rvHoldings.layoutManager = LinearLayoutManager(this)
         rvHoldings.adapter = adapter
 
-        findViewById<ImageView>(R.id.btnMenu).setOnClickListener {
-            drawerLayout.openDrawer(GravityCompat.END)
-        }
-
-        fabSync.setOnClickListener {
-            viewModel.syncHoldings()
-        }
-
+        setupCollapsibleSections()
         setupDrawerMenu()
         setupBottomNav()
         observeState()
+
+        findViewById<ImageButton>(R.id.btnBack).setOnClickListener { onBackPressed() }
+        findViewById<ImageButton>(R.id.btnSync).setOnClickListener { viewModel.syncHoldings() }
 
         viewModel.loadHoldings()
     }
@@ -74,9 +107,6 @@ class StocksActivity : com.example.personalwealthmanager.presentation.base.BaseD
         viewModel.stopPolling()
     }
 
-    // Called when wealthapp://auth/success lands after Zerodha login.
-    // Chrome Custom Tab intercepts the custom scheme, closes itself, and
-    // delivers the intent here (activity is singleTop so it isn't recreated).
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         val data = intent.data
@@ -85,6 +115,48 @@ class StocksActivity : com.example.personalwealthmanager.presentation.base.BaseD
             if (!requestToken.isNullOrBlank()) {
                 viewModel.exchangeAndSync(requestToken)
             }
+        }
+    }
+
+    private fun bindViews() {
+        rvHoldings       = findViewById(R.id.rvHoldings)
+        tvEmptyState      = findViewById(R.id.tvEmptyState)
+        progressBar       = findViewById(R.id.progressBar)
+        tvPortfolioValue  = findViewById(R.id.tvPortfolioValue)
+        tvTrendBadge      = findViewById(R.id.tvTrendBadge)
+        ivTrendIcon       = findViewById(R.id.ivTrendIcon)
+        tvTotalInvested   = findViewById(R.id.tvTotalInvested)
+        tvTotalPnl        = findViewById(R.id.tvTotalPnl)
+        tvDayChange       = findViewById(R.id.tvDayChange)
+        tvPersonalCagr    = findViewById(R.id.tvPersonalCagr)
+        tvProjected1y     = findViewById(R.id.tvProjected1y)
+        tvProjected3y     = findViewById(R.id.tvProjected3y)
+        tvProjected5y     = findViewById(R.id.tvProjected5y)
+        tvCagr1yPct       = findViewById(R.id.tvCagr1yPct)
+        tvCagr3yPct       = findViewById(R.id.tvCagr3yPct)
+        tvCagr5yPct       = findViewById(R.id.tvCagr5yPct)
+        sparkline1y       = findViewById(R.id.sparkline1y)
+        sparkline3y       = findViewById(R.id.sparkline3y)
+        sparkline5y       = findViewById(R.id.sparkline5y)
+        headerSecondaryStats  = findViewById(R.id.headerSecondaryStats)
+        contentSecondaryStats = findViewById(R.id.contentSecondaryStats)
+        ivExpandSecondary     = findViewById(R.id.ivExpandSecondary)
+        headerProjections     = findViewById(R.id.headerProjections)
+        contentProjections    = findViewById(R.id.contentProjections)
+        ivExpandProjections   = findViewById(R.id.ivExpandProjections)
+        tvHoldingsTitle       = findViewById(R.id.tvHoldingsTitle)
+    }
+
+    private fun setupCollapsibleSections() {
+        headerSecondaryStats.setOnClickListener {
+            val visible = contentSecondaryStats.visibility == View.VISIBLE
+            contentSecondaryStats.visibility = if (visible) View.GONE else View.VISIBLE
+            ivExpandSecondary.rotation = if (visible) 0f else 180f
+        }
+        headerProjections.setOnClickListener {
+            val visible = contentProjections.visibility == View.VISIBLE
+            contentProjections.visibility = if (visible) View.GONE else View.VISIBLE
+            ivExpandProjections.rotation = if (visible) 0f else 180f
         }
     }
 
@@ -111,13 +183,77 @@ class StocksActivity : com.example.personalwealthmanager.presentation.base.BaseD
         }
 
         lifecycleScope.launch {
+            viewModel.summary.collect { summary ->
+                if (summary != null) bindSummary(summary)
+            }
+        }
+
+        lifecycleScope.launch {
             viewModel.authUrlState.collect { url ->
                 if (url != null) {
                     viewModel.clearAuthUrl()
-                    val customTabsIntent = CustomTabsIntent.Builder().build()
-                    customTabsIntent.launchUrl(this@StocksActivity, Uri.parse(url))
+                    CustomTabsIntent.Builder().build()
+                        .launchUrl(this@StocksActivity, Uri.parse(url))
                 }
             }
+        }
+    }
+
+    private fun bindSummary(s: StocksPortfolioSummary) {
+        // Hero card
+        tvPortfolioValue.text = "₹${currencyFormat.format(s.totalPortfolioValue)}"
+
+        val dayPct = if (s.totalPortfolioValue != 0.0)
+            (s.todayPnl / s.totalPortfolioValue) * 100 else 0.0
+        val trendPos = dayPct >= 0
+        tvTrendBadge.text = "${if (trendPos) "+" else ""}${String.format("%.2f", dayPct)}%"
+        ivTrendIcon.setImageResource(if (trendPos) R.drawable.ic_trending_up else R.drawable.ic_trending_down)
+
+        // Secondary stats: invested and P&L come from holdings list — updated in showHoldings()
+        // Day change from summary
+        val daySign = if (s.todayPnl >= 0) "+" else "-"
+        tvDayChange.text = "$daySign₹${currencyFormat.format(abs(s.todayPnl))}"
+        tvDayChange.setTextColor(getColor(if (s.todayPnl >= 0) R.color.amount_positive else R.color.amount_negative))
+
+        // Personal CAGR (1Y blended)
+        if (s.totalPortfolioValue > 0 && s.projected1y > 0) {
+            val cagr1y = (s.projected1y / s.totalPortfolioValue - 1) * 100
+            val sign1y = if (cagr1y >= 0) "+" else ""
+            tvPersonalCagr.text = "$sign1y${String.format("%.2f", cagr1y)}%"
+            tvPersonalCagr.setTextColor(getColor(if (cagr1y >= 0) R.color.teal_800 else R.color.amount_negative))
+        }
+
+        // Projection rows
+        bindProjectionRow(tvProjected1y, tvCagr1yPct, sparkline1y,
+            s.totalPortfolioValue, s.projected1y, 1)
+        bindProjectionRow(tvProjected3y, tvCagr3yPct, sparkline3y,
+            s.totalPortfolioValue, s.projected3y, 3)
+        bindProjectionRow(tvProjected5y, tvCagr5yPct, sparkline5y,
+            s.totalPortfolioValue, s.projected5y, 5)
+    }
+
+    private fun bindProjectionRow(
+        tvValue: TextView,
+        tvPct: TextView,
+        sparkline: SparklineView,
+        current: Double,
+        projected: Double,
+        years: Int
+    ) {
+        tvValue.text = "₹${currencyFormatNoDecimal.format(projected)}"
+
+        val totalGrowthPct = if (current > 0) (projected / current - 1) * 100 else 0.0
+        val pctSign = if (totalGrowthPct >= 0) "+" else ""
+        tvPct.text = "$pctSign${String.format("%.1f", totalGrowthPct)}%"
+        tvPct.setTextColor(getColor(if (totalGrowthPct >= 0) R.color.amount_positive else R.color.amount_negative))
+
+        if (current > 0 && projected > 0) {
+            val data = when (years) {
+                1 -> SparklineView.monthly1Y(current, projected)
+                3 -> SparklineView.quarterly3Y(current, projected)
+                else -> SparklineView.semiAnnual5Y(current, projected)
+            }
+            sparkline.setData(data)
         }
     }
 
@@ -136,15 +272,26 @@ class StocksActivity : com.example.personalwealthmanager.presentation.base.BaseD
         progressBar.visibility = View.GONE
     }
 
-    private fun showHoldings(holdings: List<com.example.personalwealthmanager.domain.model.StockHolding>) {
+    private fun showHoldings(holdings: List<StockHolding>) {
         hideLoading()
         if (holdings.isEmpty()) {
             showEmpty()
-        } else {
-            rvHoldings.visibility = View.VISIBLE
-            tvEmptyState.visibility = View.GONE
-            adapter.updateHoldings(holdings)
+            return
         }
+        rvHoldings.visibility = View.VISIBLE
+        tvEmptyState.visibility = View.GONE
+        adapter.updateHoldings(holdings)
+
+        // Update holdings count in header
+        tvHoldingsTitle.text = "Holdings (${holdings.size})"
+
+        // Compute invested + total P&L from holdings list and bind to secondary stats
+        val totalInvested = holdings.sumOf { it.averagePrice * it.quantity }
+        val totalPnl = holdings.sumOf { it.pnl }
+        tvTotalInvested.text = "₹${currencyFormat.format(totalInvested)}"
+        val pnlSign = if (totalPnl >= 0) "+" else "-"
+        tvTotalPnl.text = "$pnlSign₹${currencyFormat.format(abs(totalPnl))}"
+        tvTotalPnl.setTextColor(getColor(if (totalPnl >= 0) R.color.amount_positive else R.color.amount_negative))
     }
 
     private fun showEmpty() {

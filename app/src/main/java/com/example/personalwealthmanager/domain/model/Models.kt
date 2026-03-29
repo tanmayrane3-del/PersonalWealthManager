@@ -74,7 +74,17 @@ data class StockHolding(
     val dayChangePercentage: Double,
     val closePrice: Double,
     val lastSyncedAt: String?,
-    val cagr1y: Double?
+    val cagr1y: Double?,
+    val cagr3y: Double?,
+    val cagr5y: Double?
+)
+
+data class StocksPortfolioSummary(
+    val totalPortfolioValue: Double,
+    val todayPnl: Double,
+    val projected1y: Double,
+    val projected3y: Double,
+    val projected5y: Double
 )
 
 data class TransactionMetadata(
