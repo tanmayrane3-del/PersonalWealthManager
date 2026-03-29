@@ -126,6 +126,12 @@
             android:exported="false"
             android:theme="@style/Theme.PersonalWealthManager" />
 
+        <!-- Net Worth Calculation Activity -->
+        <activity
+            android:name=".presentation.networth.NetWorthCalculationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PersonalWealthManager" />
+
         <activity
             android:name=".presentation.liabilities.AddEditLiabilityActivity"
             android:exported="false"

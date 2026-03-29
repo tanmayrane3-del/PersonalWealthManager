@@ -383,6 +383,72 @@
                     </LinearLayout>
 
                     <!-- ══════════════════════════════════════════════════════ -->
+                    <!-- NET WORTH CALCULATION ENTRY                           -->
+                    <!-- ══════════════════════════════════════════════════════ -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardNetWorthCalc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="14dp"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:src="@drawable/ic_insights"
+                                android:padding="7dp"
+                                android:background="@drawable/bg_portfolio_icon"
+                                android:backgroundTint="#E0F2F1"
+                                android:tint="@color/teal_700"
+                                android:layout_marginEnd="12dp"
+                                android:contentDescription="Calculation" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Net Worth Calculation"
+                                    android:textColor="@color/teal_800"
+                                    android:textSize="15sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Growth rates, projections &amp; valuation breakdown"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="12sp"
+                                    android:layout_marginTop="2dp" />
+
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:src="@drawable/ic_back"
+                                android:rotation="180"
+                                android:tint="@color/teal_700"
+                                android:contentDescription="Open" />
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- ══════════════════════════════════════════════════════ -->
                     <!-- PERFORMANCE CHART CARD                                -->
                     <!-- ══════════════════════════════════════════════════════ -->
                     <androidx.cardview.widget.CardView

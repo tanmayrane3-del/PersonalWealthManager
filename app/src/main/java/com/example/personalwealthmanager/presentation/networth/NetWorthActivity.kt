@@ -1,5 +1,6 @@
 package com.example.personalwealthmanager.presentation.networth
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -7,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -14,6 +16,7 @@ import com.example.personalwealthmanager.R
 import com.example.personalwealthmanager.data.remote.dto.NetWorthCurrentDto
 import com.example.personalwealthmanager.data.remote.dto.NetWorthSnapshotDto
 import android.content.Context
+import com.google.gson.Gson
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.Entry
@@ -201,6 +204,15 @@ class NetWorthActivity : com.example.personalwealthmanager.presentation.base.Bas
 
         // Back button — mirrors Stocks page behaviour
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener { onBackPressed() }
+
+        // Net Worth Calculation entry card
+        findViewById<CardView>(R.id.cardNetWorthCalc).setOnClickListener {
+            val dto = latestNetWorthDto ?: return@setOnClickListener
+            startActivity(
+                Intent(this, NetWorthCalculationActivity::class.java)
+                    .putExtra(NetWorthCalculationActivity.EXTRA_DTO, Gson().toJson(dto))
+            )
+        }
 
         setupDrawerMenu()
         setupBottomNav()
