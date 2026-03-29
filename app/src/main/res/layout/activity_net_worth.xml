@@ -4,466 +4,744 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
-    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:openDrawer="end">
+    android:fitsSystemWindows="true">
 
-    <!-- Main Content -->
+    <!-- ── Main content ──────────────────────────────────────────────────────── -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="#F8FAFB">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <ScrollView
+        <!-- ── App Bar ──────────────────────────────────────────────────────── -->
+        <LinearLayout
+            android:id="@+id/appBar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/gradient_background"
-            android:fitsSystemWindows="true"
-            android:fillViewport="true">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="8dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:background="@color/white"
+            android:elevation="2dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_back"
+                android:tint="@color/teal_800"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Back" />
+
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="24dp"
-                android:paddingTop="16dp">
+                android:layout_weight="1"
+                android:text="Net Worth"
+                android:textColor="@color/teal_800"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginStart="4dp" />
 
-                <!-- Burger Menu Button -->
-                <ImageView
-                    android:id="@+id/btnMenu"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginEnd="4dp"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_menu"
-                    android:contentDescription="@string/menu"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <ImageButton
+                android:id="@+id/ivRefresh"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_refresh"
+                android:tint="@color/teal_700"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Refresh" />
+        </LinearLayout>
 
-                <!-- Screen Title -->
-                <TextView
-                    android:id="@+id/tvScreenTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="Net Worth"
-                    android:textColor="@android:color/white"
-                    android:textSize="22sp"
-                    android:textStyle="bold"
-                    android:gravity="center_vertical"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/btnMenu"
-                    app:layout_constraintTop_toTopOf="@id/btnMenu"
-                    app:layout_constraintBottom_toBottomOf="@id/btnMenu" />
+        <!-- ── Swipe Refresh ────────────────────────────────────────────────── -->
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-                <!-- ── Hero Card ──────────────────────────────────────── -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/heroCard"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    app:cardBackgroundColor="@color/card_dark_teal"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/btnMenu">
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="80dp"
+                android:clipToPadding="false">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="20dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Total Net Worth"
-                            android:textColor="#B3FFFFFF"
-                            android:textSize="13sp"
-                            android:letterSpacing="0.08" />
-
-                        <!-- Net Worth Value -->
-                        <TextView
-                            android:id="@+id/tvNetWorthValue"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="16dp"
-                            android:text="--"
-                            android:textColor="#4CAF50"
-                            android:textSize="36sp"
-                            android:textStyle="bold"
-                            android:gravity="center_horizontal" />
-
-                        <!-- Assets | Liabilities row -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <!-- Assets -->
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:gravity="center_horizontal"
-                                android:background="@color/card_medium_teal"
-                                android:padding="12dp">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Assets"
-                                    android:textColor="#B3FFFFFF"
-                                    android:textSize="12sp" />
-
-                                <TextView
-                                    android:id="@+id/tvTotalAssets"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:text="--"
-                                    android:textColor="#4CAF50"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
-
-                            <!-- Vertical divider -->
-                            <View
-                                android:layout_width="1dp"
-                                android:layout_height="match_parent"
-                                android:background="#33FFFFFF" />
-
-                            <!-- Liabilities -->
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:gravity="center_horizontal"
-                                android:background="@color/card_medium_teal"
-                                android:padding="12dp">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Liabilities"
-                                    android:textColor="#B3FFFFFF"
-                                    android:textSize="12sp" />
-
-                                <TextView
-                                    android:id="@+id/tvTotalLiabilities"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:text="--"
-                                    android:textColor="#F44336"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- ── Chart Card ─────────────────────────────────────── -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/chartCard"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    app:cardBackgroundColor="@color/card_dark_teal"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/heroCard">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Net Worth Over Time"
-                            android:textColor="@android:color/white"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:layout_marginBottom="12dp" />
-
-                        <!-- Period Chip Group -->
-                        <com.google.android.material.chip.ChipGroup
-                            android:id="@+id/chipGroupPeriod"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            app:singleSelection="true"
-                            app:selectionRequired="true">
-
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chip1M"
-                                style="@style/Widget.Material3.Chip.Filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="1M"
-                                android:textColor="@android:color/white"
-                                android:checked="true"
-                                app:chipBackgroundColor="@color/card_medium_teal"
-                                app:chipStrokeColor="#33FFFFFF"
-                                app:chipStrokeWidth="1dp" />
-
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chip3M"
-                                style="@style/Widget.Material3.Chip.Filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="3M"
-                                android:textColor="@android:color/white"
-                                app:chipBackgroundColor="@color/card_medium_teal"
-                                app:chipStrokeColor="#33FFFFFF"
-                                app:chipStrokeWidth="1dp" />
-
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chip6M"
-                                style="@style/Widget.Material3.Chip.Filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="6M"
-                                android:textColor="@android:color/white"
-                                app:chipBackgroundColor="@color/card_medium_teal"
-                                app:chipStrokeColor="#33FFFFFF"
-                                app:chipStrokeWidth="1dp" />
-
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chip1Y"
-                                style="@style/Widget.Material3.Chip.Filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="1Y"
-                                android:textColor="@android:color/white"
-                                app:chipBackgroundColor="@color/card_medium_teal"
-                                app:chipStrokeColor="#33FFFFFF"
-                                app:chipStrokeWidth="1dp" />
-
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chipAll"
-                                style="@style/Widget.Material3.Chip.Filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="All"
-                                android:textColor="@android:color/white"
-                                app:chipBackgroundColor="@color/card_medium_teal"
-                                app:chipStrokeColor="#33FFFFFF"
-                                app:chipStrokeWidth="1dp" />
-
-                        </com.google.android.material.chip.ChipGroup>
-
-                        <!-- Loading indicator for chart -->
-                        <ProgressBar
-                            android:id="@+id/chartProgressBar"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="24dp"
-                            android:layout_marginBottom="24dp"
-                            android:visibility="gone" />
-
-                        <!-- Chart -->
-                        <com.github.mikephil.charting.charts.LineChart
-                            android:id="@+id/lineChart"
-                            android:layout_width="match_parent"
-                            android:layout_height="220dp"
-                            android:visibility="gone" />
-
-                        <!-- No data message -->
-                        <TextView
-                            android:id="@+id/tvNoData"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="24dp"
-                            android:layout_marginBottom="24dp"
-                            android:gravity="center"
-                            android:text="Keep using the app — your trend will appear after a few days"
-                            android:textColor="#B3FFFFFF"
-                            android:textSize="13sp"
-                            android:visibility="gone" />
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <!-- ── Assets Portfolio ───────────────────────────────── -->
                 <LinearLayout
-                    android:id="@+id/assetsPortfolioSection"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:orientation="vertical"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/chartCard">
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="24dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="Assets Portfolio"
-                        android:textColor="@android:color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <!-- Stock Holdings card -->
+                    <!-- ══════════════════════════════════════════════════════ -->
+                    <!-- HERO CARD                                              -->
+                    <!-- ══════════════════════════════════════════════════════ -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        app:cardBackgroundColor="@color/card_dark_teal"
-                        app:cardCornerRadius="12dp"
+                        android:layout_marginBottom="14dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="8dp"
+                        app:cardBackgroundColor="@android:color/transparent">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:background="@drawable/bg_networth_card"
+                            android:padding="20dp">
+
+                            <!-- Label -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="CURRENT POSITION"
+                                android:textColor="#B3FFFFFF"
+                                android:textSize="11sp"
+                                android:letterSpacing="0.10"
+                                android:layout_marginBottom="6dp" />
+
+                            <!-- Net Worth Value -->
+                            <TextView
+                                android:id="@+id/tvNetWorthValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="--"
+                                android:textColor="#FFFFFF"
+                                android:textSize="34sp"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="10dp" />
+
+                            <!-- Badges row: day change + CAGR -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="16dp">
+
+                                <TextView
+                                    android:id="@+id/tvDayChangeBadge"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingStart="10dp"
+                                    android:paddingEnd="10dp"
+                                    android:paddingTop="4dp"
+                                    android:paddingBottom="4dp"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:background="@drawable/bg_trend_badge"
+                                    android:visibility="gone"
+                                    tools:text="+₹1,200 (1.2%)"
+                                    tools:visibility="visible" />
+
+                                <TextView
+                                    android:id="@+id/tvCagrBadge"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:paddingStart="10dp"
+                                    android:paddingEnd="10dp"
+                                    android:paddingTop="4dp"
+                                    android:paddingBottom="4dp"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    android:background="@drawable/bg_trend_badge"
+                                    android:visibility="gone"
+                                    tools:text="14.2% CAGR"
+                                    tools:visibility="visible" />
+                            </LinearLayout>
+
+                            <!-- Divider -->
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="#1AFFFFFF"
+                                android:layout_marginBottom="14dp" />
+
+                            <!-- Assets | Liabilities -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="ASSETS"
+                                        android:textColor="#80FFFFFF"
+                                        android:textSize="10sp"
+                                        android:letterSpacing="0.08"
+                                        android:layout_marginBottom="2dp" />
+
+                                    <TextView
+                                        android:id="@+id/tvTotalAssets"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="--"
+                                        android:textColor="#FFFFFF"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <!-- Vertical divider -->
+                                <View
+                                    android:layout_width="1dp"
+                                    android:layout_height="match_parent"
+                                    android:background="#33FFFFFF"
+                                    android:layout_marginEnd="16dp" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_marginStart="16dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="LIABILITIES"
+                                        android:textColor="#80FFFFFF"
+                                        android:textSize="10sp"
+                                        android:letterSpacing="0.08"
+                                        android:layout_marginBottom="2dp" />
+
+                                    <TextView
+                                        android:id="@+id/tvTotalLiabilities"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="--"
+                                        android:textColor="#FFFFFF"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- ══════════════════════════════════════════════════════ -->
+                    <!-- PROJECTION ROW (1Y / 3Y / 5Y)                        -->
+                    <!-- ══════════════════════════════════════════════════════ -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="14dp">
+
+                        <!-- 1Y -->
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="6dp"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="2dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:padding="12dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="1Y PROJECTION"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="9sp"
+                                    android:letterSpacing="0.05"
+                                    android:layout_marginBottom="4dp" />
+
+                                <TextView
+                                    android:id="@+id/tvProj1y"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="--"
+                                    android:textColor="@color/teal_800"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tvProj1yPct"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/income_green"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <!-- 3Y -->
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="6dp"
+                            android:layout_marginEnd="6dp"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="2dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:padding="12dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="3Y PROJECTION"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="9sp"
+                                    android:letterSpacing="0.05"
+                                    android:layout_marginBottom="4dp" />
+
+                                <TextView
+                                    android:id="@+id/tvProj3y"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="--"
+                                    android:textColor="@color/teal_800"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tvProj3yPct"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/income_green"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <!-- 5Y -->
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="6dp"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="2dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:gravity="center"
+                                android:padding="12dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="5Y PROJECTION"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="9sp"
+                                    android:letterSpacing="0.05"
+                                    android:layout_marginBottom="4dp" />
+
+                                <TextView
+                                    android:id="@+id/tvProj5y"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="--"
+                                    android:textColor="@color/teal_800"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tvProj5yPct"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/income_green"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                    </LinearLayout>
+
+                    <!-- ══════════════════════════════════════════════════════ -->
+                    <!-- PERFORMANCE CHART CARD                                -->
+                    <!-- ══════════════════════════════════════════════════════ -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="16dp"
                         app:cardElevation="2dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="14dp">
+                            android:padding="16dp">
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Performance"
+                                android:textColor="@color/text_dark"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:layout_marginBottom="12dp" />
+
+                            <!-- Period Chip Group -->
+                            <com.google.android.material.chip.ChipGroup
+                                android:id="@+id/chipGroupPeriod"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="12dp"
+                                app:singleSelection="true"
+                                app:selectionRequired="true">
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chip1M"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="1M"
+                                    android:checked="true" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chip3M"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="3M" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chip6M"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="6M" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chip1Y"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="1Y" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipAll"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="All" />
+
+                            </com.google.android.material.chip.ChipGroup>
+
+                            <!-- Loading indicator -->
+                            <ProgressBar
+                                android:id="@+id/chartProgressBar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="24dp"
+                                android:layout_marginBottom="24dp"
+                                android:visibility="gone" />
+
+                            <!-- Chart -->
+                            <com.github.mikephil.charting.charts.LineChart
+                                android:id="@+id/lineChart"
+                                android:layout_width="match_parent"
+                                android:layout_height="200dp"
+                                android:visibility="gone" />
+
+                            <!-- No data message -->
+                            <TextView
+                                android:id="@+id/tvNoData"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="24dp"
+                                android:layout_marginBottom="24dp"
+                                android:gravity="center"
+                                android:text="Keep using the app — your trend will appear after a few days"
+                                android:textColor="@color/text_muted"
+                                android:textSize="13sp"
+                                android:visibility="gone" />
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- ══════════════════════════════════════════════════════ -->
+                    <!-- PORTFOLIO COMPOSITION HEADER                          -->
+                    <!-- ══════════════════════════════════════════════════════ -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Portfolio Composition"
+                        android:textColor="@color/text_dark"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- ══════════════════════════════════════════════════════ -->
+                    <!-- STOCK HOLDINGS CARD                                   -->
+                    <!-- ══════════════════════════════════════════════════════ -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <!-- Header row -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:orientation="horizontal"
                                 android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:layout_marginBottom="12dp">
 
-                                <ImageView
-                                    android:layout_width="36dp"
-                                    android:layout_height="36dp"
-                                    android:padding="6dp"
-                                    android:src="@drawable/ic_asset_stocks"
-                                    android:background="@color/card_medium_teal"
-                                    android:contentDescription="Stocks" />
-
+                                <!-- Icon container -->
                                 <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="10dp"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical">
+                                    android:layout_width="48dp"
+                                    android:layout_height="48dp"
+                                    android:gravity="center"
+                                    android:background="@drawable/bg_portfolio_icon"
+                                    android:backgroundTint="#E0F2F1">
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Stock Holdings"
-                                        android:textColor="@android:color/white"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Direct Equities &amp; ETFs"
-                                        android:textColor="#B3FFFFFF"
-                                        android:textSize="11sp" />
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:src="@drawable/ic_asset_stocks"
+                                        android:tint="@color/teal_800"
+                                        android:contentDescription="Stocks" />
                                 </LinearLayout>
 
-                                <!-- Loading / Value area -->
-                                <ProgressBar
-                                    android:id="@+id/stocksLoadingBar"
-                                    style="?android:attr/progressBarStyleSmall"
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:indeterminateTint="@android:color/white"
-                                    android:visibility="visible" />
-
+                                <!-- Label + value -->
                                 <LinearLayout
-                                    android:id="@+id/stocksValueContainer"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
                                     android:layout_height="wrap_content"
-                                    android:gravity="end"
                                     android:orientation="vertical"
-                                    android:visibility="gone">
+                                    android:layout_marginStart="12dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="STOCK HOLDINGS"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="10sp"
+                                        android:letterSpacing="0.06"
+                                        android:layout_marginBottom="2dp" />
 
                                     <TextView
                                         android:id="@+id/tvStocksValue"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@android:color/white"
-                                        android:textSize="14sp"
+                                        android:text="--"
+                                        android:textColor="@color/text_dark"
+                                        android:textSize="20sp"
                                         android:textStyle="bold" />
+                                </LinearLayout>
 
-                                    <TextView
-                                        android:id="@+id/tvStocksPnl"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="11sp" />
+                                <!-- Loading bar -->
+                                <ProgressBar
+                                    android:id="@+id/stocksLoadingBar"
+                                    style="?android:attr/progressBarStyleSmall"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:visibility="visible" />
+
+                                <!-- Change badge -->
+                                <TextView
+                                    android:id="@+id/tvStocksChangeBadge"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingStart="8dp"
+                                    android:paddingEnd="8dp"
+                                    android:paddingTop="4dp"
+                                    android:paddingBottom="4dp"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold"
+                                    android:background="@drawable/bg_stock_badge"
+                                    android:visibility="gone"
+                                    tools:text="+1.2%"
+                                    tools:visibility="visible" />
+                            </LinearLayout>
+
+                            <!-- Divider -->
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/gray_200"
+                                android:layout_marginBottom="10dp" />
+
+                            <!-- CAGR projections (GONE until loaded) -->
+                            <LinearLayout
+                                android:id="@+id/stocksCagrSection"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+                                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1Y" android:textColor="@color/text_muted" android:textSize="9sp" android:letterSpacing="0.05" />
+                                    <TextView android:id="@+id/tvStocksCagr1y" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/teal_800" android:textSize="11sp" android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+                                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3Y" android:textColor="@color/text_muted" android:textSize="9sp" android:letterSpacing="0.05" />
+                                    <TextView android:id="@+id/tvStocksCagr3y" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/teal_800" android:textSize="11sp" android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+                                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="5Y" android:textColor="@color/text_muted" android:textSize="9sp" android:letterSpacing="0.05" />
+                                    <TextView android:id="@+id/tvStocksCagr5y" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/teal_800" android:textSize="11sp" android:textStyle="bold" />
                                 </LinearLayout>
                             </LinearLayout>
+
+                            <!-- Divider below CAGR (only when CAGR is shown) -->
+                            <View
+                                android:id="@+id/dividerStocksCagr"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/gray_200"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginBottom="8dp"
+                                android:visibility="gone" />
+
+                            <!-- Footer: count + arrow (GONE until loaded) -->
+                            <LinearLayout
+                                android:id="@+id/stocksValueContainer"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:id="@+id/tvStocksPnl"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="12sp" />
+
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:src="@drawable/ic_back"
+                                    android:rotation="180"
+                                    android:tint="@color/text_muted"
+                                    android:contentDescription="View details" />
+                            </LinearLayout>
+
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
-                    <!-- Gold & Bullion card -->
+                    <!-- ══════════════════════════════════════════════════════ -->
+                    <!-- GOLD & BULLION CARD                                   -->
+                    <!-- ══════════════════════════════════════════════════════ -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        app:cardBackgroundColor="@color/card_dark_teal"
-                        app:cardCornerRadius="12dp"
+                        android:layout_marginBottom="12dp"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="16dp"
                         app:cardElevation="2dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="14dp">
+                            android:padding="16dp">
 
+                            <!-- Header row -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:orientation="horizontal"
                                 android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:layout_marginBottom="12dp">
 
-                                <ImageView
-                                    android:layout_width="36dp"
-                                    android:layout_height="36dp"
-                                    android:padding="6dp"
-                                    android:src="@drawable/ic_asset_gold"
-                                    android:background="@color/card_medium_teal"
-                                    android:contentDescription="Gold" />
+                                <LinearLayout
+                                    android:layout_width="48dp"
+                                    android:layout_height="48dp"
+                                    android:gravity="center"
+                                    android:background="@drawable/bg_portfolio_icon"
+                                    android:backgroundTint="#FFF3E0">
+
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:src="@drawable/ic_asset_gold"
+                                        android:tint="#E65100"
+                                        android:contentDescription="Gold" />
+                                </LinearLayout>
 
                                 <LinearLayout
                                     android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="10dp"
                                     android:layout_weight="1"
-                                    android:orientation="vertical">
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_marginStart="12dp">
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Gold &amp; Bullion"
-                                        android:textColor="@android:color/white"
-                                        android:textSize="14sp"
+                                        android:text="GOLD &amp; BULLION"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="10sp"
+                                        android:letterSpacing="0.06"
+                                        android:layout_marginBottom="2dp" />
+
+                                    <TextView
+                                        android:id="@+id/tvMetalsValue"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="--"
+                                        android:textColor="@color/text_dark"
+                                        android:textSize="20sp"
                                         android:textStyle="bold" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Digital &amp; Physical"
-                                        android:textColor="#B3FFFFFF"
-                                        android:textSize="11sp" />
                                 </LinearLayout>
 
                                 <ProgressBar
@@ -471,134 +749,172 @@
                                     style="?android:attr/progressBarStyleSmall"
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
-                                    android:indeterminateTint="@android:color/white"
                                     android:visibility="visible" />
 
-                                <LinearLayout
-                                    android:id="@+id/metalsValueContainer"
+                                <TextView
+                                    android:id="@+id/tvMetalsChangeBadge"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:gravity="end"
-                                    android:orientation="vertical"
-                                    android:visibility="gone">
-
-                                    <TextView
-                                        android:id="@+id/tvMetalsValue"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="@android:color/white"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
-
-                                    <TextView
-                                        android:id="@+id/tvMetalsDayPnl"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="11sp" />
-                                </LinearLayout>
+                                    android:paddingStart="8dp"
+                                    android:paddingEnd="8dp"
+                                    android:paddingTop="4dp"
+                                    android:paddingBottom="4dp"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold"
+                                    android:background="@drawable/bg_gold_badge"
+                                    android:visibility="gone"
+                                    tools:text="+2.5%" />
                             </LinearLayout>
 
-                            <!-- Metals CAGR projections (hidden until loaded) -->
+                            <!-- Divider -->
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/gray_200"
+                                android:layout_marginBottom="10dp" />
+
+                            <!-- CAGR projections -->
                             <LinearLayout
                                 android:id="@+id/metalsCagrSection"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+                                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1Y" android:textColor="@color/text_muted" android:textSize="9sp" android:letterSpacing="0.05" />
+                                    <TextView android:id="@+id/tvMetalsCagr1y" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/teal_800" android:textSize="11sp" android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+                                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3Y" android:textColor="@color/text_muted" android:textSize="9sp" android:letterSpacing="0.05" />
+                                    <TextView android:id="@+id/tvMetalsCagr3y" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/teal_800" android:textSize="11sp" android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+                                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="5Y" android:textColor="@color/text_muted" android:textSize="9sp" android:letterSpacing="0.05" />
+                                    <TextView android:id="@+id/tvMetalsCagr5y" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/teal_800" android:textSize="11sp" android:textStyle="bold" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <View
+                                android:id="@+id/dividerMetalsCagr"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/gray_200"
                                 android:layout_marginTop="10dp"
-                                android:orientation="vertical"
+                                android:layout_marginBottom="8dp"
+                                android:visibility="gone" />
+
+                            <!-- Footer (GONE until loaded) -->
+                            <LinearLayout
+                                android:id="@+id/metalsValueContainer"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
                                 android:visibility="gone">
 
                                 <TextView
-                                    android:layout_width="wrap_content"
+                                    android:id="@+id/tvMetalsDayPnl"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
                                     android:layout_height="wrap_content"
-                                    android:text="CAGR PROJECTIONS"
-                                    android:textColor="#80FFFFFF"
-                                    android:textSize="10sp"
-                                    android:letterSpacing="0.08"
-                                    android:layout_marginBottom="4dp" />
+                                    android:text="Digital &amp; Physical"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="12sp" />
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:id="@+id/tvMetalsCagr1y"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:textColor="#B3FFFFFF"
-                                        android:textSize="11sp" />
-
-                                    <TextView
-                                        android:id="@+id/tvMetalsCagr3y"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:textColor="#B3FFFFFF"
-                                        android:textSize="11sp" />
-
-                                    <TextView
-                                        android:id="@+id/tvMetalsCagr5y"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:textColor="#B3FFFFFF"
-                                        android:textSize="11sp" />
-                                </LinearLayout>
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:src="@drawable/ic_back"
+                                    android:rotation="180"
+                                    android:tint="@color/text_muted"
+                                    android:contentDescription="View details" />
                             </LinearLayout>
+
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
-                    <!-- Mutual Funds card -->
+                    <!-- ══════════════════════════════════════════════════════ -->
+                    <!-- MUTUAL FUNDS CARD                                     -->
+                    <!-- ══════════════════════════════════════════════════════ -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        app:cardBackgroundColor="@color/card_dark_teal"
-                        app:cardCornerRadius="12dp"
+                        android:layout_marginBottom="12dp"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="16dp"
                         app:cardElevation="2dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="14dp">
+                            android:padding="16dp">
 
+                            <!-- Header row -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:orientation="horizontal"
                                 android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:layout_marginBottom="12dp">
 
-                                <ImageView
-                                    android:layout_width="36dp"
-                                    android:layout_height="36dp"
-                                    android:padding="6dp"
-                                    android:src="@drawable/ic_asset_mf"
-                                    android:background="@color/card_medium_teal"
-                                    android:contentDescription="Mutual Funds" />
+                                <LinearLayout
+                                    android:layout_width="48dp"
+                                    android:layout_height="48dp"
+                                    android:gravity="center"
+                                    android:background="@drawable/bg_portfolio_icon"
+                                    android:backgroundTint="#E8F5E9">
+
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:src="@drawable/ic_asset_mf"
+                                        android:tint="#2E7D32"
+                                        android:contentDescription="Mutual Funds" />
+                                </LinearLayout>
 
                                 <LinearLayout
                                     android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="10dp"
                                     android:layout_weight="1"
-                                    android:orientation="vertical">
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_marginStart="12dp">
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Mutual Funds"
-                                        android:textColor="@android:color/white"
-                                        android:textSize="14sp"
+                                        android:text="MUTUAL FUNDS"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="10sp"
+                                        android:letterSpacing="0.06"
+                                        android:layout_marginBottom="2dp" />
+
+                                    <TextView
+                                        android:id="@+id/tvMfValue"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="--"
+                                        android:textColor="@color/text_dark"
+                                        android:textSize="20sp"
                                         android:textStyle="bold" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="SIP &amp; Lump-sum"
-                                        android:textColor="#B3FFFFFF"
-                                        android:textSize="11sp" />
                                 </LinearLayout>
 
                                 <ProgressBar
@@ -606,134 +922,171 @@
                                     style="?android:attr/progressBarStyleSmall"
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
-                                    android:indeterminateTint="@android:color/white"
                                     android:visibility="visible" />
 
-                                <LinearLayout
-                                    android:id="@+id/mfValueContainer"
+                                <TextView
+                                    android:id="@+id/tvMfChangeBadge"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:gravity="end"
-                                    android:orientation="vertical"
-                                    android:visibility="gone">
-
-                                    <TextView
-                                        android:id="@+id/tvMfValue"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="@android:color/white"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
-
-                                    <TextView
-                                        android:id="@+id/tvMfDayPnl"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="11sp" />
-                                </LinearLayout>
+                                    android:paddingStart="8dp"
+                                    android:paddingEnd="8dp"
+                                    android:paddingTop="4dp"
+                                    android:paddingBottom="4dp"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold"
+                                    android:background="@drawable/bg_mf_badge"
+                                    android:visibility="gone"
+                                    tools:text="+1.8%" />
                             </LinearLayout>
 
-                            <!-- MF CAGR projections -->
+                            <!-- Divider -->
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/gray_200"
+                                android:layout_marginBottom="10dp" />
+
+                            <!-- CAGR projections -->
                             <LinearLayout
                                 android:id="@+id/mfCagrSection"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+                                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1Y" android:textColor="@color/text_muted" android:textSize="9sp" android:letterSpacing="0.05" />
+                                    <TextView android:id="@+id/tvMfCagr1y" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/teal_800" android:textSize="11sp" android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+                                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3Y" android:textColor="@color/text_muted" android:textSize="9sp" android:letterSpacing="0.05" />
+                                    <TextView android:id="@+id/tvMfCagr3y" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/teal_800" android:textSize="11sp" android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal">
+                                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="5Y" android:textColor="@color/text_muted" android:textSize="9sp" android:letterSpacing="0.05" />
+                                    <TextView android:id="@+id/tvMfCagr5y" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/teal_800" android:textSize="11sp" android:textStyle="bold" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <View
+                                android:id="@+id/dividerMfCagr"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/gray_200"
                                 android:layout_marginTop="10dp"
-                                android:orientation="vertical"
+                                android:layout_marginBottom="8dp"
+                                android:visibility="gone" />
+
+                            <!-- Footer (GONE until loaded) -->
+                            <LinearLayout
+                                android:id="@+id/mfValueContainer"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
                                 android:visibility="gone">
 
                                 <TextView
-                                    android:layout_width="wrap_content"
+                                    android:id="@+id/tvMfDayPnl"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
                                     android:layout_height="wrap_content"
-                                    android:text="CAGR PROJECTIONS"
-                                    android:textColor="#80FFFFFF"
-                                    android:textSize="10sp"
-                                    android:letterSpacing="0.08"
-                                    android:layout_marginBottom="4dp" />
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="12sp" />
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:id="@+id/tvMfCagr1y"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:textColor="#B3FFFFFF"
-                                        android:textSize="11sp" />
-
-                                    <TextView
-                                        android:id="@+id/tvMfCagr3y"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:textColor="#B3FFFFFF"
-                                        android:textSize="11sp" />
-
-                                    <TextView
-                                        android:id="@+id/tvMfCagr5y"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:textColor="#B3FFFFFF"
-                                        android:textSize="11sp" />
-                                </LinearLayout>
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:src="@drawable/ic_back"
+                                    android:rotation="180"
+                                    android:tint="@color/text_muted"
+                                    android:contentDescription="View details" />
                             </LinearLayout>
+
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
-                    <!-- Other Assets card -->
+                    <!-- ══════════════════════════════════════════════════════ -->
+                    <!-- OTHER ASSETS CARD                                     -->
+                    <!-- ══════════════════════════════════════════════════════ -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        app:cardBackgroundColor="@color/card_dark_teal"
-                        app:cardCornerRadius="12dp"
+                        android:layout_marginBottom="12dp"
+                        app:cardBackgroundColor="@color/white"
+                        app:cardCornerRadius="16dp"
                         app:cardElevation="2dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="14dp">
+                            android:padding="16dp">
 
+                            <!-- Header row -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:orientation="horizontal"
                                 android:gravity="center_vertical"
-                                android:orientation="horizontal">
+                                android:layout_marginBottom="12dp">
 
-                                <ImageView
-                                    android:layout_width="36dp"
-                                    android:layout_height="36dp"
-                                    android:padding="6dp"
-                                    android:src="@drawable/ic_asset_other"
-                                    android:background="@color/card_medium_teal"
-                                    android:contentDescription="Other Assets" />
+                                <LinearLayout
+                                    android:layout_width="48dp"
+                                    android:layout_height="48dp"
+                                    android:gravity="center"
+                                    android:background="@drawable/bg_portfolio_icon"
+                                    android:backgroundTint="#F3E5F5">
+
+                                    <ImageView
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:src="@drawable/ic_asset_other"
+                                        android:tint="#6A1B9A"
+                                        android:contentDescription="Other Assets" />
+                                </LinearLayout>
 
                                 <LinearLayout
                                     android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="10dp"
                                     android:layout_weight="1"
-                                    android:orientation="vertical">
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_marginStart="12dp">
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Other Assets"
-                                        android:textColor="@android:color/white"
-                                        android:textSize="14sp"
+                                        android:text="OTHER ASSETS"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="10sp"
+                                        android:letterSpacing="0.06"
+                                        android:layout_marginBottom="2dp" />
+
+                                    <TextView
+                                        android:id="@+id/tvOtherValue"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="--"
+                                        android:textColor="@color/text_dark"
+                                        android:textSize="20sp"
                                         android:textStyle="bold" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Real Estate, Private Equity, etc."
-                                        android:textColor="#B3FFFFFF"
-                                        android:textSize="11sp" />
                                 </LinearLayout>
 
                                 <ProgressBar
@@ -741,71 +1094,62 @@
                                     style="?android:attr/progressBarStyleSmall"
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
-                                    android:indeterminateTint="@android:color/white"
                                     android:visibility="visible" />
-
-                                <LinearLayout
-                                    android:id="@+id/otherValueContainer"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="end"
-                                    android:orientation="vertical"
-                                    android:visibility="gone">
-
-                                    <TextView
-                                        android:id="@+id/tvOtherValue"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="@android:color/white"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold" />
-                                </LinearLayout>
                             </LinearLayout>
+
+                            <!-- Divider -->
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/gray_200"
+                                android:layout_marginBottom="8dp" />
+
+                            <!-- Footer (GONE until loaded) -->
+                            <LinearLayout
+                                android:id="@+id/otherValueContainer"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:id="@+id/tvOtherCount"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/text_muted"
+                                    android:textSize="12sp" />
+
+                                <ImageView
+                                    android:layout_width="16dp"
+                                    android:layout_height="16dp"
+                                    android:src="@drawable/ic_back"
+                                    android:rotation="180"
+                                    android:tint="@color/text_muted"
+                                    android:contentDescription="View details" />
+                            </LinearLayout>
+
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
-                </LinearLayout>
-
-                <!-- ── Footer: Last Updated + Refresh ─────────────────── -->
-                <LinearLayout
-                    android:id="@+id/footerRow"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingStart="4dp"
-                    android:paddingEnd="4dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/assetsPortfolioSection">
-
+                    <!-- ══════════════════════════════════════════════════════ -->
+                    <!-- FOOTER: Last Updated                                  -->
+                    <!-- ══════════════════════════════════════════════════════ -->
                     <TextView
                         android:id="@+id/tvLastUpdated"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
                         android:text="Last updated: --"
-                        android:textColor="#80FFFFFF"
-                        android:textSize="12sp" />
-
-                    <ImageView
-                        android:id="@+id/ivRefresh"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:padding="8dp"
-                        android:src="@drawable/ic_refresh"
-                        android:contentDescription="Refresh"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:tint="#80FFFFFF" />
+                        android:textColor="@color/text_muted"
+                        android:textSize="11sp" />
 
                 </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <include
             layout="@layout/layout_bottom_nav"
@@ -814,9 +1158,8 @@
 
     </LinearLayout>
 
-    <!-- Navigation Drawer -->
-
-<com.google.android.material.navigation.NavigationView
+    <!-- ── Navigation Drawer ────────────────────────────────────────────────── -->
+    <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
         android:layout_width="280dp"
         android:layout_height="match_parent"
