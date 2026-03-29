@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -12,9 +13,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.ChangeBounds
+import androidx.transition.Fade
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
 import com.example.personalwealthmanager.R
 import com.example.personalwealthmanager.domain.model.StockHolding
 import com.example.personalwealthmanager.domain.model.StocksPortfolioSummary
@@ -24,7 +30,6 @@ import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.abs
-import kotlin.math.pow
 
 @AndroidEntryPoint
 class StocksActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
@@ -58,6 +63,8 @@ class StocksActivity : com.example.personalwealthmanager.presentation.base.BaseD
     private lateinit var sparkline5y: SparklineView
 
     // Collapsible section views
+    private lateinit var cardSecondaryStatsInner: LinearLayout
+    private lateinit var cardProjectionsInner: LinearLayout
     private lateinit var headerSecondaryStats: LinearLayout
     private lateinit var contentSecondaryStats: LinearLayout
     private lateinit var ivExpandSecondary: ImageView
@@ -65,6 +72,16 @@ class StocksActivity : com.example.personalwealthmanager.presentation.base.BaseD
     private lateinit var contentProjections: LinearLayout
     private lateinit var ivExpandProjections: ImageView
     private lateinit var tvHoldingsTitle: TextView
+
+    private val expandTransition by lazy {
+        TransitionSet().apply {
+            addTransition(ChangeBounds())
+            addTransition(Fade())
+            ordering = TransitionSet.ORDERING_TOGETHER
+            duration = 280
+            interpolator = DecelerateInterpolator()
+        }
+    }
 
     private val currencyFormat = NumberFormat.getNumberInstance(Locale("en", "IN")).apply {
         minimumFractionDigits = 2
@@ -138,25 +155,31 @@ class StocksActivity : com.example.personalwealthmanager.presentation.base.BaseD
         sparkline1y       = findViewById(R.id.sparkline1y)
         sparkline3y       = findViewById(R.id.sparkline3y)
         sparkline5y       = findViewById(R.id.sparkline5y)
-        headerSecondaryStats  = findViewById(R.id.headerSecondaryStats)
-        contentSecondaryStats = findViewById(R.id.contentSecondaryStats)
-        ivExpandSecondary     = findViewById(R.id.ivExpandSecondary)
-        headerProjections     = findViewById(R.id.headerProjections)
-        contentProjections    = findViewById(R.id.contentProjections)
-        ivExpandProjections   = findViewById(R.id.ivExpandProjections)
-        tvHoldingsTitle       = findViewById(R.id.tvHoldingsTitle)
+        cardSecondaryStatsInner = findViewById(R.id.cardSecondaryStatsInner)
+        cardProjectionsInner    = findViewById(R.id.cardProjectionsInner)
+        headerSecondaryStats    = findViewById(R.id.headerSecondaryStats)
+        contentSecondaryStats   = findViewById(R.id.contentSecondaryStats)
+        ivExpandSecondary       = findViewById(R.id.ivExpandSecondary)
+        headerProjections       = findViewById(R.id.headerProjections)
+        contentProjections      = findViewById(R.id.contentProjections)
+        ivExpandProjections     = findViewById(R.id.ivExpandProjections)
+        tvHoldingsTitle         = findViewById(R.id.tvHoldingsTitle)
     }
 
     private fun setupCollapsibleSections() {
         headerSecondaryStats.setOnClickListener {
-            val visible = contentSecondaryStats.visibility == View.VISIBLE
-            contentSecondaryStats.visibility = if (visible) View.GONE else View.VISIBLE
-            ivExpandSecondary.rotation = if (visible) 0f else 180f
+            val opening = contentSecondaryStats.visibility != View.VISIBLE
+            TransitionManager.beginDelayedTransition(cardSecondaryStatsInner, expandTransition)
+            contentSecondaryStats.visibility = if (opening) View.VISIBLE else View.GONE
+            ivExpandSecondary.animate().rotation(if (opening) 180f else 0f).setDuration(280)
+                .setInterpolator(DecelerateInterpolator()).start()
         }
         headerProjections.setOnClickListener {
-            val visible = contentProjections.visibility == View.VISIBLE
-            contentProjections.visibility = if (visible) View.GONE else View.VISIBLE
-            ivExpandProjections.rotation = if (visible) 0f else 180f
+            val opening = contentProjections.visibility != View.VISIBLE
+            TransitionManager.beginDelayedTransition(cardProjectionsInner, expandTransition)
+            contentProjections.visibility = if (opening) View.VISIBLE else View.GONE
+            ivExpandProjections.animate().rotation(if (opening) 180f else 0f).setDuration(280)
+                .setInterpolator(DecelerateInterpolator()).start()
         }
     }
 
@@ -264,8 +287,12 @@ class StocksActivity : com.example.personalwealthmanager.presentation.base.BaseD
 
     private fun showLoading() {
         progressBar.visibility = View.VISIBLE
-        rvHoldings.visibility = View.GONE
-        tvEmptyState.visibility = View.GONE
+        // If holdings are already displayed, keep them visible during refresh
+        // so the user doesn't see a blank screen on every sync.
+        if (adapter.itemCount == 0) {
+            rvHoldings.visibility = View.GONE
+            tvEmptyState.visibility = View.GONE
+        }
     }
 
     private fun hideLoading() {
