@@ -103,7 +103,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="GROWTH RATE ASSUMPTIONS (%)"
+                            android:text="GROWTH RATE CAGR"
                             android:textColor="@color/teal_800"
                             android:textSize="14sp"
                             android:textStyle="bold"
@@ -420,7 +420,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Valuation Breakdown"
-                            android:textColor="@color/text_dark"
+                            android:textColor="@color/teal_800"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
