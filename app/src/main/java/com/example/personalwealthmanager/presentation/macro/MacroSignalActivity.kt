@@ -268,132 +268,131 @@ class MacroSignalActivity : BaseDrawerActivity() {
             binding.tvWrong.text     = "—"
         }
 
-        // Rows come from backtest endpoint; fall back to history if backtest unavailable
-        val rows = backtest?.rows
-        val rowCount = rows?.size ?: history.size
+        // Rows from /api/macro/backtest; history used for supplemental fields (isFinal, predictedReturnPct)
+        val rows = backtest?.rows ?: emptyList()
+        val historyByMonth = history.associateBy { it.month }
+
+        val rowCount = if (rows.isNotEmpty()) rows.size else history.size
         binding.tvBacktestTitle.text = "Was the model right? — $rowCount months"
 
-        val displayHistory = if (rows != null) {
-            rows.map { bt ->
-                val matched = history.firstOrNull { it.month == bt.month }
-                bt to matched
-            }
-        } else {
-            history.map { it to null }
-        }
-
         // Footer
-        val footerItems = rows?.map { it.month } ?: history.map { it.month }
-        if (footerItems.isNotEmpty()) {
-            val oldest = footerItems.lastOrNull()?.let { formatMonthShort(it) } ?: ""
-            val newest = footerItems.firstOrNull()?.let { formatMonthShort(it) } ?: ""
+        val footerMonths = if (rows.isNotEmpty()) rows.map { it.month } else history.map { it.month }
+        if (footerMonths.isNotEmpty()) {
+            val oldest = footerMonths.lastOrNull()?.let { formatMonthShort(it) } ?: ""
+            val newest = footerMonths.firstOrNull()?.let { formatMonthShort(it) } ?: ""
             binding.tvBacktestFooter.text = "$oldest – $newest · not a trading signal"
         }
 
         // Monthly rows
         binding.backtestContainer.removeAllViews()
-        if (displayHistory.isEmpty()) {
+        if (rows.isEmpty() && history.isEmpty()) {
             binding.backtestContainer.addView(makeTextView("No history available yet.", Color.GRAY, 13f))
             return
         }
 
-        val allReturns = displayHistory.mapNotNull { (bt, hist) ->
-            bt.actualRet1m ?: hist?.actualRet1m ?: hist?.predictedReturnPct
+        if (rows.isNotEmpty()) {
+            // Primary path: use backtest rows (62 months)
+            val maxRetAbs = rows.mapNotNull { it.actualRet1m }.maxOfOrNull { abs(it) }?.toFloat() ?: 5f
+            rows.forEach { bt ->
+                val histItem  = historyByMonth[bt.month]
+                val isLive    = bt.actualRet1m == null && histItem?.isFinal != true
+                val retValue  = bt.actualRet1m ?: (if (histItem?.isFinal == true) histItem.predictedReturnPct else null)
+                val scoreVal  = if (histItem?.isFinal == true && histItem.finalScore != null) histItem.finalScore else bt.score
+                addBacktestRow(bt.month, scoreVal, retValue, bt.correct, isLive, maxRetAbs)
+            }
+        } else {
+            // Fallback: history only (no backtest data)
+            val maxRetAbs = history.mapNotNull { it.actualRet1m ?: it.predictedReturnPct }.maxOfOrNull { abs(it) }?.toFloat() ?: 5f
+            history.forEach { item ->
+                val isLive   = item.actualRet1m == null && item.isFinal != true
+                val retValue = item.actualRet1m ?: (if (item.isFinal == true) item.predictedReturnPct else null)
+                addBacktestRow(item.month, item.totalScore, retValue, item.isCorrect, isLive, maxRetAbs)
+            }
         }
-        val maxRetAbs = allReturns.maxOfOrNull { abs(it) }?.toFloat() ?: 5f
+    }
 
-        displayHistory.forEach { (bt, histItem) ->
-            val actualRet = bt.actualRet1m ?: histItem?.actualRet1m
-            val isLive    = actualRet == null && histItem?.isFinal != true
-            val retValue  = actualRet ?: (if (histItem?.isFinal == true) histItem.predictedReturnPct else null)
-            val scoreVal  = if (histItem?.isFinal == true && histItem.finalScore != null)
-                histItem.finalScore else bt.score
-            val isCorrect = bt.correct
-
-            val row = LinearLayout(this).apply {
-                orientation = LinearLayout.HORIZONTAL
-                gravity     = Gravity.CENTER_VERTICAL
-                setPadding(0, 5, 0, 5)
-            }
-
-            // Month (44dp)
-            row.addView(makeTextView(formatMonthShort(bt.month), Color.parseColor("#616161"), 11f).apply {
-                layoutParams = LinearLayout.LayoutParams(dp(44), LinearLayout.LayoutParams.WRAP_CONTENT)
-            })
-
-            // Score (28dp)
-            row.addView(makeTextView(formatScore(scoreVal), scoreColor(scoreVal), 10f, bold = true).apply {
-                layoutParams = LinearLayout.LayoutParams(dp(28), LinearLayout.LayoutParams.WRAP_CONTENT).apply { gravity = Gravity.CENTER }
-                gravity = Gravity.CENTER
-            })
-
-            // Return bar (flex)
-            val barFrame = FrameLayout(this).apply {
-                layoutParams = LinearLayout.LayoutParams(0, dp(12), 1f).apply {
-                    marginStart = dp(4); marginEnd = dp(4)
-                }
-                setBackgroundColor(Color.parseColor("#F0F0F0"))
-            }
-            if (retValue != null) {
-                val barPct   = min(abs(retValue.toFloat()) / maxRetAbs, 1f)
-                val barColor = if (retValue >= 0) BULL else BEAR
-                val barView  = View(this).apply {
-                    setBackgroundColor(barColor)
-                }
-                barFrame.post {
-                    val halfW  = (barFrame.width / 2f).toInt()
-                    val barW   = (halfW * barPct).toInt().coerceAtLeast(2)
-                    val params = FrameLayout.LayoutParams(barW, FrameLayout.LayoutParams.MATCH_PARENT)
-                    if (retValue >= 0) params.leftMargin  = halfW
-                    else               params.leftMargin  = halfW - barW
-                    barView.layoutParams = params
-                }
-                barFrame.addView(barView)
-            }
-            row.addView(barFrame)
-
-            // Actual return (50dp)
-            val retText  = when {
-                isLive   -> "in progress"
-                retValue != null -> "${if (retValue >= 0) "+" else ""}${"%.1f".format(retValue)}%"
-                else     -> "—"
-            }
-            val retColor = when {
-                isLive   -> Color.GRAY
-                retValue != null && retValue >= 0 -> BULL
-                retValue != null -> BEAR
-                else     -> Color.GRAY
-            }
-            row.addView(makeTextView(retText, retColor, 10f).apply {
-                layoutParams = LinearLayout.LayoutParams(dp(50), LinearLayout.LayoutParams.WRAP_CONTENT)
-                gravity = Gravity.END
-            })
-
-            // ✓/✗ (16dp)
-            val tick      = when {
-                isLive            -> "·"
-                isCorrect == true  -> "✓"
-                isCorrect == false -> "✗"
-                else              -> "·"
-            }
-            val tickColor = when {
-                isCorrect == true  -> BULL
-                isCorrect == false -> BEAR
-                else -> Color.GRAY
-            }
-            row.addView(makeTextView(tick, tickColor, 11f).apply {
-                layoutParams = LinearLayout.LayoutParams(dp(16), LinearLayout.LayoutParams.WRAP_CONTENT)
-                gravity = Gravity.CENTER
-            })
-
-            binding.backtestContainer.addView(row)
-
-            // Thin divider
-            binding.backtestContainer.addView(View(this).apply {
-                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1)
-                setBackgroundColor(Color.parseColor("#F0F0F0"))
-            })
+    private fun addBacktestRow(
+        month: String, score: Int, retValue: Double?,
+        isCorrect: Boolean?, isLive: Boolean, maxRetAbs: Float
+    ) {
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity     = Gravity.CENTER_VERTICAL
+            setPadding(0, 5, 0, 5)
         }
+
+        // Month (44dp)
+        row.addView(makeTextView(formatMonthShort(month), Color.parseColor("#616161"), 11f).apply {
+            layoutParams = LinearLayout.LayoutParams(dp(44), LinearLayout.LayoutParams.WRAP_CONTENT)
+        })
+
+        // Score (28dp)
+        row.addView(makeTextView(formatScore(score), scoreColor(score), 10f, bold = true).apply {
+            layoutParams = LinearLayout.LayoutParams(dp(28), LinearLayout.LayoutParams.WRAP_CONTENT).apply { gravity = Gravity.CENTER }
+            gravity = Gravity.CENTER
+        })
+
+        // Return bar (flex)
+        val barFrame = FrameLayout(this).apply {
+            layoutParams = LinearLayout.LayoutParams(0, dp(12), 1f).apply {
+                marginStart = dp(4); marginEnd = dp(4)
+            }
+            setBackgroundColor(Color.parseColor("#F0F0F0"))
+        }
+        if (retValue != null) {
+            val barPct   = min(abs(retValue.toFloat()) / maxRetAbs, 1f)
+            val barColor = if (retValue >= 0) BULL else BEAR
+            val barView  = View(this).apply { setBackgroundColor(barColor) }
+            barFrame.post {
+                val halfW  = (barFrame.width / 2f).toInt()
+                val barW   = (halfW * barPct).toInt().coerceAtLeast(2)
+                val params = FrameLayout.LayoutParams(barW, FrameLayout.LayoutParams.MATCH_PARENT)
+                params.leftMargin = if (retValue >= 0) halfW else halfW - barW
+                barView.layoutParams = params
+            }
+            barFrame.addView(barView)
+        }
+        row.addView(barFrame)
+
+        // Actual return (50dp)
+        val retText  = when {
+            isLive              -> "in progress"
+            retValue != null    -> "${if (retValue >= 0) "+" else ""}${"%.1f".format(retValue)}%"
+            else                -> "—"
+        }
+        val retColor = when {
+            isLive                           -> Color.GRAY
+            retValue != null && retValue >= 0 -> BULL
+            retValue != null                 -> BEAR
+            else                             -> Color.GRAY
+        }
+        row.addView(makeTextView(retText, retColor, 10f).apply {
+            layoutParams = LinearLayout.LayoutParams(dp(50), LinearLayout.LayoutParams.WRAP_CONTENT)
+            gravity = Gravity.END
+        })
+
+        // ✓/✗ (16dp)
+        val tick      = when {
+            isLive              -> "·"
+            isCorrect == true   -> "✓"
+            isCorrect == false  -> "✗"
+            else                -> "·"
+        }
+        val tickColor = when {
+            isCorrect == true  -> BULL
+            isCorrect == false -> BEAR
+            else               -> Color.GRAY
+        }
+        row.addView(makeTextView(tick, tickColor, 11f).apply {
+            layoutParams = LinearLayout.LayoutParams(dp(16), LinearLayout.LayoutParams.WRAP_CONTENT)
+            gravity = Gravity.CENTER
+        })
+
+        binding.backtestContainer.addView(row)
+        binding.backtestContainer.addView(View(this).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1)
+            setBackgroundColor(Color.parseColor("#F0F0F0"))
+        })
     }
 
     // ── Chip helpers ──────────────────────────────────────────────────────────
