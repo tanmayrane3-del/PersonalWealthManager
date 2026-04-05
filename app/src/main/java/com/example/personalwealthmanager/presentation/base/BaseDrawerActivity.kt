@@ -32,6 +32,7 @@ import com.example.personalwealthmanager.presentation.settings.SettingsActivity
 import com.example.personalwealthmanager.presentation.sources.SourceManagementActivity
 import com.example.personalwealthmanager.presentation.stocks.StocksActivity
 import com.example.personalwealthmanager.presentation.transactions.TransactionsActivity
+import com.example.personalwealthmanager.presentation.macro.MacroSignalActivity
 import com.example.personalwealthmanager.presentation.zerodha.SetupZerodhaActivity
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
@@ -173,7 +174,8 @@ abstract class BaseDrawerActivity : AppCompatActivity() {
         nav(R.id.btnOtherAssets) { startActivity(Intent(this, OtherAssetsActivity::class.java)) }
 
         nav(R.id.btnLiabilities)    { startActivity(Intent(this, LiabilitiesActivity::class.java)) }
-        nav(R.id.btnConnectZerodha) { startActivity(Intent(this, SetupZerodhaActivity::class.java)) }
+        nav(R.id.btnConnectZerodha)  { startActivity(Intent(this, SetupZerodhaActivity::class.java)) }
+        nav(R.id.btnMarketSignal)   { startActivity(Intent(this, MacroSignalActivity::class.java)) }
         nav(R.id.btnSettings)       { startActivity(Intent(this, SettingsActivity::class.java)) }
 
         headerView.findViewById<View>(R.id.btnLogout)?.setOnClickListener { logout() }

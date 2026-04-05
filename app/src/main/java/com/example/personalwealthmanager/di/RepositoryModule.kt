@@ -1,6 +1,7 @@
 package com.example.personalwealthmanager.di
 
 import com.example.personalwealthmanager.data.repository.AuthRepositoryImpl
+import com.example.personalwealthmanager.data.repository.MacroRepositoryImpl
 import com.example.personalwealthmanager.data.repository.CategoryRepositoryImpl
 import com.example.personalwealthmanager.data.repository.HoldingsRepositoryImpl
 import com.example.personalwealthmanager.data.repository.MetalsRepositoryImpl
@@ -13,6 +14,7 @@ import com.example.personalwealthmanager.data.repository.SourceRepositoryImpl
 import com.example.personalwealthmanager.data.repository.TransactionRepositoryImpl
 import com.example.personalwealthmanager.data.repository.ZerodhaRepositoryImpl
 import com.example.personalwealthmanager.domain.repository.AuthRepository
+import com.example.personalwealthmanager.domain.repository.MacroRepository
 import com.example.personalwealthmanager.domain.repository.CategoryRepository
 import com.example.personalwealthmanager.domain.repository.HoldingsRepository
 import com.example.personalwealthmanager.domain.repository.MetalsRepository
@@ -105,4 +107,10 @@ abstract class RepositoryModule {
     abstract fun bindNetWorthRepository(
         netWorthRepositoryImpl: NetWorthRepositoryImpl
     ): NetWorthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindMacroRepository(
+        macroRepositoryImpl: MacroRepositoryImpl
+    ): MacroRepository
 }

@@ -326,6 +326,21 @@
                     android:text="@string/connect_zerodha" />
             </LinearLayout>
 
+            <!-- Market Signal -->
+            <LinearLayout
+                android:id="@+id/btnMarketSignal"
+                style="@style/DrawerNavRow"
+                android:layout_marginBottom="2dp">
+                <ImageView
+                    android:id="@+id/icMarketSignal"
+                    style="@style/DrawerNavIcon"
+                    android:src="@drawable/ic_drawer_bank"
+                    android:tint="@color/drawer_item_text" />
+                <TextView
+                    style="@style/DrawerNavLabel"
+                    android:text="Market Signal" />
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

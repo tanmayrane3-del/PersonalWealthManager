@@ -150,6 +150,12 @@
             android:theme="@style/Theme.PersonalWealthManager"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Macro Market Signal Activity -->
+        <activity
+            android:name=".presentation.macro.MacroSignalActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PersonalWealthManager" />
+
         <!-- Settings -->
         <activity
             android:name=".presentation.settings.SettingsActivity"
