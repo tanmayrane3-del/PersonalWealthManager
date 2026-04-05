@@ -65,6 +65,27 @@ data class MacroHistoryItemDto(
     @SerializedName("is_correct")           val isCorrect: Boolean?
 )
 
+data class MacroBacktestItemDto(
+    val month: String,
+    val score: Int,
+    @SerializedName("predicted_direction") val predictedDirection: String?,
+    @SerializedName("actual_ret_1m")       val actualRet1m: Double?,
+    val correct: Boolean?
+)
+
+data class MacroBacktestSummaryDto(
+    @SerializedName("total_months")  val totalMonths: Int,
+    @SerializedName("with_returns")  val withReturns: Int,
+    @SerializedName("correct_calls") val correctCalls: Int,
+    @SerializedName("wrong_calls")   val wrongCalls: Int,
+    @SerializedName("accuracy_pct")  val accuracyPct: Double?
+)
+
+data class MacroBacktestResponseDto(
+    val rows: List<MacroBacktestItemDto>,
+    val summary: MacroBacktestSummaryDto
+)
+
 data class MacroAccuracyDto(
     val score: Int,
     @SerializedName("accuracy_pct")  val accuracyPct: Double?,

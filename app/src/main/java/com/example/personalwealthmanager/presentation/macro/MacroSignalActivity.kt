@@ -3,6 +3,8 @@ package com.example.personalwealthmanager.presentation.macro
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
 import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
@@ -13,6 +15,7 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.personalwealthmanager.R
 import com.example.personalwealthmanager.data.remote.dto.MacroAccuracyDto
+import com.example.personalwealthmanager.data.remote.dto.MacroBacktestResponseDto
 import com.example.personalwealthmanager.data.remote.dto.MacroHistoryItemDto
 import com.example.personalwealthmanager.data.remote.dto.MacroSignalDto
 import com.example.personalwealthmanager.databinding.ActivityMacroSignalBinding
@@ -45,6 +48,7 @@ class MacroSignalActivity : BaseDrawerActivity() {
 
         binding.btnMenu.setOnClickListener { drawerLayout.openDrawer(GravityCompat.END) }
         binding.btnRetry.setOnClickListener { viewModel.load() }
+        binding.btnRefresh.setOnClickListener { viewModel.load() }
 
         setupDrawerMenu()
         setupBottomNav()
@@ -66,6 +70,7 @@ class MacroSignalActivity : BaseDrawerActivity() {
         binding.layoutLoading.visibility = View.VISIBLE
         binding.layoutError.visibility   = View.GONE
         binding.layoutContent.visibility = View.GONE
+        startRefreshSpin()
     }
 
     private fun showError(msg: String) {
@@ -73,12 +78,14 @@ class MacroSignalActivity : BaseDrawerActivity() {
         binding.layoutError.visibility   = View.VISIBLE
         binding.layoutContent.visibility = View.GONE
         binding.tvError.text = msg
+        stopRefreshSpin()
     }
 
     private fun renderSuccess(state: MacroUiState.Success) {
         binding.layoutLoading.visibility = View.GONE
         binding.layoutError.visibility   = View.GONE
         binding.layoutContent.visibility = View.VISIBLE
+        stopRefreshSpin()
 
         val s = state.signal
         if (s != null) {
@@ -87,7 +94,7 @@ class MacroSignalActivity : BaseDrawerActivity() {
             renderFactorTable(s)
             renderMacroGrid(s)
         }
-        renderBacktest(state.history, state.accuracy)
+        renderBacktest(state.backtest, state.history)
     }
 
     // ── Header ────────────────────────────────────────────────────────────────
@@ -245,42 +252,63 @@ class MacroSignalActivity : BaseDrawerActivity() {
 
     // ── Backtest ──────────────────────────────────────────────────────────────
 
-    private fun renderBacktest(history: List<MacroHistoryItemDto>, accuracy: List<MacroAccuracyDto>) {
-        // Aggregate stats from history (is_correct field per month)
-        val totalDecided = history.count { it.isCorrect != null }
-        val correctCalls = history.count { it.isCorrect == true }
-        val wrongCalls   = history.count { it.isCorrect == false }
-        val overallPct   = if (totalDecided > 0) correctCalls.toFloat() / totalDecided * 100f else 0f
+    private fun renderBacktest(backtest: MacroBacktestResponseDto?, history: List<MacroHistoryItemDto>) {
+        // Summary stats from /api/macro/backtest (source of truth)
+        val summary = backtest?.summary
+        if (summary != null) {
+            val pct = summary.accuracyPct
+            binding.tvAccPct.text    = if (pct != null) "${"%.1f".format(pct)}%" else "N/A"
+            binding.tvAccMonths.text = "${summary.totalMonths} months"
+            binding.tvCorrect.text   = "${summary.correctCalls}"
+            binding.tvWrong.text     = "${summary.wrongCalls}"
+        } else {
+            binding.tvAccPct.text    = "—"
+            binding.tvAccMonths.text = "—"
+            binding.tvCorrect.text   = "—"
+            binding.tvWrong.text     = "—"
+        }
 
-        binding.tvAccPct.text    = if (totalDecided > 0) "${"%.1f".format(overallPct)}%" else "N/A"
-        binding.tvAccMonths.text = "$totalDecided months"
-        binding.tvCorrect.text   = "$correctCalls"
-        binding.tvWrong.text     = "$wrongCalls"
+        // Rows come from backtest endpoint; fall back to history if backtest unavailable
+        val rows = backtest?.rows
+        val rowCount = rows?.size ?: history.size
+        binding.tvBacktestTitle.text = "Was the model right? — $rowCount months"
 
-        // Backtest title
-        val historyCount = history.size
-        binding.tvBacktestTitle.text = "Was the model right? — $historyCount months"
+        val displayHistory = if (rows != null) {
+            rows.map { bt ->
+                val matched = history.firstOrNull { it.month == bt.month }
+                bt to matched
+            }
+        } else {
+            history.map { it to null }
+        }
 
         // Footer
-        if (history.isNotEmpty()) {
-            val oldest = history.lastOrNull()?.month?.let { formatMonthShort(it) } ?: ""
-            val newest = history.firstOrNull()?.month?.let { formatMonthShort(it) } ?: ""
+        val footerItems = rows?.map { it.month } ?: history.map { it.month }
+        if (footerItems.isNotEmpty()) {
+            val oldest = footerItems.lastOrNull()?.let { formatMonthShort(it) } ?: ""
+            val newest = footerItems.firstOrNull()?.let { formatMonthShort(it) } ?: ""
             binding.tvBacktestFooter.text = "$oldest – $newest · not a trading signal"
         }
 
         // Monthly rows
         binding.backtestContainer.removeAllViews()
-        if (history.isEmpty()) {
+        if (displayHistory.isEmpty()) {
             binding.backtestContainer.addView(makeTextView("No history available yet.", Color.GRAY, 13f))
             return
         }
 
-        val maxRetAbs = history.mapNotNull { it.actualRet1m ?: it.predictedReturnPct }.maxOfOrNull { abs(it) }?.toFloat() ?: 5f
+        val allReturns = displayHistory.mapNotNull { (bt, hist) ->
+            bt.actualRet1m ?: hist?.actualRet1m ?: hist?.predictedReturnPct
+        }
+        val maxRetAbs = allReturns.maxOfOrNull { abs(it) }?.toFloat() ?: 5f
 
-        history.forEach { item ->
-            val isLive   = item.actualRet1m == null && item.isFinal != true
-            val retValue = item.actualRet1m ?: (if (item.isFinal == true) item.predictedReturnPct else null)
-            val scoreVal = if (item.isFinal == true && item.finalScore != null) item.finalScore else item.totalScore
+        displayHistory.forEach { (bt, histItem) ->
+            val actualRet = bt.actualRet1m ?: histItem?.actualRet1m
+            val isLive    = actualRet == null && histItem?.isFinal != true
+            val retValue  = actualRet ?: (if (histItem?.isFinal == true) histItem.predictedReturnPct else null)
+            val scoreVal  = if (histItem?.isFinal == true && histItem.finalScore != null)
+                histItem.finalScore else bt.score
+            val isCorrect = bt.correct
 
             val row = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
@@ -289,7 +317,7 @@ class MacroSignalActivity : BaseDrawerActivity() {
             }
 
             // Month (44dp)
-            row.addView(makeTextView(formatMonthShort(item.month), Color.parseColor("#616161"), 11f).apply {
+            row.addView(makeTextView(formatMonthShort(bt.month), Color.parseColor("#616161"), 11f).apply {
                 layoutParams = LinearLayout.LayoutParams(dp(44), LinearLayout.LayoutParams.WRAP_CONTENT)
             })
 
@@ -312,7 +340,6 @@ class MacroSignalActivity : BaseDrawerActivity() {
                 val barView  = View(this).apply {
                     setBackgroundColor(barColor)
                 }
-                val fullW    = resources.displayMetrics.widthPixels // will be set in post
                 barFrame.post {
                     val halfW  = (barFrame.width / 2f).toInt()
                     val barW   = (halfW * barPct).toInt().coerceAtLeast(2)
@@ -343,15 +370,15 @@ class MacroSignalActivity : BaseDrawerActivity() {
             })
 
             // ✓/✗ (16dp)
-            val tick     = when {
-                isLive           -> "·"
-                item.isCorrect == true  -> "✓"
-                item.isCorrect == false -> "✗"
-                else             -> "·"
+            val tick      = when {
+                isLive            -> "·"
+                isCorrect == true  -> "✓"
+                isCorrect == false -> "✗"
+                else              -> "·"
             }
             val tickColor = when {
-                item.isCorrect == true  -> BULL
-                item.isCorrect == false -> BEAR
+                isCorrect == true  -> BULL
+                isCorrect == false -> BEAR
                 else -> Color.GRAY
             }
             row.addView(makeTextView(tick, tickColor, 11f).apply {
@@ -486,6 +513,21 @@ class MacroSignalActivity : BaseDrawerActivity() {
             setTextColor(color)
             if (bold) setTypeface(null, android.graphics.Typeface.BOLD)
         }
+
+    private fun startRefreshSpin() {
+        val spin = RotateAnimation(0f, 360f,
+            RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+            RotateAnimation.RELATIVE_TO_SELF, 0.5f).apply {
+            duration       = 700
+            repeatCount    = RotateAnimation.INFINITE
+            interpolator   = LinearInterpolator()
+        }
+        binding.btnRefresh.startAnimation(spin)
+    }
+
+    private fun stopRefreshSpin() {
+        binding.btnRefresh.clearAnimation()
+    }
 
     private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
 }

@@ -2,6 +2,7 @@ package com.example.personalwealthmanager.data.remote.api
 
 import com.example.personalwealthmanager.data.remote.dto.ApiResponse
 import com.example.personalwealthmanager.data.remote.dto.MacroAccuracyDto
+import com.example.personalwealthmanager.data.remote.dto.MacroBacktestResponseDto
 import com.example.personalwealthmanager.data.remote.dto.MacroHistoryItemDto
 import com.example.personalwealthmanager.data.remote.dto.MacroSignalDto
 import retrofit2.Response
@@ -26,4 +27,10 @@ interface MacroApi {
     suspend fun getAccuracy(
         @Header("x-session-token") sessionToken: String
     ): Response<ApiResponse<List<MacroAccuracyDto>>>
+
+    @GET("api/macro/backtest")
+    suspend fun getBacktest(
+        @Header("x-session-token") sessionToken: String,
+        @Query("months") months: Int = 24
+    ): Response<ApiResponse<MacroBacktestResponseDto>>
 }

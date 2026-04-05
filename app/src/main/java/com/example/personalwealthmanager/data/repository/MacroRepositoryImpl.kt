@@ -2,6 +2,7 @@ package com.example.personalwealthmanager.data.repository
 
 import com.example.personalwealthmanager.data.remote.api.MacroApi
 import com.example.personalwealthmanager.data.remote.dto.MacroAccuracyDto
+import com.example.personalwealthmanager.data.remote.dto.MacroBacktestResponseDto
 import com.example.personalwealthmanager.data.remote.dto.MacroHistoryItemDto
 import com.example.personalwealthmanager.data.remote.dto.MacroSignalDto
 import com.example.personalwealthmanager.domain.repository.MacroRepository
@@ -45,6 +46,21 @@ class MacroRepositoryImpl @Inject constructor(
                 Result.success(response.body()?.data ?: emptyList())
             } else {
                 Result.failure(Exception(parseReason(response.errorBody()?.string(), "Failed to fetch accuracy")))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getBacktest(sessionToken: String): Result<MacroBacktestResponseDto> {
+        return try {
+            val response = macroApi.getBacktest(sessionToken)
+            if (response.isSuccessful && response.body()?.status == "success") {
+                val data = response.body()?.data
+                    ?: return Result.failure(Exception("Empty backtest response"))
+                Result.success(data)
+            } else {
+                Result.failure(Exception(parseReason(response.errorBody()?.string(), "Failed to fetch backtest")))
             }
         } catch (e: Exception) {
             Result.failure(e)
