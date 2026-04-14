@@ -19,10 +19,10 @@ class RegisterViewModel @Inject constructor(
     private val _state = MutableStateFlow(RegisterState())
     val state: StateFlow<RegisterState> = _state.asStateFlow()
 
-    fun register(email: String, password: String, confirmPassword: String) {
+    fun register(email: String, password: String, confirmPassword: String, fullName: String, phone: String) {
         // Validation
         when {
-            email.isBlank() || password.isBlank() -> {
+            fullName.isBlank() || email.isBlank() || password.isBlank() || phone.isBlank() -> {
                 _state.update { it.copy(error = "All fields are required") }
                 return
             }
@@ -39,7 +39,7 @@ class RegisterViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
 
-            authRepository.register(email, password)
+            authRepository.register(email, password, fullName, phone)
                 .onSuccess {
                     _state.update { it.copy(isLoading = false, isSuccess = true) }
                 }

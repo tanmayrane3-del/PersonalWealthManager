@@ -18,6 +18,7 @@ import android.widget.TextView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
@@ -278,25 +279,71 @@ private lateinit var tvStockValue: TextView
         setupBottomNav()
 
         // Request SMS permissions at runtime
+        requestSmsPermissions()
+
+        // Request POST_NOTIFICATIONS on Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestNotificationPermission()
+        }
+    }
+
+    private fun requestSmsPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
+                == PackageManager.PERMISSION_GRANTED) return
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.RECEIVE_SMS)) {
+            AlertDialog.Builder(this)
+                .setTitle("SMS Permission Required")
+                .setMessage(
+                    "This app reads bank transaction SMS messages to automatically record your " +
+                    "expenses and income — so you don't have to enter them manually. " +
+                    "Only messages from known bank senders are processed."
+                )
+                .setPositiveButton("Grant") { _, _ ->
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS),
+                        REQUEST_CODE_SMS_PERMISSION
+                    )
+                }
+                .setNegativeButton("Not Now", null)
+                .show()
+        } else {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS),
                 REQUEST_CODE_SMS_PERMISSION
             )
         }
+    }
 
-        // Request POST_NOTIFICATIONS on Android 13+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                    != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                    REQUEST_CODE_NOTIFICATION_PERMISSION
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                == PackageManager.PERMISSION_GRANTED) return
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)) {
+            AlertDialog.Builder(this)
+                .setTitle("Notification Permission Required")
+                .setMessage(
+                    "Allow notifications so the app can alert you when a bank SMS is " +
+                    "automatically recorded as a transaction."
                 )
-            }
+                .setPositiveButton("Grant") { _, _ ->
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                        REQUEST_CODE_NOTIFICATION_PERMISSION
+                    )
+                }
+                .setNegativeButton("Not Now", null)
+                .show()
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                REQUEST_CODE_NOTIFICATION_PERMISSION
+            )
         }
     }
 

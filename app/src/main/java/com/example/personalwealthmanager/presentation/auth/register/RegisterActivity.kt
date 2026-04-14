@@ -31,11 +31,13 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun setupUI() {
         binding.btnSignUp.setOnClickListener {
+            val fullName = binding.etName.text.toString()
             val email = binding.etEmail.text.toString()
+            val phone = binding.etPhone.text.toString()
             val password = binding.etPassword.text.toString()
             val confirmPassword = binding.etConfirmPassword.text.toString()
 
-            viewModel.register(email, password, confirmPassword)
+            viewModel.register(email, password, confirmPassword, fullName, phone)
         }
 
         binding.tvLogin.text = android.text.SpannableString("Already have an account? Login here").apply {

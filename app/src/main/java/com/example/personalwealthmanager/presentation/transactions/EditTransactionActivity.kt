@@ -640,10 +640,8 @@ class EditTransactionActivity : AppCompatActivity() {
     }
 
     private fun showAddSourceDialog() {
-        addSourceDialog = Dialog(this)
-        addSourceDialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        addSourceDialog = BottomSheetDialog(this)
         addSourceDialog?.setContentView(R.layout.dialog_edit_source)
-        addSourceDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         addSourceDialog?.setCancelable(true)
 
         val tvDialogTitle = addSourceDialog?.findViewById<TextView>(R.id.tvDialogTitle)
@@ -715,14 +713,12 @@ class EditTransactionActivity : AppCompatActivity() {
             }
         }
 
-        addSourceDialog?.show()
+        showExpandedBottomSheet(addSourceDialog as BottomSheetDialog)
     }
 
     private fun showAddRecipientDialog() {
-        addRecipientDialog = Dialog(this)
-        addRecipientDialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        addRecipientDialog = BottomSheetDialog(this)
         addRecipientDialog?.setContentView(R.layout.dialog_edit_recipient)
-        addRecipientDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         addRecipientDialog?.setCancelable(true)
 
         val tvDialogTitle = addRecipientDialog?.findViewById<TextView>(R.id.tvDialogTitle)
@@ -819,7 +815,23 @@ class EditTransactionActivity : AppCompatActivity() {
             }
         }
 
-        addRecipientDialog?.show()
+        showExpandedBottomSheet(addRecipientDialog as BottomSheetDialog)
+    }
+
+    private fun showExpandedBottomSheet(dialog: BottomSheetDialog) {
+        dialog.setOnShowListener {
+            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let { view ->
+                val lp = view.layoutParams
+                lp.height = (resources.displayMetrics.heightPixels * 0.85).toInt()
+                view.layoutParams = lp
+                com.google.android.material.bottomsheet.BottomSheetBehavior.from(view).apply {
+                    state = com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+                    skipCollapsed = true
+                }
+            }
+        }
+        dialog.show()
     }
 
     private fun showFetchFromInboxSheet() {

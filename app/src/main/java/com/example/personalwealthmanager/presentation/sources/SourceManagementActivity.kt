@@ -1,13 +1,11 @@
 package com.example.personalwealthmanager.presentation.sources
 
 import android.app.AlertDialog
-import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
-import android.view.Window
 import android.widget.*
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
@@ -125,26 +123,20 @@ class SourceManagementActivity : com.example.personalwealthmanager.presentation.
     }
 
     private fun showCreateSourceDialog() {
-        val dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val dialog = BottomSheetDialog(this)
         dialog.setContentView(R.layout.dialog_edit_source)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.window?.setLayout(
-            (resources.displayMetrics.widthPixels * 0.9).toInt(),
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
 
-        val tvDialogTitle = dialog.findViewById<TextView>(R.id.tvDialogTitle)
-        val etSourceName = dialog.findViewById<TextInputEditText>(R.id.etSourceName)
-        val etSourceDescription = dialog.findViewById<TextInputEditText>(R.id.etSourceDescription)
-        val etSourceIdentifier = dialog.findViewById<TextInputEditText>(R.id.etSourceIdentifier)
-        val spinnerDefaultCategory = dialog.findViewById<Spinner>(R.id.spinnerDefaultCategory)
-        val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)
-        val tvError = dialog.findViewById<TextView>(R.id.tvError)
-        val buttonsLayout = dialog.findViewById<LinearLayout>(R.id.buttonsLayout)
-        val btnCancel = dialog.findViewById<Button>(R.id.btnCancel)
-        val btnSave = dialog.findViewById<Button>(R.id.btnSave)
-        val btnDelete = dialog.findViewById<Button>(R.id.btnDelete)
+        val tvDialogTitle = dialog.findViewById<TextView>(R.id.tvDialogTitle)!!
+        val etSourceName = dialog.findViewById<TextInputEditText>(R.id.etSourceName)!!
+        val etSourceDescription = dialog.findViewById<TextInputEditText>(R.id.etSourceDescription)!!
+        val etSourceIdentifier = dialog.findViewById<TextInputEditText>(R.id.etSourceIdentifier)!!
+        val spinnerDefaultCategory = dialog.findViewById<Spinner>(R.id.spinnerDefaultCategory)!!
+        val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)!!
+        val tvError = dialog.findViewById<TextView>(R.id.tvError)!!
+        val buttonsLayout = dialog.findViewById<LinearLayout>(R.id.buttonsLayout)!!
+        val btnCancel = dialog.findViewById<Button>(R.id.btnCancel)!!
+        val btnSave = dialog.findViewById<Button>(R.id.btnSave)!!
+        val btnDelete = dialog.findViewById<Button>(R.id.btnDelete)!!
         val btnCloseDialog = dialog.findViewById<ImageView>(R.id.btnCloseDialog)
 
         tvDialogTitle.text = getString(R.string.add_source)
@@ -154,7 +146,7 @@ class SourceManagementActivity : com.example.personalwealthmanager.presentation.
         val incomeCategories = viewModel.state.value.incomeCategories
         setupCategorySpinner(spinnerDefaultCategory, incomeCategories)
 
-        btnCloseDialog.setOnClickListener { dialog.dismiss() }
+        btnCloseDialog?.setOnClickListener { dialog.dismiss() }
         btnCancel.setOnClickListener { dialog.dismiss() }
 
         btnSave.setOnClickListener {
@@ -195,30 +187,24 @@ class SourceManagementActivity : com.example.personalwealthmanager.presentation.
             }
         }
 
-        dialog.show()
+        showExpandedBottomSheet(dialog)
     }
 
     private fun showEditSourceDialog(source: Source) {
-        val dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val dialog = BottomSheetDialog(this)
         dialog.setContentView(R.layout.dialog_edit_source)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.window?.setLayout(
-            (resources.displayMetrics.widthPixels * 0.9).toInt(),
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
 
-        val etSourceName = dialog.findViewById<TextInputEditText>(R.id.etSourceName)
-        val etSourceDescription = dialog.findViewById<TextInputEditText>(R.id.etSourceDescription)
-        val etSourceIdentifier = dialog.findViewById<TextInputEditText>(R.id.etSourceIdentifier)
-        val spinnerDefaultCategory = dialog.findViewById<Spinner>(R.id.spinnerDefaultCategory)
-        val tvTransactionWarning = dialog.findViewById<TextView>(R.id.tvTransactionWarning)
-        val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)
-        val tvError = dialog.findViewById<TextView>(R.id.tvError)
-        val buttonsLayout = dialog.findViewById<LinearLayout>(R.id.buttonsLayout)
-        val btnCancel = dialog.findViewById<Button>(R.id.btnCancel)
-        val btnSave = dialog.findViewById<Button>(R.id.btnSave)
-        val btnDelete = dialog.findViewById<Button>(R.id.btnDelete)
+        val etSourceName = dialog.findViewById<TextInputEditText>(R.id.etSourceName)!!
+        val etSourceDescription = dialog.findViewById<TextInputEditText>(R.id.etSourceDescription)!!
+        val etSourceIdentifier = dialog.findViewById<TextInputEditText>(R.id.etSourceIdentifier)!!
+        val spinnerDefaultCategory = dialog.findViewById<Spinner>(R.id.spinnerDefaultCategory)!!
+        val tvTransactionWarning = dialog.findViewById<TextView>(R.id.tvTransactionWarning)!!
+        val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)!!
+        val tvError = dialog.findViewById<TextView>(R.id.tvError)!!
+        val buttonsLayout = dialog.findViewById<LinearLayout>(R.id.buttonsLayout)!!
+        val btnCancel = dialog.findViewById<Button>(R.id.btnCancel)!!
+        val btnSave = dialog.findViewById<Button>(R.id.btnSave)!!
+        val btnDelete = dialog.findViewById<Button>(R.id.btnDelete)!!
         val btnCloseDialog = dialog.findViewById<ImageView>(R.id.btnCloseDialog)
 
         // Pre-populate fields
@@ -242,7 +228,7 @@ class SourceManagementActivity : com.example.personalwealthmanager.presentation.
             btnDelete.visibility = View.VISIBLE
         }
 
-        btnCloseDialog.setOnClickListener { dialog.dismiss() }
+        btnCloseDialog?.setOnClickListener { dialog.dismiss() }
         btnCancel.setOnClickListener { dialog.dismiss() }
 
         btnSave.setOnClickListener {
@@ -321,6 +307,22 @@ class SourceManagementActivity : com.example.personalwealthmanager.presentation.
                 .show()
         }
 
+        showExpandedBottomSheet(dialog)
+    }
+
+    private fun showExpandedBottomSheet(dialog: BottomSheetDialog) {
+        dialog.setOnShowListener {
+            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let { view ->
+                val lp = view.layoutParams
+                lp.height = (resources.displayMetrics.heightPixels * 0.70).toInt()
+                view.layoutParams = lp
+                BottomSheetBehavior.from(view).apply {
+                    state = BottomSheetBehavior.STATE_EXPANDED
+                    skipCollapsed = true
+                }
+            }
+        }
         dialog.show()
     }
 

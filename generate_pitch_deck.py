@@ -297,6 +297,7 @@ def slide_04_product(prs):
         ("Liabilities & Loans", "EMI calculation, principal balance, payoff projections"),
         ("AI Expense Auto-Capture", "Bank SMS → Claude AI → categorised transaction, automatic"),
         ("Transaction Management", "Income/expense CRUD with custom categories, sources, recipients"),
+        ("Nifty 50 Market Signal", "6-factor macro model — monthly bull/bear signal, target price & 24M backtest"),
         ("Growth Projections", "Per-class CAGR model → full 1Y / 3Y / 5Y net worth forecast"),
         ("Cron Automation", "Market sync, daily snapshots, weekly CAGR recalc — all scheduled"),
     ]
@@ -416,12 +417,13 @@ def slide_07_traction(prs):
     divider(s, Inches(1.45), width_pct=0.94)
 
     built = [
-        "✅  Full-stack MVP with 10 screens and 21 backend API modules",
+        "✅  Full-stack MVP with 11 screens and 25+ backend API modules",
         "✅  Zerodha (India's #1 broker) OAuth integration live and tested",
         "✅  AI-powered SMS expense capture (Claude API) working end-to-end",
         "✅  CAS PDF import for mutual funds fully operational",
         "✅  Real-time gold/silver rates, stock prices, AMFI NAV sync",
         "✅  5-year net worth projection engine with per-asset CAGR model",
+        "✅  Nifty 50 Market Signal: proprietary 6-factor macro model, 24-month backtest",
         "✅  Automated cron jobs: daily snapshots, market sync, weekly CAGR",
         "✅  Backend deployed on Render · Database live on Supabase PostgreSQL",
     ]
@@ -439,9 +441,9 @@ def slide_07_traction(prs):
         ("Q3 2025", "Architecture design & DB schema", GRAY),
         ("Q4 2025", "Core modules: Auth, Transactions, Stocks", GRAY),
         ("Q1 2026", "Zerodha OAuth, Mutual Funds, Metals", GOLD),
-        ("Mar 2026", "Net Worth projections + AI SMS ✓ NOW", GREEN),
+        ("Mar 2026", "Net Worth projections + AI SMS ✓", GREEN),
+        ("Apr 2026", "Nifty 50 Market Signal + Macro Model ✓ NOW", GREEN),
         ("Q2 2026", "Play Store launch + beta users", LIGHT_GOLD),
-        ("Q3 2026", "Premium tier + monetisation", LIGHT_GOLD),
     ]
     for i, (date, event, color) in enumerate(milestones):
         y = Inches(2.25) + i * Inches(0.72)
@@ -529,6 +531,7 @@ def slide_09_competition(prs):
         ["Net Worth Projection (5Y)",     "✅", "❌", "❌", "❌", "❌"],
         ["AI-Powered SMS Expense Capture","✅", "❌", "❌", "⚠️", "❌"],
         ["Unified Net Worth Dashboard",   "✅", "❌", "⚠️", "❌", "❌"],
+        ["Nifty 50 Market Signal",        "✅", "❌", "❌", "❌", "❌"],
     ]
 
     col_widths = [Inches(3.3), Inches(1.65), Inches(1.65), Inches(1.65), Inches(1.65), Inches(1.65)]
@@ -536,7 +539,7 @@ def slide_09_competition(prs):
     for w in col_widths[:-1]:
         col_x.append(col_x[-1] + w)
 
-    row_h = Inches(0.6)
+    row_h = Inches(0.52)
     header_y = Inches(1.6)
 
     # Header row
@@ -743,7 +746,7 @@ def main():
 
     out_path = os.path.join(os.path.dirname(__file__), "WealthPulse_InvestorPitch.pptx")
     prs.save(out_path)
-    print(f"\n✅  Saved: {out_path}")
+    print(f"\nDone. Saved: {out_path}")
 
 
 if __name__ == "__main__":

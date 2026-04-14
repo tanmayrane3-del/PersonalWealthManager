@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Production backend: only allow HTTPS, no cleartext -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">wealth-backend-demo.onrender.com</domain>
+    </domain-config>
+    <!-- Block all other cleartext traffic -->
+    <base-config cleartextTrafficPermitted="false"/>
+</network-security-config>

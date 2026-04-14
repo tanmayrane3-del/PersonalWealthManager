@@ -58,10 +58,10 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun register(email: String, password: String): Result<User> {
+    override suspend fun register(email: String, password: String, fullName: String, phone: String): Result<User> {
         return try {
             // Create user
-            val registerResponse = authApi.register(RegisterRequest(email, password))
+            val registerResponse = authApi.register(RegisterRequest(email, password, fullName, phone))
 
             if (!registerResponse.isSuccessful || registerResponse.body()?.status != "success") {
                 val errorMessage = registerResponse.body()?.reason ?: "Registration failed"
