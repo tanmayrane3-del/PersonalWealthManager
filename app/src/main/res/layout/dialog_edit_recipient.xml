@@ -212,17 +212,20 @@
                     android:textSize="13sp" />
             </FrameLayout>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAddIdentifier"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:text="Add"
                 android:textColor="@android:color/white"
-                android:background="@drawable/bs_btn_primary"
                 android:textStyle="bold"
                 android:textSize="13sp"
                 android:paddingStart="20dp"
-                android:paddingEnd="20dp" />
+                android:paddingEnd="20dp"
+                app:backgroundTint="@color/teal_800"
+                app:cornerRadius="24dp"
+                app:elevation="0dp"
+                xmlns:app="http://schemas.android.com/apk/res-auto" />
         </LinearLayout>
 
         <TextView
@@ -312,42 +315,53 @@
             android:layout_marginTop="28dp"
             android:layout_marginBottom="12dp">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:id="@+id/btnCancel"
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_weight="1"
                 android:text="Cancel"
                 android:textColor="@color/teal_800"
-                android:background="@drawable/bs_btn_secondary"
-                android:layout_marginEnd="8dp"
                 android:textStyle="bold"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:layout_marginEnd="8dp"
+                app:strokeColor="@color/teal_800"
+                app:strokeWidth="1.5dp"
+                app:cornerRadius="28dp"
+                app:backgroundTint="@android:color/transparent"
+                xmlns:app="http://schemas.android.com/apk/res-auto" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_weight="1"
                 android:text="@string/save"
                 android:textColor="@android:color/white"
-                android:background="@drawable/bs_btn_primary"
-                android:layout_marginStart="8dp"
                 android:textStyle="bold"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:layout_marginStart="8dp"
+                app:backgroundTint="@color/teal_800"
+                app:cornerRadius="28dp"
+                app:elevation="0dp"
+                xmlns:app="http://schemas.android.com/apk/res-auto" />
         </LinearLayout>
 
         <!-- Delete Button -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDelete"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:text="@string/delete_recipient"
             android:textColor="@android:color/white"
-            android:background="@drawable/bs_btn_delete"
             android:textStyle="bold"
             android:textSize="15sp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:backgroundTint="@color/error_red"
+            app:cornerRadius="28dp"
+            app:elevation="0dp"
+            xmlns:app="http://schemas.android.com/apk/res-auto" />
 
     </LinearLayout>
 
