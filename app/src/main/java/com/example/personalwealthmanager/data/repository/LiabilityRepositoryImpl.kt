@@ -1,12 +1,12 @@
-package com.example.personalwealthmanager.data.repository
+﻿package com.pwm.personalwealthmanager.data.repository
 
-import com.example.personalwealthmanager.data.remote.api.LiabilityApiService
-import com.example.personalwealthmanager.data.remote.dto.CreateLiabilityRequest
-import com.example.personalwealthmanager.data.remote.dto.LiabilityDto
-import com.example.personalwealthmanager.data.remote.dto.UpdateLiabilityRequest
-import com.example.personalwealthmanager.domain.model.Liability
-import com.example.personalwealthmanager.domain.model.LiabilitySummary
-import com.example.personalwealthmanager.domain.repository.LiabilityRepository
+import com.pwm.personalwealthmanager.data.remote.api.LiabilityApiService
+import com.pwm.personalwealthmanager.data.remote.dto.CreateLiabilityRequest
+import com.pwm.personalwealthmanager.data.remote.dto.LiabilityDto
+import com.pwm.personalwealthmanager.data.remote.dto.UpdateLiabilityRequest
+import com.pwm.personalwealthmanager.domain.model.Liability
+import com.pwm.personalwealthmanager.domain.model.LiabilitySummary
+import com.pwm.personalwealthmanager.domain.repository.LiabilityRepository
 import org.json.JSONObject
 import javax.inject.Inject
 

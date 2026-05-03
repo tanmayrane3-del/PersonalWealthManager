@@ -1,13 +1,13 @@
-package com.example.personalwealthmanager.data.repository
+﻿package com.pwm.personalwealthmanager.data.repository
 
-import com.example.personalwealthmanager.data.remote.api.MetalsApi
-import com.example.personalwealthmanager.data.remote.dto.MetalHoldingDto
-import com.example.personalwealthmanager.data.remote.dto.MetalHoldingRequest
-import com.example.personalwealthmanager.data.remote.dto.MetalRatesDto
-import com.example.personalwealthmanager.data.remote.dto.MetalsSummaryDto
-import com.example.personalwealthmanager.domain.model.MetalHolding
-import com.example.personalwealthmanager.domain.model.MetalRates
-import com.example.personalwealthmanager.domain.repository.MetalsRepository
+import com.pwm.personalwealthmanager.data.remote.api.MetalsApi
+import com.pwm.personalwealthmanager.data.remote.dto.MetalHoldingDto
+import com.pwm.personalwealthmanager.data.remote.dto.MetalHoldingRequest
+import com.pwm.personalwealthmanager.data.remote.dto.MetalRatesDto
+import com.pwm.personalwealthmanager.data.remote.dto.MetalsSummaryDto
+import com.pwm.personalwealthmanager.domain.model.MetalHolding
+import com.pwm.personalwealthmanager.domain.model.MetalRates
+import com.pwm.personalwealthmanager.domain.repository.MetalsRepository
 import org.json.JSONObject
 import javax.inject.Inject
 

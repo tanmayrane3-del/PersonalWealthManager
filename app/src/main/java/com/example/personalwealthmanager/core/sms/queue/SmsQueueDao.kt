@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.core.sms.queue
+﻿package com.pwm.personalwealthmanager.core.sms.queue
 
 import androidx.room.Dao
 import androidx.room.Delete

@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.mutualfunds
+﻿package com.pwm.personalwealthmanager.presentation.mutualfunds
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.data.remote.dto.CasPreviewFundDto
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.data.remote.dto.CasPreviewFundDto
 
 class CasImportPreviewAdapter : RecyclerView.Adapter<CasImportPreviewAdapter.VH>() {
 

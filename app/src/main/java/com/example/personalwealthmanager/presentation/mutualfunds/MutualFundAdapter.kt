@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.mutualfunds
+﻿package com.pwm.personalwealthmanager.presentation.mutualfunds
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +8,9 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.domain.model.MutualFundHolding
-import com.example.personalwealthmanager.domain.model.MutualFundLot
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.domain.model.MutualFundHolding
+import com.pwm.personalwealthmanager.domain.model.MutualFundLot
 import java.text.NumberFormat
 import java.util.Locale
 

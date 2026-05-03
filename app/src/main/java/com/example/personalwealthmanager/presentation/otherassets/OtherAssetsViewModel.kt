@@ -1,11 +1,11 @@
-package com.example.personalwealthmanager.presentation.otherassets
+﻿package com.pwm.personalwealthmanager.presentation.otherassets
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.personalwealthmanager.core.utils.SessionManager
-import com.example.personalwealthmanager.data.remote.dto.CreatePhysicalAssetRequest
-import com.example.personalwealthmanager.data.remote.dto.UpdatePhysicalAssetRequest
-import com.example.personalwealthmanager.domain.repository.PhysicalAssetRepository
+import com.pwm.personalwealthmanager.core.utils.SessionManager
+import com.pwm.personalwealthmanager.data.remote.dto.CreatePhysicalAssetRequest
+import com.pwm.personalwealthmanager.data.remote.dto.UpdatePhysicalAssetRequest
+import com.pwm.personalwealthmanager.domain.repository.PhysicalAssetRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

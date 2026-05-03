@@ -1,7 +1,7 @@
-package com.example.personalwealthmanager.core.sms
+﻿package com.pwm.personalwealthmanager.core.sms
 
-import com.example.personalwealthmanager.core.sms.queue.SmsQueueDao
-import com.example.personalwealthmanager.core.utils.SessionManager
+import com.pwm.personalwealthmanager.core.sms.queue.SmsQueueDao
+import com.pwm.personalwealthmanager.core.utils.SessionManager
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent

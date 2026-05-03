@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.auth.register
+﻿package com.pwm.personalwealthmanager.presentation.auth.register
 
 import android.content.Intent
 import android.net.Uri
@@ -8,9 +8,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.personalwealthmanager.MainActivity
-import com.example.personalwealthmanager.databinding.ActivityRegistrationBinding
-import com.example.personalwealthmanager.presentation.auth.login.LoginActivity
+import com.pwm.personalwealthmanager.MainActivity
+import com.pwm.personalwealthmanager.databinding.ActivityRegistrationBinding
+import com.pwm.personalwealthmanager.presentation.auth.login.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

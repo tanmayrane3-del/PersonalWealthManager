@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.liabilities
+﻿package com.pwm.personalwealthmanager.presentation.liabilities
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,8 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.domain.model.Liability
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.domain.model.Liability
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -53,9 +53,7 @@ class LiabilityCardAdapter(
         holder.tvLoanTypeBadge.text = loanTypeLabel(liability.loanType)
 
         // Status chip
-        val (statusText, statusColor) = statusStyle(liability.status)
-        holder.tvStatusChip.text = statusText
-        holder.tvStatusChip.setTextColor(statusColor)
+        styleStatusChip(holder.tvStatusChip, liability.status)
 
         // Linked asset chip
         if (!liability.assetLabel.isNullOrBlank()) {
@@ -68,7 +66,7 @@ class LiabilityCardAdapter(
 
         // Outstanding principal
         holder.tvOutstanding.text = currencyFormat.format(liability.outstandingPrincipal)
-        holder.tvOriginalAmount.text = "of ${currencyFormat.format(liability.originalAmount)}"
+        holder.tvOriginalAmount.text = currencyFormat.format(liability.originalAmount)
 
         // EMI
         holder.tvEmi.text = currencyFormat.format(liability.emiAmount)
@@ -77,7 +75,7 @@ class LiabilityCardAdapter(
         // EMI due day
         if (liability.emiDueDay != null) {
             holder.tvEmiDueDay.visibility = View.VISIBLE
-            holder.tvEmiDueDay.text = "Due: ${liability.emiDueDay}${daySuffix(liability.emiDueDay)} of month"
+            holder.tvEmiDueDay.text = "${liability.emiDueDay}${daySuffix(liability.emiDueDay)} of month"
         } else {
             holder.tvEmiDueDay.visibility = View.GONE
         }
@@ -106,11 +104,20 @@ class LiabilityCardAdapter(
         else -> "Other Loan"
     }
 
-    private fun statusStyle(status: String): Pair<String, Int> = when (status) {
-        "active" -> Pair("● Active", 0xFF4CAF50.toInt())
-        "closed" -> Pair("● Closed", 0xFF9E9E9E.toInt())
-        "foreclosed" -> Pair("● Foreclosed", 0xFFF44336.toInt())
-        else -> Pair(status.replaceFirstChar { it.uppercase() }, 0xFFFFFFFF.toInt())
+    private fun styleStatusChip(chip: TextView, status: String) {
+        val (text, bgColor, textColor) = when (status) {
+            "active"     -> Triple("Active",     0xFFC8E6C9.toInt(), 0xFF1B5E20.toInt())
+            "closed"     -> Triple("Closed",     0xFFE0E0E0.toInt(), 0xFF424242.toInt())
+            "foreclosed" -> Triple("Foreclosed", 0xFFFFDAD6.toInt(), 0xFFBA1A1A.toInt())
+            else         -> Triple(status.replaceFirstChar { it.uppercase() }, 0xFFE0E0E0.toInt(), 0xFF424242.toInt())
+        }
+        chip.text = text
+        chip.setTextColor(textColor)
+        val bg = android.graphics.drawable.GradientDrawable().apply {
+            setColor(bgColor)
+            cornerRadius = chip.context.resources.displayMetrics.density * 12f
+        }
+        chip.background = bg
     }
 
     private fun daySuffix(day: Int): String = when {

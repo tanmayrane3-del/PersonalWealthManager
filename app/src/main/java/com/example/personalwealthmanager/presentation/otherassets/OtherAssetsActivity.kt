@@ -1,13 +1,13 @@
-package com.example.personalwealthmanager.presentation.otherassets
+﻿package com.pwm.personalwealthmanager.presentation.otherassets
 
 import android.os.Bundle
 import androidx.core.view.GravityCompat
 import android.widget.ImageView
-import com.example.personalwealthmanager.R
+import com.pwm.personalwealthmanager.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class OtherAssetsActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
+class OtherAssetsActivity : com.pwm.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
     override fun getActiveNavItem() = BottomNavItem.NETWORTH
 

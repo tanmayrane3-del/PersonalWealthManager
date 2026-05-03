@@ -1,7 +1,7 @@
-package com.example.personalwealthmanager.presentation.recipients
+﻿package com.pwm.personalwealthmanager.presentation.recipients
 
-import com.example.personalwealthmanager.domain.model.Category
-import com.example.personalwealthmanager.domain.model.Recipient
+import com.pwm.personalwealthmanager.domain.model.Category
+import com.pwm.personalwealthmanager.domain.model.Recipient
 
 data class RecipientManagementState(
     val isLoading: Boolean = false,

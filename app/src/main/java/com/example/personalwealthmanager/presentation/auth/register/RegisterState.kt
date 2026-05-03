@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.auth.register
+﻿package com.pwm.personalwealthmanager.presentation.auth.register
 
 data class RegisterState(
     val isLoading: Boolean = false,

@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.mutualfunds
+﻿package com.pwm.personalwealthmanager.presentation.mutualfunds
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -9,8 +9,8 @@ import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import com.example.personalwealthmanager.data.remote.dto.AddLotRequest
-import com.example.personalwealthmanager.databinding.BottomSheetAddMfBinding
+import com.pwm.personalwealthmanager.data.remote.dto.AddLotRequest
+import com.pwm.personalwealthmanager.databinding.BottomSheetAddMfBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -70,7 +70,7 @@ class AddMutualFundBottomSheet : BottomSheetDialogFragment() {
                         binding.tvLookupStatus.visibility = View.GONE
                     }
                     is LookupState.Loading -> {
-                        binding.tvLookupStatus.text = getString(com.example.personalwealthmanager.R.string.looking_up_scheme)
+                        binding.tvLookupStatus.text = getString(com.pwm.personalwealthmanager.R.string.looking_up_scheme)
                         binding.tvLookupStatus.visibility = View.VISIBLE
                     }
                     is LookupState.Found -> {
@@ -81,7 +81,7 @@ class AddMutualFundBottomSheet : BottomSheetDialogFragment() {
                         binding.tvLookupStatus.visibility = View.GONE
                     }
                     is LookupState.Error -> {
-                        binding.tvLookupStatus.text = getString(com.example.personalwealthmanager.R.string.scheme_not_found)
+                        binding.tvLookupStatus.text = getString(com.pwm.personalwealthmanager.R.string.scheme_not_found)
                         binding.tvLookupStatus.visibility = View.VISIBLE
                         resolvedSchemeCode = null
                         binding.etSchemeName.setText("")

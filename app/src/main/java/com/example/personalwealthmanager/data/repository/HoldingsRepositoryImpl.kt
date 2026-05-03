@@ -1,10 +1,10 @@
-package com.example.personalwealthmanager.data.repository
+﻿package com.pwm.personalwealthmanager.data.repository
 
-import com.example.personalwealthmanager.data.remote.api.HoldingsApi
-import com.example.personalwealthmanager.data.remote.dto.StockHoldingDto
-import com.example.personalwealthmanager.domain.model.StockHolding
-import com.example.personalwealthmanager.domain.model.StocksPortfolioSummary
-import com.example.personalwealthmanager.domain.repository.HoldingsRepository
+import com.pwm.personalwealthmanager.data.remote.api.HoldingsApi
+import com.pwm.personalwealthmanager.data.remote.dto.StockHoldingDto
+import com.pwm.personalwealthmanager.domain.model.StockHolding
+import com.pwm.personalwealthmanager.domain.model.StocksPortfolioSummary
+import com.pwm.personalwealthmanager.domain.repository.HoldingsRepository
 import org.json.JSONObject
 import javax.inject.Inject
 

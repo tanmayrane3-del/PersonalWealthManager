@@ -1,9 +1,9 @@
-package com.example.personalwealthmanager.presentation.transactions
+﻿package com.pwm.personalwealthmanager.presentation.transactions
 
-import com.example.personalwealthmanager.domain.model.Category
-import com.example.personalwealthmanager.domain.model.Recipient
-import com.example.personalwealthmanager.domain.model.Source
-import com.example.personalwealthmanager.domain.model.Transaction
+import com.pwm.personalwealthmanager.domain.model.Category
+import com.pwm.personalwealthmanager.domain.model.Recipient
+import com.pwm.personalwealthmanager.domain.model.Source
+import com.pwm.personalwealthmanager.domain.model.Transaction
 
 data class TransactionListState(
     val isLoading: Boolean = false,

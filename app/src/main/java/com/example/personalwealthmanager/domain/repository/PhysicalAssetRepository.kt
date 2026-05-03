@@ -1,9 +1,9 @@
-package com.example.personalwealthmanager.domain.repository
+﻿package com.pwm.personalwealthmanager.domain.repository
 
-import com.example.personalwealthmanager.data.remote.dto.CreatePhysicalAssetRequest
-import com.example.personalwealthmanager.data.remote.dto.UpdatePhysicalAssetRequest
-import com.example.personalwealthmanager.domain.model.PhysicalAsset
-import com.example.personalwealthmanager.domain.model.PhysicalAssetSummary
+import com.pwm.personalwealthmanager.data.remote.dto.CreatePhysicalAssetRequest
+import com.pwm.personalwealthmanager.data.remote.dto.UpdatePhysicalAssetRequest
+import com.pwm.personalwealthmanager.domain.model.PhysicalAsset
+import com.pwm.personalwealthmanager.domain.model.PhysicalAssetSummary
 
 interface PhysicalAssetRepository {
     suspend fun getAssets(sessionToken: String): Result<List<PhysicalAsset>>

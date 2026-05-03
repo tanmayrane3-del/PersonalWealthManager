@@ -1,18 +1,18 @@
-package com.example.personalwealthmanager.data.repository
+﻿package com.pwm.personalwealthmanager.data.repository
 
-import com.example.personalwealthmanager.data.remote.api.MutualFundApi
-import com.example.personalwealthmanager.data.remote.dto.AddLotRequest
-import com.example.personalwealthmanager.data.remote.dto.CasPreviewData
-import com.example.personalwealthmanager.data.remote.dto.ConfirmImportRequest
-import com.example.personalwealthmanager.data.remote.dto.ImportResultDto
-import com.example.personalwealthmanager.data.remote.dto.MfCagrSummaryDto
-import com.example.personalwealthmanager.data.remote.dto.MutualFundHoldingDto
-import com.example.personalwealthmanager.data.remote.dto.MutualFundLotDto
-import com.example.personalwealthmanager.domain.model.MutualFundHolding
-import com.example.personalwealthmanager.domain.model.MutualFundLot
-import com.example.personalwealthmanager.domain.model.MutualFundPortfolioSummary
-import com.example.personalwealthmanager.domain.model.SchemeLookupResult
-import com.example.personalwealthmanager.domain.repository.MutualFundRepository
+import com.pwm.personalwealthmanager.data.remote.api.MutualFundApi
+import com.pwm.personalwealthmanager.data.remote.dto.AddLotRequest
+import com.pwm.personalwealthmanager.data.remote.dto.CasPreviewData
+import com.pwm.personalwealthmanager.data.remote.dto.ConfirmImportRequest
+import com.pwm.personalwealthmanager.data.remote.dto.ImportResultDto
+import com.pwm.personalwealthmanager.data.remote.dto.MfCagrSummaryDto
+import com.pwm.personalwealthmanager.data.remote.dto.MutualFundHoldingDto
+import com.pwm.personalwealthmanager.data.remote.dto.MutualFundLotDto
+import com.pwm.personalwealthmanager.domain.model.MutualFundHolding
+import com.pwm.personalwealthmanager.domain.model.MutualFundLot
+import com.pwm.personalwealthmanager.domain.model.MutualFundPortfolioSummary
+import com.pwm.personalwealthmanager.domain.model.SchemeLookupResult
+import com.pwm.personalwealthmanager.domain.repository.MutualFundRepository
 import okhttp3.MultipartBody
 import org.json.JSONObject
 import javax.inject.Inject
@@ -185,7 +185,7 @@ class MutualFundRepositoryImpl @Inject constructor(
         lots              = lots.map { it.toDomain() }
     )
 
-    private fun com.example.personalwealthmanager.data.remote.dto.SchemeLookupDto.toDomain() = SchemeLookupResult(
+    private fun com.pwm.personalwealthmanager.data.remote.dto.SchemeLookupDto.toDomain() = SchemeLookupResult(
         schemeCode = schemeCode,
         schemeName = schemeName,
         amcName    = amcName

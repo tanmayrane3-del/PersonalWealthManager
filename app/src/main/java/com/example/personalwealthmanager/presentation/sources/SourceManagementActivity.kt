@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.sources
+﻿package com.pwm.personalwealthmanager.presentation.sources
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -11,15 +11,15 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.domain.model.Category
-import com.example.personalwealthmanager.domain.model.Source
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.domain.model.Category
+import com.pwm.personalwealthmanager.domain.model.Source
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SourceManagementActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
+class SourceManagementActivity : com.pwm.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
     override fun getSelfButtonId() = R.id.btnSourceManagement
 

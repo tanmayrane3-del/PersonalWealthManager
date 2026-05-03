@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.stocks
+﻿package com.pwm.personalwealthmanager.presentation.stocks
 
 import android.content.Context
 import android.graphics.Canvas

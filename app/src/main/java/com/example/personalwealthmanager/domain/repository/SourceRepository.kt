@@ -1,6 +1,6 @@
-package com.example.personalwealthmanager.domain.repository
+﻿package com.pwm.personalwealthmanager.domain.repository
 
-import com.example.personalwealthmanager.domain.model.Source
+import com.pwm.personalwealthmanager.domain.model.Source
 
 interface SourceRepository {
     suspend fun getSources(): Result<List<Source>>

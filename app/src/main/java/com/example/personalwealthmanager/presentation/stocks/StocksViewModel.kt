@@ -1,11 +1,11 @@
-package com.example.personalwealthmanager.presentation.stocks
+﻿package com.pwm.personalwealthmanager.presentation.stocks
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.personalwealthmanager.core.utils.SessionManager
-import com.example.personalwealthmanager.domain.model.StocksPortfolioSummary
-import com.example.personalwealthmanager.domain.repository.HoldingsRepository
-import com.example.personalwealthmanager.domain.repository.ZerodhaRepository
+import com.pwm.personalwealthmanager.core.utils.SessionManager
+import com.pwm.personalwealthmanager.domain.model.StocksPortfolioSummary
+import com.pwm.personalwealthmanager.domain.repository.HoldingsRepository
+import com.pwm.personalwealthmanager.domain.repository.ZerodhaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

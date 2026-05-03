@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.zerodha
+﻿package com.pwm.personalwealthmanager.presentation.zerodha
 
 import android.content.Intent
 import android.net.Uri
@@ -11,13 +11,13 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.presentation.stocks.StocksActivity
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.presentation.stocks.StocksActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SetupZerodhaActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
+class SetupZerodhaActivity : com.pwm.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
     override fun getSelfButtonId() = R.id.btnConnectZerodha
 

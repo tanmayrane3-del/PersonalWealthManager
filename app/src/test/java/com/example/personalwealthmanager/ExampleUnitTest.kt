@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager
+﻿package com.pwm.personalwealthmanager
 
 import org.junit.Test
 

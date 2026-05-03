@@ -1,7 +1,7 @@
-package com.example.personalwealthmanager.presentation.metals
+﻿package com.pwm.personalwealthmanager.presentation.metals
 
-import com.example.personalwealthmanager.domain.model.MetalHolding
-import com.example.personalwealthmanager.domain.model.MetalRates
+import com.pwm.personalwealthmanager.domain.model.MetalHolding
+import com.pwm.personalwealthmanager.domain.model.MetalRates
 
 sealed class MetalsUiState {
     object Idle : MetalsUiState()

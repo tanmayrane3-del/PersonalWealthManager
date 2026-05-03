@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.macro
+﻿package com.pwm.personalwealthmanager.presentation.macro
 
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -13,13 +13,13 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.data.remote.dto.MacroAccuracyDto
-import com.example.personalwealthmanager.data.remote.dto.MacroBacktestResponseDto
-import com.example.personalwealthmanager.data.remote.dto.MacroHistoryItemDto
-import com.example.personalwealthmanager.data.remote.dto.MacroSignalDto
-import com.example.personalwealthmanager.databinding.ActivityMacroSignalBinding
-import com.example.personalwealthmanager.presentation.base.BaseDrawerActivity
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.data.remote.dto.MacroAccuracyDto
+import com.pwm.personalwealthmanager.data.remote.dto.MacroBacktestResponseDto
+import com.pwm.personalwealthmanager.data.remote.dto.MacroHistoryItemDto
+import com.pwm.personalwealthmanager.data.remote.dto.MacroSignalDto
+import com.pwm.personalwealthmanager.databinding.ActivityMacroSignalBinding
+import com.pwm.personalwealthmanager.presentation.base.BaseDrawerActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.NumberFormat

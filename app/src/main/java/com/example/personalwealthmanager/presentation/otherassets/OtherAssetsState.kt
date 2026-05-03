@@ -1,6 +1,6 @@
-package com.example.personalwealthmanager.presentation.otherassets
+﻿package com.pwm.personalwealthmanager.presentation.otherassets
 
-import com.example.personalwealthmanager.domain.model.PhysicalAssetSummary
+import com.pwm.personalwealthmanager.domain.model.PhysicalAssetSummary
 
 sealed class OtherAssetsUiState {
     object Idle : OtherAssetsUiState()

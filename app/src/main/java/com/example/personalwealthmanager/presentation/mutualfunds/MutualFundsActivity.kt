@@ -1,13 +1,13 @@
-package com.example.personalwealthmanager.presentation.mutualfunds
+﻿package com.pwm.personalwealthmanager.presentation.mutualfunds
 
 import android.os.Bundle
 import androidx.core.view.GravityCompat
 import android.widget.ImageView
-import com.example.personalwealthmanager.R
+import com.pwm.personalwealthmanager.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MutualFundsActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
+class MutualFundsActivity : com.pwm.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
     override fun getActiveNavItem() = BottomNavItem.NETWORTH
 

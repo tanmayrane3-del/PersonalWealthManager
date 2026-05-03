@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.personalwealthmanager"
+    namespace = "com.pwm.personalwealthmanager"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.personalwealthmanager"
+        applicationId = "com.pwm.personalwealthmanager"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

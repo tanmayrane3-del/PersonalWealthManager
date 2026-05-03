@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager
+﻿package com.pwm.personalwealthmanager
 
 import android.content.Context
 import android.content.Intent
@@ -11,8 +11,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.content.edit
-import com.example.personalwealthmanager.ApiConfig
-import com.example.personalwealthmanager.databinding.ActivityLoginBinding
+import com.pwm.personalwealthmanager.ApiConfig
+import com.pwm.personalwealthmanager.databinding.ActivityLoginBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

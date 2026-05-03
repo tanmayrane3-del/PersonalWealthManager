@@ -1,10 +1,10 @@
-package com.example.personalwealthmanager.presentation.settings
+﻿package com.pwm.personalwealthmanager.presentation.settings
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.cardview.widget.CardView
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.presentation.base.BaseDrawerActivity
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.presentation.base.BaseDrawerActivity
 
 class SettingsActivity : BaseDrawerActivity() {
 

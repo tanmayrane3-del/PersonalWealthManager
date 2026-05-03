@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Launcher icon background -->
+    <color name="ic_launcher_background">#00897B</color>
+
     <!-- Primary Teal Colors -->
     <color name="teal_500">#009688</color>
     <color name="teal_600">#00897B</color>
@@ -81,6 +84,13 @@
 
     <!-- Stocks / Assets Dashboard Card -->
     <color name="card_stocks_indigo">#3F51B5</color>
+
+    <!-- Metals screen redesign (light theme) -->
+    <color name="metals_bg">#F2F4F5</color>
+    <color name="metals_label_muted">#6E7976</color>
+    <color name="metals_cagr_badge_bg">#196B22</color>
+    <color name="metals_cagr_badge_text">#88D982</color>
+    <color name="metals_gain_green">#005111</color>
 
     <!-- Drawer Menu -->
     <color name="drawer_bg">#CCFFFFFF</color>

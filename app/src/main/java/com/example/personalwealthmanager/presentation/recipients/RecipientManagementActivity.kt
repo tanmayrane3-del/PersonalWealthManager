@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.recipients
+﻿package com.pwm.personalwealthmanager.presentation.recipients
 
 import android.app.AlertDialog
 import android.content.res.ColorStateList
@@ -14,8 +14,8 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.domain.model.Recipient
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.domain.model.Recipient
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
@@ -23,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RecipientManagementActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
+class RecipientManagementActivity : com.pwm.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
     override fun getSelfButtonId() = R.id.btnRecipientManagement
 

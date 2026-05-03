@@ -1,7 +1,7 @@
-package com.example.personalwealthmanager.domain.repository
+﻿package com.pwm.personalwealthmanager.domain.repository
 
-import com.example.personalwealthmanager.data.remote.dto.NetWorthCurrentDto
-import com.example.personalwealthmanager.data.remote.dto.NetWorthSnapshotDto
+import com.pwm.personalwealthmanager.data.remote.dto.NetWorthCurrentDto
+import com.pwm.personalwealthmanager.data.remote.dto.NetWorthSnapshotDto
 
 interface NetWorthRepository {
     suspend fun getCurrent(sessionToken: String): Result<NetWorthCurrentDto>

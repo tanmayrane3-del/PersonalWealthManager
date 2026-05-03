@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.core.sms.queue
+﻿package com.pwm.personalwealthmanager.core.sms.queue
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

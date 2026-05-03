@@ -1,11 +1,11 @@
-package com.example.personalwealthmanager.data.remote.api
+﻿package com.pwm.personalwealthmanager.data.remote.api
 
-import com.example.personalwealthmanager.data.remote.dto.ApiResponse
-import com.example.personalwealthmanager.data.remote.dto.CreatePhysicalAssetRequest
-import com.example.personalwealthmanager.data.remote.dto.PhysicalAssetDto
-import com.example.personalwealthmanager.data.remote.dto.PhysicalAssetsListDto
-import com.example.personalwealthmanager.data.remote.dto.PhysicalAssetSummaryDto
-import com.example.personalwealthmanager.data.remote.dto.UpdatePhysicalAssetRequest
+import com.pwm.personalwealthmanager.data.remote.dto.ApiResponse
+import com.pwm.personalwealthmanager.data.remote.dto.CreatePhysicalAssetRequest
+import com.pwm.personalwealthmanager.data.remote.dto.PhysicalAssetDto
+import com.pwm.personalwealthmanager.data.remote.dto.PhysicalAssetsListDto
+import com.pwm.personalwealthmanager.data.remote.dto.PhysicalAssetSummaryDto
+import com.pwm.personalwealthmanager.data.remote.dto.UpdatePhysicalAssetRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

@@ -1,7 +1,7 @@
-package com.example.personalwealthmanager.presentation.mutualfunds
+﻿package com.pwm.personalwealthmanager.presentation.mutualfunds
 
-import com.example.personalwealthmanager.domain.model.MutualFundHolding
-import com.example.personalwealthmanager.domain.model.MutualFundPortfolioSummary
+import com.pwm.personalwealthmanager.domain.model.MutualFundHolding
+import com.pwm.personalwealthmanager.domain.model.MutualFundPortfolioSummary
 
 sealed class MutualFundsUiState {
     object Idle    : MutualFundsUiState()

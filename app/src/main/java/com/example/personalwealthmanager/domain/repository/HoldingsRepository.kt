@@ -1,7 +1,7 @@
-package com.example.personalwealthmanager.domain.repository
+﻿package com.pwm.personalwealthmanager.domain.repository
 
-import com.example.personalwealthmanager.domain.model.StockHolding
-import com.example.personalwealthmanager.domain.model.StocksPortfolioSummary
+import com.pwm.personalwealthmanager.domain.model.StockHolding
+import com.pwm.personalwealthmanager.domain.model.StocksPortfolioSummary
 
 interface HoldingsRepository {
     suspend fun getHoldings(sessionToken: String): Result<List<StockHolding>>

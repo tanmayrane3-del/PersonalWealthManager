@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.metals
+﻿package com.pwm.personalwealthmanager.presentation.metals
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.data.remote.dto.MetalHoldingRequest
-import com.example.personalwealthmanager.databinding.BottomSheetAddEditMetalBinding
-import com.example.personalwealthmanager.domain.model.MetalHolding
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.data.remote.dto.MetalHoldingRequest
+import com.pwm.personalwealthmanager.databinding.BottomSheetAddEditMetalBinding
+import com.pwm.personalwealthmanager.domain.model.MetalHolding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 

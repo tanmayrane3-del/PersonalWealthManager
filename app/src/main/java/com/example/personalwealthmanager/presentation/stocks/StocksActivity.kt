@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.stocks
+﻿package com.pwm.personalwealthmanager.presentation.stocks
 
 import android.content.Intent
 import android.net.Uri
@@ -21,10 +21,10 @@ import androidx.transition.ChangeBounds
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.domain.model.StockHolding
-import com.example.personalwealthmanager.domain.model.StocksPortfolioSummary
-import com.example.personalwealthmanager.presentation.zerodha.SetupZerodhaActivity
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.domain.model.StockHolding
+import com.pwm.personalwealthmanager.domain.model.StocksPortfolioSummary
+import com.pwm.personalwealthmanager.presentation.zerodha.SetupZerodhaActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -32,7 +32,7 @@ import java.util.Locale
 import kotlin.math.abs
 
 @AndroidEntryPoint
-class StocksActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
+class StocksActivity : com.pwm.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
     override fun getActiveNavItem() = BottomNavItem.NETWORTH
     override fun getSelfButtonId() = R.id.btnStocks

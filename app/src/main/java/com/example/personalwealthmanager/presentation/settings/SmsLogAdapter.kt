@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.settings
+﻿package com.pwm.personalwealthmanager.presentation.settings
 
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.core.sms.queue.SmsQueueEntity
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.core.sms.queue.SmsQueueEntity
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

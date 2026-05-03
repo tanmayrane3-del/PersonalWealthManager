@@ -1,6 +1,6 @@
-package com.example.personalwealthmanager.core.utils
+﻿package com.pwm.personalwealthmanager.core.utils
 
-import com.example.personalwealthmanager.domain.model.PhysicalAsset
+import com.pwm.personalwealthmanager.domain.model.PhysicalAsset
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import kotlin.math.pow

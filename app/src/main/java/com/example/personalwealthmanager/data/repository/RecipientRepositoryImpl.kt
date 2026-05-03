@@ -1,12 +1,12 @@
-package com.example.personalwealthmanager.data.repository
+﻿package com.pwm.personalwealthmanager.data.repository
 
-import com.example.personalwealthmanager.core.utils.SessionManager
-import com.example.personalwealthmanager.data.remote.api.MetadataApi
-import com.example.personalwealthmanager.data.remote.dto.CreateRecipientRequest
-import com.example.personalwealthmanager.data.remote.dto.RecipientDto
-import com.example.personalwealthmanager.data.remote.dto.UpdateRecipientRequest
-import com.example.personalwealthmanager.domain.model.Recipient
-import com.example.personalwealthmanager.domain.repository.RecipientRepository
+import com.pwm.personalwealthmanager.core.utils.SessionManager
+import com.pwm.personalwealthmanager.data.remote.api.MetadataApi
+import com.pwm.personalwealthmanager.data.remote.dto.CreateRecipientRequest
+import com.pwm.personalwealthmanager.data.remote.dto.RecipientDto
+import com.pwm.personalwealthmanager.data.remote.dto.UpdateRecipientRequest
+import com.pwm.personalwealthmanager.domain.model.Recipient
+import com.pwm.personalwealthmanager.domain.repository.RecipientRepository
 import javax.inject.Inject
 
 class RecipientRepositoryImpl @Inject constructor(

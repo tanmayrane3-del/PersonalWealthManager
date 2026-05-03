@@ -1,11 +1,11 @@
-package com.example.personalwealthmanager.data.remote.api
+﻿package com.pwm.personalwealthmanager.data.remote.api
 
-import com.example.personalwealthmanager.data.remote.dto.ApiResponse
-import com.example.personalwealthmanager.data.remote.dto.CreateLiabilityRequest
-import com.example.personalwealthmanager.data.remote.dto.LiabilitiesListDto
-import com.example.personalwealthmanager.data.remote.dto.LiabilityDto
-import com.example.personalwealthmanager.data.remote.dto.LiabilitySummaryDto
-import com.example.personalwealthmanager.data.remote.dto.UpdateLiabilityRequest
+import com.pwm.personalwealthmanager.data.remote.dto.ApiResponse
+import com.pwm.personalwealthmanager.data.remote.dto.CreateLiabilityRequest
+import com.pwm.personalwealthmanager.data.remote.dto.LiabilitiesListDto
+import com.pwm.personalwealthmanager.data.remote.dto.LiabilityDto
+import com.pwm.personalwealthmanager.data.remote.dto.LiabilitySummaryDto
+import com.pwm.personalwealthmanager.data.remote.dto.UpdateLiabilityRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

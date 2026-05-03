@@ -1,11 +1,11 @@
-package com.example.personalwealthmanager.presentation.mutualfunds
+﻿package com.pwm.personalwealthmanager.presentation.mutualfunds
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.personalwealthmanager.core.utils.SessionManager
-import com.example.personalwealthmanager.data.remote.dto.AddLotRequest
-import com.example.personalwealthmanager.domain.model.SchemeLookupResult
-import com.example.personalwealthmanager.domain.repository.MutualFundRepository
+import com.pwm.personalwealthmanager.core.utils.SessionManager
+import com.pwm.personalwealthmanager.data.remote.dto.AddLotRequest
+import com.pwm.personalwealthmanager.domain.model.SchemeLookupResult
+import com.pwm.personalwealthmanager.domain.repository.MutualFundRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

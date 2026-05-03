@@ -1,11 +1,11 @@
-package com.example.personalwealthmanager.presentation.liabilities
+﻿package com.pwm.personalwealthmanager.presentation.liabilities
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.personalwealthmanager.core.utils.SessionManager
-import com.example.personalwealthmanager.data.remote.dto.CreateLiabilityRequest
-import com.example.personalwealthmanager.data.remote.dto.UpdateLiabilityRequest
-import com.example.personalwealthmanager.domain.repository.LiabilityRepository
+import com.pwm.personalwealthmanager.core.utils.SessionManager
+import com.pwm.personalwealthmanager.data.remote.dto.CreateLiabilityRequest
+import com.pwm.personalwealthmanager.data.remote.dto.UpdateLiabilityRequest
+import com.pwm.personalwealthmanager.domain.repository.LiabilityRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

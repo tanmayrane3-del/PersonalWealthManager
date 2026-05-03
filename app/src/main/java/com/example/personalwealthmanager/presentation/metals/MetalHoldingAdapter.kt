@@ -1,12 +1,12 @@
-package com.example.personalwealthmanager.presentation.metals
+﻿package com.pwm.personalwealthmanager.presentation.metals
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalwealthmanager.databinding.ItemMetalHeaderBinding
-import com.example.personalwealthmanager.databinding.ItemMetalHoldingBinding
-import com.example.personalwealthmanager.domain.model.MetalHolding
+import com.pwm.personalwealthmanager.databinding.ItemMetalHeaderBinding
+import com.pwm.personalwealthmanager.databinding.ItemMetalHoldingBinding
+import com.pwm.personalwealthmanager.domain.model.MetalHolding
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -82,6 +82,10 @@ class MetalHoldingAdapter(
             binding.tvPurity.text = holding.purity.uppercase()
             binding.tvQuantity.text = String.format("%.2f g", holding.quantityGrams)
             binding.tvCurrentValue.text = formatInr(holding.currentValue)
+            binding.tvTypeCell.text = holding.subType
+                ?.replaceFirstChar { it.uppercase() }
+                ?: holding.metalType.replace("_", " ").split(" ")
+                    .joinToString(" ") { it.replaceFirstChar { c -> c.uppercase() } }
 
             binding.root.setOnLongClickListener {
                 showContextMenu(holding)

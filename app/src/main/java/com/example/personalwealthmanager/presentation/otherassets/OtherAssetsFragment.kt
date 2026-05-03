@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.otherassets
+﻿package com.pwm.personalwealthmanager.presentation.otherassets
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -19,10 +19,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.core.utils.PhysicalAssetCagrCalculator
-import com.example.personalwealthmanager.domain.model.PhysicalAsset
-import com.example.personalwealthmanager.domain.model.PhysicalAssetSummary
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.core.utils.PhysicalAssetCagrCalculator
+import com.pwm.personalwealthmanager.domain.model.PhysicalAsset
+import com.pwm.personalwealthmanager.domain.model.PhysicalAssetSummary
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

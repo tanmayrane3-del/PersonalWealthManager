@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.sources
+﻿package com.pwm.personalwealthmanager.presentation.sources
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.domain.model.Source
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.domain.model.Source
 
 class SourceAdapter(
     private var sources: List<Source>,

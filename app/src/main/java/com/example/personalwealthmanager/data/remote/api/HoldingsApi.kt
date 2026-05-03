@@ -1,9 +1,9 @@
-package com.example.personalwealthmanager.data.remote.api
+﻿package com.pwm.personalwealthmanager.data.remote.api
 
-import com.example.personalwealthmanager.data.remote.dto.ApiResponse
-import com.example.personalwealthmanager.data.remote.dto.HoldingsListResponse
-import com.example.personalwealthmanager.data.remote.dto.HoldingsSyncResponse
-import com.example.personalwealthmanager.data.remote.dto.StocksSummaryDto
+import com.pwm.personalwealthmanager.data.remote.dto.ApiResponse
+import com.pwm.personalwealthmanager.data.remote.dto.HoldingsListResponse
+import com.pwm.personalwealthmanager.data.remote.dto.HoldingsSyncResponse
+import com.pwm.personalwealthmanager.data.remote.dto.StocksSummaryDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header

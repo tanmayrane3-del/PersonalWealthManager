@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.stocks
+﻿package com.pwm.personalwealthmanager.presentation.stocks
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,8 +7,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.domain.model.StockHolding
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.domain.model.StockHolding
 import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.abs

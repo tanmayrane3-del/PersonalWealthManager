@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.auth.login
+﻿package com.pwm.personalwealthmanager.presentation.auth.login
 
 data class LoginState(
     val isLoading: Boolean = false,

@@ -1,10 +1,10 @@
-package com.example.personalwealthmanager.data.remote.api
+﻿package com.pwm.personalwealthmanager.data.remote.api
 
-import com.example.personalwealthmanager.data.remote.dto.ApiResponse
-import com.example.personalwealthmanager.data.remote.dto.CreateTransactionRequest
-import com.example.personalwealthmanager.data.remote.dto.TransactionDto
-import com.example.personalwealthmanager.data.remote.dto.TransactionIdResponse
-import com.example.personalwealthmanager.data.remote.dto.UpdateTransactionRequest
+import com.pwm.personalwealthmanager.data.remote.dto.ApiResponse
+import com.pwm.personalwealthmanager.data.remote.dto.CreateTransactionRequest
+import com.pwm.personalwealthmanager.data.remote.dto.TransactionDto
+import com.pwm.personalwealthmanager.data.remote.dto.TransactionIdResponse
+import com.pwm.personalwealthmanager.data.remote.dto.UpdateTransactionRequest
 import retrofit2.Response
 import retrofit2.http.*
 

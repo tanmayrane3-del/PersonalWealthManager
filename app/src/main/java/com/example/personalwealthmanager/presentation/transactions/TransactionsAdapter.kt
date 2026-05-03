@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.transactions
+﻿package com.pwm.personalwealthmanager.presentation.transactions
 
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.domain.model.Transaction
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.domain.model.Transaction
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*

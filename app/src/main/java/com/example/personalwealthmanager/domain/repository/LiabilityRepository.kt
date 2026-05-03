@@ -1,9 +1,9 @@
-package com.example.personalwealthmanager.domain.repository
+﻿package com.pwm.personalwealthmanager.domain.repository
 
-import com.example.personalwealthmanager.data.remote.dto.CreateLiabilityRequest
-import com.example.personalwealthmanager.data.remote.dto.UpdateLiabilityRequest
-import com.example.personalwealthmanager.domain.model.Liability
-import com.example.personalwealthmanager.domain.model.LiabilitySummary
+import com.pwm.personalwealthmanager.data.remote.dto.CreateLiabilityRequest
+import com.pwm.personalwealthmanager.data.remote.dto.UpdateLiabilityRequest
+import com.pwm.personalwealthmanager.domain.model.Liability
+import com.pwm.personalwealthmanager.domain.model.LiabilitySummary
 
 interface LiabilityRepository {
     suspend fun getLiabilities(sessionToken: String): Result<List<Liability>>

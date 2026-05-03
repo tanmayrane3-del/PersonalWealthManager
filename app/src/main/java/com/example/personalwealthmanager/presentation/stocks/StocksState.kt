@@ -1,6 +1,6 @@
-package com.example.personalwealthmanager.presentation.stocks
+﻿package com.pwm.personalwealthmanager.presentation.stocks
 
-import com.example.personalwealthmanager.domain.model.StockHolding
+import com.pwm.personalwealthmanager.domain.model.StockHolding
 
 sealed class StocksState {
     object Idle : StocksState()

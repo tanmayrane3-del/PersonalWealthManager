@@ -1,6 +1,6 @@
-package com.example.personalwealthmanager.domain.repository
+﻿package com.pwm.personalwealthmanager.domain.repository
 
-import com.example.personalwealthmanager.domain.model.User
+import com.pwm.personalwealthmanager.domain.model.User
 
 interface AuthRepository {
     suspend fun login(email: String, password: String): Result<User>

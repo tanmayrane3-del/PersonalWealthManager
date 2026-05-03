@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager
+﻿package com.pwm.personalwealthmanager
 
 data class Transaction(
     val transactionId: String,

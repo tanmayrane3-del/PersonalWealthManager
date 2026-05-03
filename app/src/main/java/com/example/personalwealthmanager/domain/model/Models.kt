@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.domain.model
+﻿package com.pwm.personalwealthmanager.domain.model
 
 data class User(
     val email: String,

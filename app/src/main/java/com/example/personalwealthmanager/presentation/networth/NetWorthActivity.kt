@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.networth
+﻿package com.pwm.personalwealthmanager.presentation.networth
 
 import android.content.Intent
 import android.graphics.Color
@@ -12,9 +12,9 @@ import androidx.cardview.widget.CardView
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.data.remote.dto.NetWorthCurrentDto
-import com.example.personalwealthmanager.data.remote.dto.NetWorthSnapshotDto
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.data.remote.dto.NetWorthCurrentDto
+import com.pwm.personalwealthmanager.data.remote.dto.NetWorthSnapshotDto
 import android.content.Context
 import com.google.gson.Gson
 import com.github.mikephil.charting.charts.LineChart
@@ -37,7 +37,7 @@ import java.util.Locale
 import androidx.lifecycle.Lifecycle
 
 @AndroidEntryPoint
-class NetWorthActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
+class NetWorthActivity : com.pwm.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
     override fun getActiveNavItem() = BottomNavItem.NETWORTH
     override fun getSelfButtonId() = R.id.btnNetWorth

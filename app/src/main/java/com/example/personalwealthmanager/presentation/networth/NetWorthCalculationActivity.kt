@@ -1,12 +1,12 @@
-package com.example.personalwealthmanager.presentation.networth
+﻿package com.pwm.personalwealthmanager.presentation.networth
 
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.data.remote.dto.NetWorthCurrentDto
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.data.remote.dto.NetWorthCurrentDto
 import com.google.gson.Gson
 import java.text.NumberFormat
 import java.util.Locale

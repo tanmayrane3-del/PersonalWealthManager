@@ -1,6 +1,6 @@
-package com.example.personalwealthmanager.presentation.categories
+﻿package com.pwm.personalwealthmanager.presentation.categories
 
-import com.example.personalwealthmanager.domain.model.Category
+import com.pwm.personalwealthmanager.domain.model.Category
 
 data class CategoryManagementState(
     val isLoading: Boolean = false,

@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.core.utils
+﻿package com.pwm.personalwealthmanager.core.utils
 
 import android.app.Dialog
 import android.content.Context
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.personalwealthmanager.R
+import com.pwm.personalwealthmanager.R
 
 object AppLoader {
 

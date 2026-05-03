@@ -1,8 +1,8 @@
-package com.example.personalwealthmanager.data.remote.api
+﻿package com.pwm.personalwealthmanager.data.remote.api
 
-import com.example.personalwealthmanager.data.remote.dto.ApiResponse
-import com.example.personalwealthmanager.data.remote.dto.SmsParseRequest
-import com.example.personalwealthmanager.data.remote.dto.SmsParseResult
+import com.pwm.personalwealthmanager.data.remote.dto.ApiResponse
+import com.pwm.personalwealthmanager.data.remote.dto.SmsParseRequest
+import com.pwm.personalwealthmanager.data.remote.dto.SmsParseResult
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header

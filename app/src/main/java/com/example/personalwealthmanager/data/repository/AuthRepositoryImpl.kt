@@ -1,12 +1,12 @@
-package com.example.personalwealthmanager.data.repository
+﻿package com.pwm.personalwealthmanager.data.repository
 
-import com.example.personalwealthmanager.core.utils.SessionManager
-import com.example.personalwealthmanager.data.remote.api.AuthApi
-import com.example.personalwealthmanager.data.remote.dto.CreateSessionRequest
-import com.example.personalwealthmanager.data.remote.dto.LoginRequest
-import com.example.personalwealthmanager.data.remote.dto.RegisterRequest
-import com.example.personalwealthmanager.domain.model.User
-import com.example.personalwealthmanager.domain.repository.AuthRepository
+import com.pwm.personalwealthmanager.core.utils.SessionManager
+import com.pwm.personalwealthmanager.data.remote.api.AuthApi
+import com.pwm.personalwealthmanager.data.remote.dto.CreateSessionRequest
+import com.pwm.personalwealthmanager.data.remote.dto.LoginRequest
+import com.pwm.personalwealthmanager.data.remote.dto.RegisterRequest
+import com.pwm.personalwealthmanager.domain.model.User
+import com.pwm.personalwealthmanager.domain.repository.AuthRepository
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(

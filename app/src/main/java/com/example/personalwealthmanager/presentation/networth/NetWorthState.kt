@@ -1,9 +1,9 @@
-package com.example.personalwealthmanager.presentation.networth
+﻿package com.pwm.personalwealthmanager.presentation.networth
 
-import com.example.personalwealthmanager.data.remote.dto.MetalsSummaryDto
-import com.example.personalwealthmanager.data.remote.dto.MfCagrSummaryDto
-import com.example.personalwealthmanager.data.remote.dto.NetWorthCurrentDto
-import com.example.personalwealthmanager.data.remote.dto.NetWorthSnapshotDto
+import com.pwm.personalwealthmanager.data.remote.dto.MetalsSummaryDto
+import com.pwm.personalwealthmanager.data.remote.dto.MfCagrSummaryDto
+import com.pwm.personalwealthmanager.data.remote.dto.NetWorthCurrentDto
+import com.pwm.personalwealthmanager.data.remote.dto.NetWorthSnapshotDto
 
 sealed class NetWorthCurrentState {
     object Idle    : NetWorthCurrentState()

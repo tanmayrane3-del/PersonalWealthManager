@@ -1,6 +1,6 @@
-package com.example.personalwealthmanager.domain.repository
+﻿package com.pwm.personalwealthmanager.domain.repository
 
-import com.example.personalwealthmanager.domain.model.Category
+import com.pwm.personalwealthmanager.domain.model.Category
 
 interface CategoryRepository {
     suspend fun getIncomeCategories(): Result<List<Category>>

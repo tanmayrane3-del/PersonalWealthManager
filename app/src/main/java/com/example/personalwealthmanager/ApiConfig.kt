@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager
+﻿package com.pwm.personalwealthmanager
 
 object ApiConfig {
     const val BASE_URL = "https://wealth-backend-demo.onrender.com"

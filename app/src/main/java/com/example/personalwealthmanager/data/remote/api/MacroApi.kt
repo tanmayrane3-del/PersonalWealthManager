@@ -1,10 +1,10 @@
-package com.example.personalwealthmanager.data.remote.api
+﻿package com.pwm.personalwealthmanager.data.remote.api
 
-import com.example.personalwealthmanager.data.remote.dto.ApiResponse
-import com.example.personalwealthmanager.data.remote.dto.MacroAccuracyDto
-import com.example.personalwealthmanager.data.remote.dto.MacroBacktestResponseDto
-import com.example.personalwealthmanager.data.remote.dto.MacroHistoryItemDto
-import com.example.personalwealthmanager.data.remote.dto.MacroSignalDto
+import com.pwm.personalwealthmanager.data.remote.dto.ApiResponse
+import com.pwm.personalwealthmanager.data.remote.dto.MacroAccuracyDto
+import com.pwm.personalwealthmanager.data.remote.dto.MacroBacktestResponseDto
+import com.pwm.personalwealthmanager.data.remote.dto.MacroHistoryItemDto
+import com.pwm.personalwealthmanager.data.remote.dto.MacroSignalDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header

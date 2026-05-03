@@ -1,8 +1,8 @@
-package com.example.personalwealthmanager.domain.repository
+﻿package com.pwm.personalwealthmanager.domain.repository
 
-import com.example.personalwealthmanager.domain.model.Category
-import com.example.personalwealthmanager.domain.model.Transaction
-import com.example.personalwealthmanager.domain.model.TransactionMetadata
+import com.pwm.personalwealthmanager.domain.model.Category
+import com.pwm.personalwealthmanager.domain.model.Transaction
+import com.pwm.personalwealthmanager.domain.model.TransactionMetadata
 
 interface TransactionRepository {
     suspend fun getTransactions(

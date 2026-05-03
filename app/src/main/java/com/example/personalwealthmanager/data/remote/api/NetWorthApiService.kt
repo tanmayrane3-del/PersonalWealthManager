@@ -1,8 +1,8 @@
-package com.example.personalwealthmanager.data.remote.api
+﻿package com.pwm.personalwealthmanager.data.remote.api
 
-import com.example.personalwealthmanager.data.remote.dto.ApiResponse
-import com.example.personalwealthmanager.data.remote.dto.NetWorthCurrentDto
-import com.example.personalwealthmanager.data.remote.dto.NetWorthSnapshotsDto
+import com.pwm.personalwealthmanager.data.remote.dto.ApiResponse
+import com.pwm.personalwealthmanager.data.remote.dto.NetWorthCurrentDto
+import com.pwm.personalwealthmanager.data.remote.dto.NetWorthSnapshotsDto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header

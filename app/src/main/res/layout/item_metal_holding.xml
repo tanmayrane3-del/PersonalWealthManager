@@ -4,86 +4,204 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="16dp"
-    android:layout_marginVertical="4dp"
-    app:cardCornerRadius="12dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    app:cardCornerRadius="14dp"
     app:cardElevation="2dp"
-    app:cardBackgroundColor="@color/card_medium_teal">
+    app:cardBackgroundColor="@color/white">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="14dp">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!-- Label -->
-        <TextView
-            android:id="@+id/tvLabel"
-            android:layout_width="0dp"
+        <!-- Row 1: Label + Sub-label  |  Value + Gain -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="My Gold Bangle"
-            android:textColor="@android:color/white"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:ellipsize="end"
-            android:maxLines="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tvPurity" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <!-- Purity Badge -->
-        <TextView
-            android:id="@+id/tvPurity"
-            android:layout_width="wrap_content"
+            <!-- Left: label + sub-type -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginEnd="8dp">
+
+                <TextView
+                    android:id="@+id/tvLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="My Gold"
+                    android:textColor="@color/teal_800"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+
+                <TextView
+                    android:id="@+id/tvSubType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Investment"
+                    android:textColor="@color/metals_label_muted"
+                    android:textSize="12sp"
+                    android:layout_marginTop="2dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <!-- Right: value + gain % -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="end">
+
+                <TextView
+                    android:id="@+id/tvCurrentValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹0"
+                    android:textColor="@color/tx_text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvGainPercent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+0.0% Overall"
+                    android:textColor="@color/metals_gain_green"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="2dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/metals_bg"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Row 2: Weight / Purity / Type grid -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="22K"
-            android:textColor="@android:color/white"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="3dp"
-            android:background="@drawable/bg_purity_badge"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <!-- Sub-type -->
-        <TextView
-            android:id="@+id/tvSubType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Jewellery"
-            android:textColor="#AAFFFFFF"
-            android:textSize="12sp"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvLabel"
-            android:layout_marginTop="2dp" />
+            <!-- Weight -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-        <!-- Quantity -->
-        <TextView
-            android:id="@+id/tvQuantity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="10.00 g"
-            android:textColor="#DDFFFFFF"
-            android:textSize="13sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvSubType"
-            android:layout_marginTop="8dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="WEIGHT"
+                    android:textColor="@color/metals_label_muted"
+                    android:textSize="9sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.06"
+                    android:layout_marginBottom="2dp" />
 
-        <!-- Current Value -->
-        <TextView
-            android:id="@+id/tvCurrentValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="₹75,000"
-            android:textColor="#F5A623"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvPurity"
-            android:layout_marginTop="8dp" />
+                <TextView
+                    android:id="@+id/tvQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0.00 g"
+                    android:textColor="@color/tx_text_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <!-- Vertical divider -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="28dp"
+                android:background="@color/metals_bg"
+                android:layout_marginEnd="12dp" />
+
+            <!-- Purity -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PURITY"
+                    android:textColor="@color/metals_label_muted"
+                    android:textSize="9sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.06"
+                    android:layout_marginBottom="2dp" />
+
+                <TextView
+                    android:id="@+id/tvPurity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="22K"
+                    android:textColor="@color/tx_text_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Vertical divider -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="28dp"
+                android:background="@color/metals_bg"
+                android:layout_marginEnd="12dp" />
+
+            <!-- Type -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TYPE"
+                    android:textColor="@color/metals_label_muted"
+                    android:textSize="9sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.06"
+                    android:layout_marginBottom="2dp" />
+
+                <TextView
+                    android:id="@+id/tvTypeCell"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="--"
+                    android:textColor="@color/tx_text_primary"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

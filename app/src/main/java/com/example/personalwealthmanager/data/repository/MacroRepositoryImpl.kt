@@ -1,11 +1,11 @@
-package com.example.personalwealthmanager.data.repository
+﻿package com.pwm.personalwealthmanager.data.repository
 
-import com.example.personalwealthmanager.data.remote.api.MacroApi
-import com.example.personalwealthmanager.data.remote.dto.MacroAccuracyDto
-import com.example.personalwealthmanager.data.remote.dto.MacroBacktestResponseDto
-import com.example.personalwealthmanager.data.remote.dto.MacroHistoryItemDto
-import com.example.personalwealthmanager.data.remote.dto.MacroSignalDto
-import com.example.personalwealthmanager.domain.repository.MacroRepository
+import com.pwm.personalwealthmanager.data.remote.api.MacroApi
+import com.pwm.personalwealthmanager.data.remote.dto.MacroAccuracyDto
+import com.pwm.personalwealthmanager.data.remote.dto.MacroBacktestResponseDto
+import com.pwm.personalwealthmanager.data.remote.dto.MacroHistoryItemDto
+import com.pwm.personalwealthmanager.data.remote.dto.MacroSignalDto
+import com.pwm.personalwealthmanager.domain.repository.MacroRepository
 import org.json.JSONObject
 import javax.inject.Inject
 

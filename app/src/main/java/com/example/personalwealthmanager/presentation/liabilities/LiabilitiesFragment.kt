@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.liabilities
+﻿package com.pwm.personalwealthmanager.presentation.liabilities
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,10 +17,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.domain.model.Liability
-import com.example.personalwealthmanager.domain.model.LiabilitySummary
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.domain.model.Liability
+import com.pwm.personalwealthmanager.domain.model.LiabilitySummary
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -40,8 +39,6 @@ class LiabilitiesFragment : Fragment() {
     private lateinit var tvTotalOutstanding: TextView
     private lateinit var tvTotalEmi: TextView
     private lateinit var tvActiveCount: TextView
-    private lateinit var fabAddLiability: FloatingActionButton
-
     private val currencyFormat = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("en-IN"))
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -59,16 +56,10 @@ class LiabilitiesFragment : Fragment() {
         tvTotalOutstanding = view.findViewById(R.id.tvTotalOutstanding)
         tvTotalEmi = view.findViewById(R.id.tvTotalEmi)
         tvActiveCount = view.findViewById(R.id.tvActiveCount)
-        fabAddLiability = view.findViewById(R.id.fabAddLiability)
-
         adapter = LiabilityCardAdapter(onClick = { liability -> openEdit(liability) })
         rvLiabilities.layoutManager = LinearLayoutManager(requireContext())
         rvLiabilities.adapter = adapter
         rvLiabilities.isNestedScrollingEnabled = false
-
-        fabAddLiability.setOnClickListener {
-            startActivity(Intent(requireContext(), AddEditLiabilityActivity::class.java))
-        }
 
         swipeRefresh.setOnRefreshListener {
             viewModel.fetchSummary()
@@ -129,7 +120,7 @@ class LiabilitiesFragment : Fragment() {
 
         tvTotalOutstanding.text = currencyFormat.format(summary.totalOutstanding)
         tvTotalEmi.text = currencyFormat.format(summary.totalEmi)
-        tvActiveCount.text = "${summary.activeCount} active loan${if (summary.activeCount != 1) "s" else ""}"
+        tvActiveCount.text = "${summary.liabilities.size}"
 
         if (summary.liabilities.isEmpty()) {
             rvLiabilities.visibility = View.GONE

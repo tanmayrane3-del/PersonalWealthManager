@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.core.sms
+﻿package com.pwm.personalwealthmanager.core.sms
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -11,9 +11,9 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.personalwealthmanager.core.sms.queue.SmsQueueEntity
-import com.example.personalwealthmanager.core.sms.queue.SmsQueueWorker
-import com.example.personalwealthmanager.core.utils.SessionManager
+import com.pwm.personalwealthmanager.core.sms.queue.SmsQueueEntity
+import com.pwm.personalwealthmanager.core.sms.queue.SmsQueueWorker
+import com.pwm.personalwealthmanager.core.utils.SessionManager
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -1,13 +1,13 @@
-package com.example.personalwealthmanager.data.remote.api
+﻿package com.pwm.personalwealthmanager.data.remote.api
 
-import com.example.personalwealthmanager.data.remote.dto.AddLotRequest
-import com.example.personalwealthmanager.data.remote.dto.ApiResponse
-import com.example.personalwealthmanager.data.remote.dto.CasPreviewData
-import com.example.personalwealthmanager.data.remote.dto.ConfirmImportRequest
-import com.example.personalwealthmanager.data.remote.dto.ImportResultDto
-import com.example.personalwealthmanager.data.remote.dto.MfCagrSummaryDto
-import com.example.personalwealthmanager.data.remote.dto.MfHoldingsData
-import com.example.personalwealthmanager.data.remote.dto.SchemeLookupDto
+import com.pwm.personalwealthmanager.data.remote.dto.AddLotRequest
+import com.pwm.personalwealthmanager.data.remote.dto.ApiResponse
+import com.pwm.personalwealthmanager.data.remote.dto.CasPreviewData
+import com.pwm.personalwealthmanager.data.remote.dto.ConfirmImportRequest
+import com.pwm.personalwealthmanager.data.remote.dto.ImportResultDto
+import com.pwm.personalwealthmanager.data.remote.dto.MfCagrSummaryDto
+import com.pwm.personalwealthmanager.data.remote.dto.MfHoldingsData
+import com.pwm.personalwealthmanager.data.remote.dto.SchemeLookupDto
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body

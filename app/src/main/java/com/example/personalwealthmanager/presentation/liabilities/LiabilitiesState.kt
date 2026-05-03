@@ -1,6 +1,6 @@
-package com.example.personalwealthmanager.presentation.liabilities
+﻿package com.pwm.personalwealthmanager.presentation.liabilities
 
-import com.example.personalwealthmanager.domain.model.LiabilitySummary
+import com.pwm.personalwealthmanager.domain.model.LiabilitySummary
 
 sealed class LiabilitiesUiState {
     object Idle : LiabilitiesUiState()

@@ -1,9 +1,9 @@
-package com.example.personalwealthmanager.presentation.recipients
+﻿package com.pwm.personalwealthmanager.presentation.recipients
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.personalwealthmanager.domain.repository.CategoryRepository
-import com.example.personalwealthmanager.domain.repository.RecipientRepository
+import com.pwm.personalwealthmanager.domain.repository.CategoryRepository
+import com.pwm.personalwealthmanager.domain.repository.RecipientRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

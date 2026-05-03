@@ -1,9 +1,9 @@
-package com.example.personalwealthmanager.data.repository
+﻿package com.pwm.personalwealthmanager.data.repository
 
-import com.example.personalwealthmanager.data.remote.api.ZerodhaApi
-import com.example.personalwealthmanager.data.remote.dto.CredentialsRequest
-import com.example.personalwealthmanager.data.remote.dto.ExchangeTokenRequest
-import com.example.personalwealthmanager.domain.repository.ZerodhaRepository
+import com.pwm.personalwealthmanager.data.remote.api.ZerodhaApi
+import com.pwm.personalwealthmanager.data.remote.dto.CredentialsRequest
+import com.pwm.personalwealthmanager.data.remote.dto.ExchangeTokenRequest
+import com.pwm.personalwealthmanager.domain.repository.ZerodhaRepository
 import org.json.JSONObject
 import javax.inject.Inject
 

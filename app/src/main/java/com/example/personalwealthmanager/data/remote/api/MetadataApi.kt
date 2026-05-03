@@ -1,15 +1,15 @@
-package com.example.personalwealthmanager.data.remote.api
+﻿package com.pwm.personalwealthmanager.data.remote.api
 
-import com.example.personalwealthmanager.data.remote.dto.ApiResponse
-import com.example.personalwealthmanager.data.remote.dto.CategoryDto
-import com.example.personalwealthmanager.data.remote.dto.CreateCategoryRequest
-import com.example.personalwealthmanager.data.remote.dto.CreateRecipientRequest
-import com.example.personalwealthmanager.data.remote.dto.CreateSourceRequest
-import com.example.personalwealthmanager.data.remote.dto.RecipientDto
-import com.example.personalwealthmanager.data.remote.dto.SourceDto
-import com.example.personalwealthmanager.data.remote.dto.UpdateCategoryRequest
-import com.example.personalwealthmanager.data.remote.dto.UpdateRecipientRequest
-import com.example.personalwealthmanager.data.remote.dto.UpdateSourceRequest
+import com.pwm.personalwealthmanager.data.remote.dto.ApiResponse
+import com.pwm.personalwealthmanager.data.remote.dto.CategoryDto
+import com.pwm.personalwealthmanager.data.remote.dto.CreateCategoryRequest
+import com.pwm.personalwealthmanager.data.remote.dto.CreateRecipientRequest
+import com.pwm.personalwealthmanager.data.remote.dto.CreateSourceRequest
+import com.pwm.personalwealthmanager.data.remote.dto.RecipientDto
+import com.pwm.personalwealthmanager.data.remote.dto.SourceDto
+import com.pwm.personalwealthmanager.data.remote.dto.UpdateCategoryRequest
+import com.pwm.personalwealthmanager.data.remote.dto.UpdateRecipientRequest
+import com.pwm.personalwealthmanager.data.remote.dto.UpdateSourceRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

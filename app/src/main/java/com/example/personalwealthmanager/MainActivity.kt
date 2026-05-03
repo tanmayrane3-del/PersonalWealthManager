@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager
+﻿package com.pwm.personalwealthmanager
 
 import android.Manifest
 import android.app.DatePickerDialog
@@ -22,15 +22,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
-import com.example.personalwealthmanager.presentation.stocks.StocksActivity
+import com.pwm.personalwealthmanager.presentation.stocks.StocksActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.example.personalwealthmanager.ApiConfig
-import com.example.personalwealthmanager.presentation.categories.CategoryManagementActivity
-import com.example.personalwealthmanager.presentation.sources.SourceManagementActivity
-import com.example.personalwealthmanager.presentation.recipients.RecipientManagementActivity
-import com.example.personalwealthmanager.presentation.zerodha.SetupZerodhaActivity
-import com.example.personalwealthmanager.presentation.settings.SettingsActivity
+import com.pwm.personalwealthmanager.ApiConfig
+import com.pwm.personalwealthmanager.presentation.categories.CategoryManagementActivity
+import com.pwm.personalwealthmanager.presentation.sources.SourceManagementActivity
+import com.pwm.personalwealthmanager.presentation.recipients.RecipientManagementActivity
+import com.pwm.personalwealthmanager.presentation.zerodha.SetupZerodhaActivity
+import com.pwm.personalwealthmanager.presentation.settings.SettingsActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,17 +41,17 @@ import java.net.URL
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import com.example.personalwealthmanager.presentation.transactions.TransactionsActivity
-import com.example.personalwealthmanager.presentation.mutualfunds.MutualFundsActivity
-import com.example.personalwealthmanager.presentation.otherassets.OtherAssetsActivity
-import com.example.personalwealthmanager.presentation.liabilities.LiabilitiesActivity
-import com.example.personalwealthmanager.presentation.networth.NetWorthActivity
-import com.example.personalwealthmanager.core.utils.PhysicalAssetCagrCalculator
+import com.pwm.personalwealthmanager.presentation.transactions.TransactionsActivity
+import com.pwm.personalwealthmanager.presentation.mutualfunds.MutualFundsActivity
+import com.pwm.personalwealthmanager.presentation.otherassets.OtherAssetsActivity
+import com.pwm.personalwealthmanager.presentation.liabilities.LiabilitiesActivity
+import com.pwm.personalwealthmanager.presentation.networth.NetWorthActivity
+import com.pwm.personalwealthmanager.core.utils.PhysicalAssetCagrCalculator
 import android.graphics.Color
-import com.example.personalwealthmanager.domain.model.PhysicalAsset
-import com.example.personalwealthmanager.domain.model.Liability
+import com.pwm.personalwealthmanager.domain.model.PhysicalAsset
+import com.pwm.personalwealthmanager.domain.model.Liability
 
-class MainActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
+class MainActivity : com.pwm.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
     override fun getActiveNavItem() = BottomNavItem.DASHBOARD
 
@@ -263,7 +263,7 @@ private lateinit var tvStockValue: TextView
         }
 
         findViewById<View>(R.id.goldCard).setOnClickListener {
-            startActivity(Intent(this, com.example.personalwealthmanager.presentation.metals.MetalsActivity::class.java))
+            startActivity(Intent(this, com.pwm.personalwealthmanager.presentation.metals.MetalsActivity::class.java))
         }
 
         findViewById<View>(R.id.mfCard).setOnClickListener {

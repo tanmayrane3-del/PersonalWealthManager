@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.core.sms.queue
+﻿package com.pwm.personalwealthmanager.core.sms.queue
 
 import android.content.Context
 import android.net.Uri
@@ -12,7 +12,7 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.example.personalwealthmanager.core.sms.SmsReceiver
+import com.pwm.personalwealthmanager.core.sms.SmsReceiver
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import java.util.concurrent.TimeUnit

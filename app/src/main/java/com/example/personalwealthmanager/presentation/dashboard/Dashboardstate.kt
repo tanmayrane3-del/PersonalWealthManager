@@ -1,6 +1,6 @@
-package com.example.personalwealthmanager.presentation.dashboard
+﻿package com.pwm.personalwealthmanager.presentation.dashboard
 
-import com.example.personalwealthmanager.domain.model.Transaction
+import com.pwm.personalwealthmanager.domain.model.Transaction
 
 data class DashboardState(
     val isLoading: Boolean = false,

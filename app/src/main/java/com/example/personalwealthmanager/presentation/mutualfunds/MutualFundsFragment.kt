@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.mutualfunds
+﻿package com.pwm.personalwealthmanager.presentation.mutualfunds
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -12,10 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.databinding.FragmentMutualFundsBinding
-import com.example.personalwealthmanager.domain.model.MutualFundHolding
-import com.example.personalwealthmanager.domain.model.MutualFundLot
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.databinding.FragmentMutualFundsBinding
+import com.pwm.personalwealthmanager.domain.model.MutualFundHolding
+import com.pwm.personalwealthmanager.domain.model.MutualFundLot
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.NumberFormat

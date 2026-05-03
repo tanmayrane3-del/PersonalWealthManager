@@ -1,13 +1,15 @@
-package com.example.personalwealthmanager.presentation.liabilities
+﻿package com.pwm.personalwealthmanager.presentation.liabilities
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.GravityCompat
 import android.widget.ImageView
-import com.example.personalwealthmanager.R
+import com.pwm.personalwealthmanager.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LiabilitiesActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
+class LiabilitiesActivity : com.pwm.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
     override fun getActiveNavItem() = BottomNavItem.NETWORTH
 
@@ -18,8 +20,14 @@ class LiabilitiesActivity : com.example.personalwealthmanager.presentation.base.
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_liabilities)
 
+        findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
+
         findViewById<ImageView>(R.id.btnMenu).setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.END)
+        }
+
+        findViewById<FloatingActionButton>(R.id.fabAddLiability).setOnClickListener {
+            startActivity(Intent(this, AddEditLiabilityActivity::class.java))
         }
 
         if (savedInstanceState == null) {

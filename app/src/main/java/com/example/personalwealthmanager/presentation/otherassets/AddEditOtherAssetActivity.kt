@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.otherassets
+﻿package com.pwm.personalwealthmanager.presentation.otherassets
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -16,9 +16,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.data.remote.dto.CreatePhysicalAssetRequest
-import com.example.personalwealthmanager.data.remote.dto.UpdatePhysicalAssetRequest
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.data.remote.dto.CreatePhysicalAssetRequest
+import com.pwm.personalwealthmanager.data.remote.dto.UpdatePhysicalAssetRequest
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Calendar

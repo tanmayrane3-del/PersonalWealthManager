@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.mutualfunds
+﻿package com.pwm.personalwealthmanager.presentation.mutualfunds
 
 import android.app.Activity
 import android.net.Uri
@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalwealthmanager.R
+import com.pwm.personalwealthmanager.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

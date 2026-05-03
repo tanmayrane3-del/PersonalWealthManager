@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.data.remote.dto
+﻿package com.pwm.personalwealthmanager.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
 

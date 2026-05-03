@@ -1,7 +1,7 @@
-package com.example.personalwealthmanager.presentation.sources
+﻿package com.pwm.personalwealthmanager.presentation.sources
 
-import com.example.personalwealthmanager.domain.model.Category
-import com.example.personalwealthmanager.domain.model.Source
+import com.pwm.personalwealthmanager.domain.model.Category
+import com.pwm.personalwealthmanager.domain.model.Source
 
 data class SourceManagementState(
     val isLoading: Boolean = false,

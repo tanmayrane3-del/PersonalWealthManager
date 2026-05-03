@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager
+﻿package com.pwm.personalwealthmanager
 
 import android.app.Application
 import android.app.NotificationChannel
@@ -14,9 +14,9 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Configuration
-import com.example.personalwealthmanager.core.sms.SmsReceiver
-import com.example.personalwealthmanager.core.sms.queue.NightlySmsScanWorker
-import com.example.personalwealthmanager.core.sms.queue.SmsQueueWorker
+import com.pwm.personalwealthmanager.core.sms.SmsReceiver
+import com.pwm.personalwealthmanager.core.sms.queue.NightlySmsScanWorker
+import com.pwm.personalwealthmanager.core.sms.queue.SmsQueueWorker
 import dagger.hilt.android.HiltAndroidApp
 import java.util.Calendar
 import java.util.concurrent.TimeUnit

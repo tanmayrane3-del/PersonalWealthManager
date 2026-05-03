@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.data.remote.api
+﻿package com.pwm.personalwealthmanager.data.remote.api
 
 import com.google.gson.annotations.SerializedName
 import retrofit2.Response

@@ -1,13 +1,13 @@
-package com.example.personalwealthmanager.domain.repository
+﻿package com.pwm.personalwealthmanager.domain.repository
 
-import com.example.personalwealthmanager.data.remote.dto.AddLotRequest
-import com.example.personalwealthmanager.data.remote.dto.CasPreviewData
-import com.example.personalwealthmanager.data.remote.dto.ConfirmImportRequest
-import com.example.personalwealthmanager.data.remote.dto.ImportResultDto
-import com.example.personalwealthmanager.data.remote.dto.MfCagrSummaryDto
-import com.example.personalwealthmanager.domain.model.MutualFundHolding
-import com.example.personalwealthmanager.domain.model.MutualFundPortfolioSummary
-import com.example.personalwealthmanager.domain.model.SchemeLookupResult
+import com.pwm.personalwealthmanager.data.remote.dto.AddLotRequest
+import com.pwm.personalwealthmanager.data.remote.dto.CasPreviewData
+import com.pwm.personalwealthmanager.data.remote.dto.ConfirmImportRequest
+import com.pwm.personalwealthmanager.data.remote.dto.ImportResultDto
+import com.pwm.personalwealthmanager.data.remote.dto.MfCagrSummaryDto
+import com.pwm.personalwealthmanager.domain.model.MutualFundHolding
+import com.pwm.personalwealthmanager.domain.model.MutualFundPortfolioSummary
+import com.pwm.personalwealthmanager.domain.model.SchemeLookupResult
 import okhttp3.MultipartBody
 
 interface MutualFundRepository {

@@ -1,9 +1,9 @@
-package com.example.personalwealthmanager.domain.repository
+﻿package com.pwm.personalwealthmanager.domain.repository
 
-import com.example.personalwealthmanager.data.remote.dto.MetalHoldingRequest
-import com.example.personalwealthmanager.data.remote.dto.MetalsSummaryDto
-import com.example.personalwealthmanager.domain.model.MetalHolding
-import com.example.personalwealthmanager.domain.model.MetalRates
+import com.pwm.personalwealthmanager.data.remote.dto.MetalHoldingRequest
+import com.pwm.personalwealthmanager.data.remote.dto.MetalsSummaryDto
+import com.pwm.personalwealthmanager.domain.model.MetalHolding
+import com.pwm.personalwealthmanager.domain.model.MetalRates
 
 interface MetalsRepository {
     suspend fun getRates(sessionToken: String): Result<MetalRates>

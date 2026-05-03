@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.categories
+﻿package com.pwm.personalwealthmanager.presentation.categories
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.domain.model.Category
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.domain.model.Category
 
 class CategoryAdapter(
     private var categories: List<Category>,

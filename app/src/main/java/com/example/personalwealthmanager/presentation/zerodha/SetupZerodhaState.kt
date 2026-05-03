@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.zerodha
+﻿package com.pwm.personalwealthmanager.presentation.zerodha
 
 sealed class SetupZerodhaState {
     object Idle : SetupZerodhaState()

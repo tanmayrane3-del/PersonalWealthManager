@@ -1,8 +1,8 @@
-package com.example.personalwealthmanager.presentation.categories
+﻿package com.pwm.personalwealthmanager.presentation.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.personalwealthmanager.domain.repository.CategoryRepository
+import com.pwm.personalwealthmanager.domain.repository.CategoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,8 +27,8 @@ class CategoryManagementViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
 
-            var incomeCategories = emptyList<com.example.personalwealthmanager.domain.model.Category>()
-            var expenseCategories = emptyList<com.example.personalwealthmanager.domain.model.Category>()
+            var incomeCategories = emptyList<com.pwm.personalwealthmanager.domain.model.Category>()
+            var expenseCategories = emptyList<com.pwm.personalwealthmanager.domain.model.Category>()
             var hasError = false
             var errorMessage = ""
 

@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.settings
+﻿package com.pwm.personalwealthmanager.presentation.settings
 
 import android.os.Bundle
 import android.view.View
@@ -14,10 +14,10 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.core.sms.queue.SmsQueueDao
-import com.example.personalwealthmanager.core.sms.queue.SmsQueueEntity
-import com.example.personalwealthmanager.core.sms.queue.SmsQueueWorker
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.core.sms.queue.SmsQueueDao
+import com.pwm.personalwealthmanager.core.sms.queue.SmsQueueEntity
+import com.pwm.personalwealthmanager.core.sms.queue.SmsQueueWorker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

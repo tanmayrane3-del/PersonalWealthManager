@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.recipients
+﻿package com.pwm.personalwealthmanager.presentation.recipients
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.domain.model.Recipient
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.domain.model.Recipient
 
 class RecipientAdapter(
     private var recipients: List<Recipient>,

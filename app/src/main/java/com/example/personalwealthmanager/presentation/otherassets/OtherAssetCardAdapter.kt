@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.otherassets
+﻿package com.pwm.personalwealthmanager.presentation.otherassets
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +8,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.core.utils.PhysicalAssetCagrCalculator
-import com.example.personalwealthmanager.domain.model.PhysicalAsset
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.core.utils.PhysicalAssetCagrCalculator
+import com.pwm.personalwealthmanager.domain.model.PhysicalAsset
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale

@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.core.sms.queue
+﻿package com.pwm.personalwealthmanager.core.sms.queue
 
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -14,14 +14,14 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.core.sms.SmsReceiver
-import com.example.personalwealthmanager.core.utils.SessionManager
-import com.example.personalwealthmanager.data.remote.api.AdminApi
-import com.example.personalwealthmanager.data.remote.api.QueueStatsRequest
-import com.example.personalwealthmanager.data.remote.api.SmsApi
-import com.example.personalwealthmanager.data.remote.dto.SmsParseRequest
-import com.example.personalwealthmanager.presentation.transactions.TransactionsActivity
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.core.sms.SmsReceiver
+import com.pwm.personalwealthmanager.core.utils.SessionManager
+import com.pwm.personalwealthmanager.data.remote.api.AdminApi
+import com.pwm.personalwealthmanager.data.remote.api.QueueStatsRequest
+import com.pwm.personalwealthmanager.data.remote.api.SmsApi
+import com.pwm.personalwealthmanager.data.remote.dto.SmsParseRequest
+import com.pwm.personalwealthmanager.presentation.transactions.TransactionsActivity
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 

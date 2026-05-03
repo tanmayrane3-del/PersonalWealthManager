@@ -1,8 +1,8 @@
-package com.example.personalwealthmanager.presentation.auth.register
+﻿package com.pwm.personalwealthmanager.presentation.auth.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.personalwealthmanager.domain.repository.AuthRepository
+import com.pwm.personalwealthmanager.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

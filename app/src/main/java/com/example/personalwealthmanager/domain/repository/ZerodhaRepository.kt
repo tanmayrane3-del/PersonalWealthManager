@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.domain.repository
+﻿package com.pwm.personalwealthmanager.domain.repository
 
 interface ZerodhaRepository {
     suspend fun saveCredentials(sessionToken: String, apiKey: String, apiSecret: String): Result<Unit>

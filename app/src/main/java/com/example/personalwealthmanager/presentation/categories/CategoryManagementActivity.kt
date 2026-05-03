@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.categories
+﻿package com.pwm.personalwealthmanager.presentation.categories
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -13,14 +13,14 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.domain.model.Category
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.domain.model.Category
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CategoryManagementActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
+class CategoryManagementActivity : com.pwm.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
     override fun getSelfButtonId() = R.id.btnCategoryManagement
 

@@ -1,12 +1,12 @@
-package com.example.personalwealthmanager.data.remote.api
+﻿package com.pwm.personalwealthmanager.data.remote.api
 
-import com.example.personalwealthmanager.data.remote.dto.ApiResponse
-import com.example.personalwealthmanager.data.remote.dto.CreateSessionRequest
-import com.example.personalwealthmanager.data.remote.dto.CreateSessionResponse
-import com.example.personalwealthmanager.data.remote.dto.LoginRequest
-import com.example.personalwealthmanager.data.remote.dto.LoginResponse
-import com.example.personalwealthmanager.data.remote.dto.RegisterRequest
-import com.example.personalwealthmanager.data.remote.dto.RegisterResponse
+import com.pwm.personalwealthmanager.data.remote.dto.ApiResponse
+import com.pwm.personalwealthmanager.data.remote.dto.CreateSessionRequest
+import com.pwm.personalwealthmanager.data.remote.dto.CreateSessionResponse
+import com.pwm.personalwealthmanager.data.remote.dto.LoginRequest
+import com.pwm.personalwealthmanager.data.remote.dto.LoginResponse
+import com.pwm.personalwealthmanager.data.remote.dto.RegisterRequest
+import com.pwm.personalwealthmanager.data.remote.dto.RegisterResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header

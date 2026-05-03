@@ -27,71 +27,51 @@
                     android:paddingTop="8dp">
 
                     <!-- Summary Header Card -->
-                    <com.google.android.material.card.MaterialCardView
+                    <LinearLayout
                         android:id="@+id/summaryCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginBottom="12dp"
-                        android:visibility="gone"
-                        app:cardCornerRadius="14dp"
-                        app:cardElevation="4dp"
-                        app:cardBackgroundColor="@color/card_dark_teal">
+                        android:background="@drawable/bg_liability_status_hero"
+                        android:orientation="vertical"
+                        android:padding="20dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Total Outstanding"
+                            android:textColor="#B3FFFFFF"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/tvTotalOutstanding"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="--"
+                            android:textColor="@android:color/white"
+                            android:textSize="28sp"
+                            android:textStyle="bold" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="16dp"
+                            android:background="#1AFFFFFF" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:padding="16dp">
+                            android:orientation="horizontal">
 
-                            <!-- Left: Total Outstanding -->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Total Outstanding"
-                                    android:textColor="#B3FFFFFF"
-                                    android:textSize="12sp" />
-
-                                <TextView
-                                    android:id="@+id/tvTotalOutstanding"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:text="--"
-                                    android:textColor="@android:color/white"
-                                    android:textSize="22sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:id="@+id/tvActiveCount"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:text="-- active loans"
-                                    android:textColor="#88FFFFFF"
-                                    android:textSize="12sp" />
-                            </LinearLayout>
-
-                            <!-- Vertical Divider -->
-                            <View
-                                android:layout_width="1dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginHorizontal="12dp"
-                                android:background="#33FFFFFF" />
-
-                            <!-- Right: Monthly EMI -->
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:gravity="end">
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -104,23 +84,39 @@
                                     android:id="@+id/tvTotalEmi"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
+                                    android:layout_marginTop="2dp"
                                     android:text="--"
-                                    android:textColor="#FF8080"
-                                    android:textSize="22sp"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="17sp"
                                     android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:gravity="end">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="4dp"
-                                    android:text="per month"
-                                    android:textColor="#88FFFFFF"
+                                    android:text="Total Liabilities"
+                                    android:textColor="#B3FFFFFF"
                                     android:textSize="12sp" />
-                            </LinearLayout>
 
+                                <TextView
+                                    android:id="@+id/tvActiveCount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="--"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="17sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
 
                     <!-- Progress Bar -->
                     <ProgressBar
@@ -152,7 +148,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
                             android:text="No liabilities yet"
-                            android:textColor="@android:color/white"
+                            android:textColor="@color/tx_text_primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
@@ -161,7 +157,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="Tap + to add a loan or EMI"
-                            android:textColor="#B3FFFFFF"
+                            android:textColor="#6E7976"
                             android:textSize="14sp"
                             android:gravity="center" />
                     </LinearLayout>
@@ -177,17 +173,6 @@
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-        <!-- FAB -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabAddLiability"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_add"
-            app:backgroundTint="@color/card_income_teal"
-            android:contentDescription="Add liability" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </FrameLayout>

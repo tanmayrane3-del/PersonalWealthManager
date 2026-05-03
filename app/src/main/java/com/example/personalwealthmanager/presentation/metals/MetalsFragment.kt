@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.metals
+﻿package com.pwm.personalwealthmanager.presentation.metals
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.personalwealthmanager.databinding.FragmentMetalsBinding
-import com.example.personalwealthmanager.domain.model.MetalHolding
-import com.example.personalwealthmanager.domain.model.MetalRates
+import com.pwm.personalwealthmanager.databinding.FragmentMetalsBinding
+import com.pwm.personalwealthmanager.domain.model.MetalHolding
+import com.pwm.personalwealthmanager.domain.model.MetalRates
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -98,9 +98,12 @@ class MetalsFragment : Fragment() {
                             val cagr3y = (Math.pow(state.projected3y / total, 1.0 / 3) - 1) * 100
                             val cagr5y = (Math.pow(state.projected5y / total, 1.0 / 5) - 1) * 100
                             val fmt = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
-                            binding.tvCagrProjection1y.text = "1Y:  %.1f%%   %s".format(cagr1y, formatCompact(state.projected1y, fmt))
-                            binding.tvCagrProjection3y.text = "3Y:  %.1f%%   %s".format(cagr3y, formatCompact(state.projected3y, fmt))
-                            binding.tvCagrProjection5y.text = "5Y:  %.1f%%   %s".format(cagr5y, formatCompact(state.projected5y, fmt))
+                            binding.tvCagrValue1y.text = formatCompact(state.projected1y, fmt)
+                            binding.tvCagrPct1y.text = "%.1f%%".format(cagr1y)
+                            binding.tvCagrValue3y.text = formatCompact(state.projected3y, fmt)
+                            binding.tvCagrPct3y.text = "%.1f%%".format(cagr3y)
+                            binding.tvCagrValue5y.text = formatCompact(state.projected5y, fmt)
+                            binding.tvCagrPct5y.text = "%.1f%%".format(cagr5y)
                         }
                         binding.cagrProjectionsSection.visibility = View.VISIBLE
                     }

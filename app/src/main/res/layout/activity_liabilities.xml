@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        android:background="@drawable/gradient_background">
+        android:background="@color/tx_bg">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -25,21 +25,34 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingStart="16dp"
+                android:paddingStart="12dp"
                 android:paddingEnd="16dp"
-                android:paddingBottom="16dp"
+                android:paddingBottom="12dp"
                 android:paddingTop="24dp"
+                android:background="@color/tx_bg"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:id="@+id/btnBack"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_back_arrow"
+                    android:contentDescription="Back"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginStart="4dp"
                     android:text="Liabilities"
-                    android:textColor="@android:color/white"
-                    android:textSize="22sp"
+                    android:textColor="@color/tx_text_primary"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <ImageView
@@ -59,6 +72,24 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- FAB -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabAddLiability"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="82dp"
+                android:src="@android:drawable/ic_input_add"
+                android:contentDescription="Add Liability"
+                app:backgroundTint="@color/tx_primary"
+                app:tint="@android:color/white"
+                app:elevation="8dp"
+                app:pressedTranslationZ="16dp"
+                app:borderWidth="0dp"
+                app:rippleColor="#33005C4B"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     

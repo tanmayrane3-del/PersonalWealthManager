@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.liabilities
+﻿package com.pwm.personalwealthmanager.presentation.liabilities
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
@@ -11,7 +11,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.Spinner
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,13 +22,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.data.remote.dto.CreateLiabilityRequest
-import com.example.personalwealthmanager.data.remote.dto.UpdateLiabilityRequest
-import com.example.personalwealthmanager.domain.model.PhysicalAsset
-import com.example.personalwealthmanager.presentation.otherassets.AddEditOtherAssetActivity
-import com.example.personalwealthmanager.presentation.otherassets.OtherAssetsUiState
-import com.example.personalwealthmanager.presentation.otherassets.OtherAssetsViewModel
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.data.remote.dto.CreateLiabilityRequest
+import com.pwm.personalwealthmanager.data.remote.dto.UpdateLiabilityRequest
+import com.pwm.personalwealthmanager.domain.model.PhysicalAsset
+import com.pwm.personalwealthmanager.presentation.otherassets.AddEditOtherAssetActivity
+import com.pwm.personalwealthmanager.presentation.otherassets.OtherAssetsUiState
+import com.pwm.personalwealthmanager.presentation.otherassets.OtherAssetsViewModel
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -91,10 +93,13 @@ class AddEditLiabilityActivity : AppCompatActivity() {
     // Optional / edit views
     private lateinit var layoutStatus: LinearLayout
     private lateinit var spinnerStatus: Spinner
+    private lateinit var switchActiveStatus: Switch
     private lateinit var etNotes: EditText
-    private lateinit var btnSave: Button
+    private lateinit var btnSave: com.google.android.material.button.MaterialButton
     private lateinit var btnCancel: Button
-    private lateinit var btnDelete: Button
+    private lateinit var btnDelete: com.google.android.material.button.MaterialButton
+    private lateinit var btnDeleteHeader: ImageView
+    private lateinit var progressEmi: ProgressBar
 
     private var selectedStartDate: String = ""
     private var editLiabilityId: String? = null
@@ -159,10 +164,13 @@ class AddEditLiabilityActivity : AppCompatActivity() {
 
         layoutStatus         = findViewById(R.id.layoutStatus)
         spinnerStatus        = findViewById(R.id.spinnerStatus)
+        switchActiveStatus   = findViewById(R.id.switchActiveStatus)
         etNotes              = findViewById(R.id.etNotes)
         btnSave              = findViewById(R.id.btnSave)
         btnCancel            = findViewById(R.id.btnCancel)
         btnDelete            = findViewById(R.id.btnDelete)
+        btnDeleteHeader      = findViewById(R.id.btnDeleteHeader)
+        progressEmi          = findViewById(R.id.progressEmi)
 
         setupSpinners()
 
@@ -170,8 +178,8 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         if (editLiabilityId != null) {
             tvTitle.text = "Edit Liability"
             btnSave.text = "Update Liability"
-            btnCancel.visibility = View.VISIBLE
             btnDelete.visibility = View.VISIBLE
+            btnDeleteHeader.visibility = View.VISIBLE
             layoutStatus.visibility = View.VISIBLE
             prefillEditData()
         }
@@ -182,6 +190,7 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         btnSave.setOnClickListener { save() }
         btnCancel.setOnClickListener { finish() }
         btnDelete.setOnClickListener { confirmDelete() }
+        btnDeleteHeader.setOnClickListener { confirmDelete() }
 
         btnAddNewAsset.setOnClickListener {
             val loanType = loanTypeValues[spinnerLoanType.selectedItemPosition]
@@ -325,6 +334,7 @@ class AddEditLiabilityActivity : AppCompatActivity() {
 
         val status = intent.getStringExtra(EXTRA_STATUS) ?: "active"
         spinnerStatus.setSelection(statusValues.indexOf(status).coerceAtLeast(0))
+        switchActiveStatus.isChecked = (status == "active")
 
         etNotes.setText(intent.getStringExtra(EXTRA_NOTES) ?: "")
 
@@ -401,8 +411,6 @@ class AddEditLiabilityActivity : AppCompatActivity() {
             set(startYear, startMonth - 1, dueDay)
             add(Calendar.MONTH, tenure)
         }
-        val loanEndStr = "${dueDay} ${monthNames[endCal.get(Calendar.MONTH)]} ${endCal.get(Calendar.YEAR)}"
-
         val totalInterest = emi * tenure - principal
 
         // Store for save()
@@ -413,12 +421,13 @@ class AddEditLiabilityActivity : AppCompatActivity() {
 
         // Populate status card
         tvStatusEmi.text           = formatAmount(emi)
-        tvStatusEmiDueDay.text     = ordinal(dueDay) + " of month"
-        tvStatusLoanEnd.text       = loanEndStr
+        tvStatusEmiDueDay.text     = ordinal(dueDay)
+        tvStatusLoanEnd.text       = "${monthNames[endCal.get(Calendar.MONTH)]} ${endCal.get(Calendar.YEAR)}"
         tvStatusTotalInterest.text = formatAmount(totalInterest)
         tvStatusOutstanding.text   = formatAmount(outstanding)
-        tvStatusEmisPaid.text      = "$emisPaid of $tenure"
-        tvStatusEmisRemaining.text = "${tenure - emisPaid} EMIs"
+        tvStatusEmisPaid.text      = "$emisPaid EMIs Paid"
+        tvStatusEmisRemaining.text = "${tenure - emisPaid} Remaining"
+        progressEmi.progress       = ((emisPaid.toFloat() / tenure.toFloat()) * 100).toInt()
 
         cardLoanStatus.visibility = View.VISIBLE
 
@@ -493,7 +502,7 @@ class AddEditLiabilityActivity : AppCompatActivity() {
         btnSave.text = "Saving..."
 
         if (editLiabilityId != null) {
-            val status = statusValues[spinnerStatus.selectedItemPosition]
+            val status = if (switchActiveStatus.isChecked) "active" else "closed"
             viewModel.updateLiability(
                 editLiabilityId!!,
                 UpdateLiabilityRequest(
@@ -556,7 +565,7 @@ class AddEditLiabilityActivity : AppCompatActivity() {
                     when (state) {
                         is LiabilitiesActionState.Saving -> {
                             btnSave.isEnabled = false
-                            btnSave.text = "Saving..."
+                            btnSave.text = "Saving…"
                         }
                         is LiabilitiesActionState.Saved -> {
                             viewModel.resetActionState()

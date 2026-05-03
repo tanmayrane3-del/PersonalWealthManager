@@ -1,4 +1,4 @@
-package com.example.personalwealthmanager.presentation.transactions
+﻿package com.pwm.personalwealthmanager.presentation.transactions
 
 import android.app.ActivityOptions
 import android.app.AlertDialog
@@ -17,8 +17,8 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.personalwealthmanager.R
-import com.example.personalwealthmanager.domain.model.Transaction
+import com.pwm.personalwealthmanager.R
+import com.pwm.personalwealthmanager.domain.model.Transaction
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.animation.Easing
@@ -41,7 +41,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @AndroidEntryPoint
-class TransactionsActivity : com.example.personalwealthmanager.presentation.base.BaseDrawerActivity() {
+class TransactionsActivity : com.pwm.personalwealthmanager.presentation.base.BaseDrawerActivity() {
 
     override fun getActiveNavItem() = BottomNavItem.TRANSACTIONS
     override fun getSelfButtonId() = R.id.btnTransactions
