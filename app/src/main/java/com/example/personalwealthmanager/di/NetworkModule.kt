@@ -4,6 +4,7 @@ import android.content.Context
 import com.pwm.personalwealthmanager.core.utils.SessionManager
 import com.pwm.personalwealthmanager.data.remote.api.AdminApi
 import com.pwm.personalwealthmanager.data.remote.api.AuthApi
+import com.pwm.personalwealthmanager.data.remote.api.BudgetApiService
 import com.pwm.personalwealthmanager.data.remote.api.HoldingsApi
 import com.pwm.personalwealthmanager.data.remote.api.MetadataApi
 import com.pwm.personalwealthmanager.data.remote.api.MetalsApi
@@ -182,5 +183,11 @@ object NetworkModule {
     @Singleton
     fun provideMacroApi(retrofit: Retrofit): MacroApi {
         return retrofit.create(MacroApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBudgetApi(retrofit: Retrofit): BudgetApiService {
+        return retrofit.create(BudgetApiService::class.java)
     }
 }

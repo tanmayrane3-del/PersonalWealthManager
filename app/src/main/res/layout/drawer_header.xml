@@ -301,6 +301,20 @@
                     android:text="Liabilities" />
             </LinearLayout>
 
+            <!-- Budget -->
+            <LinearLayout
+                android:id="@+id/btnBudget"
+                style="@style/DrawerNavRow">
+                <ImageView
+                    android:id="@+id/icBudget"
+                    style="@style/DrawerNavIcon"
+                    android:src="@drawable/ic_drawer_wallet"
+                    android:tint="@color/drawer_item_text" />
+                <TextView
+                    style="@style/DrawerNavLabel"
+                    android:text="Budget" />
+            </LinearLayout>
+
             <!-- Divider 2 -->
             <View
                 android:layout_width="match_parent"

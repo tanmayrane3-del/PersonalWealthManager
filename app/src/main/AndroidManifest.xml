@@ -163,6 +163,20 @@
             android:exported="false"
             android:theme="@style/Theme.PersonalWealthManager" />
 
+        <!-- Budget -->
+        <activity
+            android:name=".presentation.budget.BudgetDashboardActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PersonalWealthManager" />
+        <activity
+            android:name=".presentation.budget.BudgetReportsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PersonalWealthManager" />
+        <activity
+            android:name=".presentation.budget.BudgetWizardActivity"
+            android:exported="false"
+            android:theme="@style/Theme.PersonalWealthManager" />
+
         <!-- Settings -->
         <activity
             android:name=".presentation.settings.SettingsActivity"

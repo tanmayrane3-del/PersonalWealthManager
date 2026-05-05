@@ -32,6 +32,8 @@ import com.pwm.personalwealthmanager.presentation.settings.SettingsActivity
 import com.pwm.personalwealthmanager.presentation.sources.SourceManagementActivity
 import com.pwm.personalwealthmanager.presentation.stocks.StocksActivity
 import com.pwm.personalwealthmanager.presentation.transactions.TransactionsActivity
+import com.pwm.personalwealthmanager.presentation.budget.BudgetDashboardActivity
+import com.pwm.personalwealthmanager.presentation.budget.BudgetWizardActivity
 import com.pwm.personalwealthmanager.presentation.macro.MacroSignalActivity
 import com.pwm.personalwealthmanager.presentation.zerodha.SetupZerodhaActivity
 import com.google.android.material.navigation.NavigationView
@@ -174,6 +176,7 @@ abstract class BaseDrawerActivity : AppCompatActivity() {
         nav(R.id.btnOtherAssets) { startActivity(Intent(this, OtherAssetsActivity::class.java)) }
 
         nav(R.id.btnLiabilities)    { startActivity(Intent(this, LiabilitiesActivity::class.java)) }
+        nav(R.id.btnBudget)         { startActivity(Intent(this, BudgetDashboardActivity::class.java)) }
         nav(R.id.btnConnectZerodha)  { startActivity(Intent(this, SetupZerodhaActivity::class.java)) }
         nav(R.id.btnMarketSignal)   { startActivity(Intent(this, MacroSignalActivity::class.java)) }
         nav(R.id.btnSettings)       { startActivity(Intent(this, SettingsActivity::class.java)) }

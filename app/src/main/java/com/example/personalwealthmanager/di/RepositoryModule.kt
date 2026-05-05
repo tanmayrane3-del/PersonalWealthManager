@@ -1,6 +1,7 @@
 ﻿package com.pwm.personalwealthmanager.di
 
 import com.pwm.personalwealthmanager.data.repository.AuthRepositoryImpl
+import com.pwm.personalwealthmanager.data.repository.BudgetRepositoryImpl
 import com.pwm.personalwealthmanager.data.repository.MacroRepositoryImpl
 import com.pwm.personalwealthmanager.data.repository.CategoryRepositoryImpl
 import com.pwm.personalwealthmanager.data.repository.HoldingsRepositoryImpl
@@ -14,6 +15,7 @@ import com.pwm.personalwealthmanager.data.repository.SourceRepositoryImpl
 import com.pwm.personalwealthmanager.data.repository.TransactionRepositoryImpl
 import com.pwm.personalwealthmanager.data.repository.ZerodhaRepositoryImpl
 import com.pwm.personalwealthmanager.domain.repository.AuthRepository
+import com.pwm.personalwealthmanager.domain.repository.BudgetRepository
 import com.pwm.personalwealthmanager.domain.repository.MacroRepository
 import com.pwm.personalwealthmanager.domain.repository.CategoryRepository
 import com.pwm.personalwealthmanager.domain.repository.HoldingsRepository
@@ -113,4 +115,10 @@ abstract class RepositoryModule {
     abstract fun bindMacroRepository(
         macroRepositoryImpl: MacroRepositoryImpl
     ): MacroRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindBudgetRepository(
+        budgetRepositoryImpl: BudgetRepositoryImpl
+    ): BudgetRepository
 }
