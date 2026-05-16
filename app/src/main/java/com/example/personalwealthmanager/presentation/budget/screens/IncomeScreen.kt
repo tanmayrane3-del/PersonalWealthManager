@@ -115,9 +115,13 @@ fun IncomeScreen(
                     )
                 }
                 items(entries, key = { it.categoryId }) { entry ->
+                    val noPrimaryYet = isFirstTime
+                            && entry.incomeTypeLabel == "primary"
+                            && incomeEntries.filter { it.incomeTypeLabel == "primary" }
+                                           .none { it.amount > 0 }
                     IncomeCategoryRow(
                         entry = entry,
-                        isFirstTime = isFirstTime && entry.incomeTypeLabel == "primary",
+                        showRequiredError = noPrimaryYet,
                         onAmountChange = { onAmountChange(entry.categoryId, it) }
                     )
                 }
@@ -130,14 +134,14 @@ fun IncomeScreen(
 @Composable
 private fun IncomeCategoryRow(
     entry: IncomeEntryUi,
-    isFirstTime: Boolean,
+    showRequiredError: Boolean,
     onAmountChange: (Double) -> Unit
 ) {
     var text by remember(entry.categoryId) {
         mutableStateOf(if (entry.amount > 0) entry.amount.toLong().toString() else "")
     }
     val isEmpty = text.isBlank() || text == "0"
-    val showError = isFirstTime && isEmpty
+    val showError = showRequiredError && isEmpty
 
     Card(
         modifier = Modifier
@@ -178,7 +182,7 @@ private fun IncomeCategoryRow(
             }
             AnimatedVisibility(visible = showError) {
                 Text(
-                    text = "Required — enter your ${entry.name.lowercase()} income",
+                    text = "Enter at least one primary income to continue",
                     style = MaterialTheme.typography.labelSmall,
                     color = Color(0xFFEF4444),
                     modifier = Modifier.padding(top = 4.dp)

@@ -79,7 +79,7 @@ data class WizardUiState(
         if (isFirstTimeUser) {
             return incomeEntries
                 .filter { it.incomeTypeLabel == "primary" }
-                .all { it.amount > 0 }
+                .any { it.amount > 0 }
         }
         return true
     }
