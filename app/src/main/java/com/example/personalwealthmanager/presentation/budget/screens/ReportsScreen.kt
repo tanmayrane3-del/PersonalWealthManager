@@ -26,6 +26,8 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.pwm.personalwealthmanager.core.utils.IndianCurrencyFormatter
+import com.pwm.personalwealthmanager.presentation.budget.BudgetBottomNavBar
+import com.pwm.personalwealthmanager.presentation.budget.BudgetNavTab
 import com.pwm.personalwealthmanager.data.remote.dto.AdherencePointDto
 import com.pwm.personalwealthmanager.data.remote.dto.CalendarMonthDto
 import com.pwm.personalwealthmanager.data.remote.dto.CategoryStreakDto
@@ -45,6 +47,7 @@ fun ReportsScreen(
 ) {
     Scaffold(
         containerColor = Color(0xFFF5F7FA),
+        bottomBar = { BudgetBottomNavBar(activeTab = BudgetNavTab.BUDGET) },
         topBar = {
             Surface(shadowElevation = 2.dp, color = Color.White) {
                 Box(

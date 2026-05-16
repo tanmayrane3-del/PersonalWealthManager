@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pwm.personalwealthmanager.core.utils.IndianCurrencyFormatter
 import com.pwm.personalwealthmanager.data.remote.dto.BucketSummaryDto
+import com.pwm.personalwealthmanager.presentation.budget.BudgetBottomNavBar
+import com.pwm.personalwealthmanager.presentation.budget.BudgetNavTab
 import com.pwm.personalwealthmanager.data.remote.dto.CategoryBudgetViewDto
 import com.pwm.personalwealthmanager.data.remote.dto.MonthlyPlanDto
 import com.pwm.personalwealthmanager.data.remote.dto.SpendingType
@@ -48,6 +50,7 @@ fun DashboardScreen(
     onMonthSelect: (String) -> Unit,
     onAddExpense: () -> Unit,
     onOpenReports: () -> Unit,
+    onEditPlan: () -> Unit,
     onStartWizard: () -> Unit,
     onRetry: () -> Unit
 ) {
@@ -95,6 +98,15 @@ fun DashboardScreen(
                     }
                 },
                 actions = {
+                    // Show Edit only for unlocked current-month plans
+                    val canEdit = isCurrentMonth
+                            && uiState is DashboardUiState.Success
+                            && !uiState.data.isLocked
+                    if (canEdit) {
+                        TextButton(onClick = onEditPlan) {
+                            Text("Edit", color = Color(0xFF1A7C5C))
+                        }
+                    }
                     TextButton(onClick = onOpenReports) {
                         Text("Reports", color = Color(0xFF1A7C5C))
                     }
@@ -102,6 +114,7 @@ fun DashboardScreen(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
             )
         },
+        bottomBar = { BudgetBottomNavBar(activeTab = BudgetNavTab.BUDGET) },
         floatingActionButton = {
             if (isCurrentMonth && uiState is DashboardUiState.Success) {
                 FloatingActionButton(

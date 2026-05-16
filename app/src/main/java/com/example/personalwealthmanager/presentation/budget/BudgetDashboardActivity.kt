@@ -41,6 +41,9 @@ class BudgetDashboardActivity : ComponentActivity() {
                     onOpenReports   = {
                         startActivity(Intent(this, BudgetReportsActivity::class.java))
                     },
+                    onEditPlan      = {
+                        startActivity(Intent(this, BudgetWizardActivity::class.java))
+                    },
                     onStartWizard   = {
                         startActivity(Intent(this, BudgetWizardActivity::class.java))
                     },
