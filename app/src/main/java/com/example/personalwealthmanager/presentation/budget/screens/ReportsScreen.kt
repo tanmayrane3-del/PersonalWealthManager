@@ -47,7 +47,7 @@ fun ReportsScreen(
 ) {
     Scaffold(
         containerColor = Color(0xFFF5F7FA),
-        bottomBar = { BudgetBottomNavBar(activeTab = BudgetNavTab.BUDGET) },
+        bottomBar = { BudgetBottomNavBar(activeTab = BudgetNavTab.MENU) },
         topBar = {
             Surface(shadowElevation = 2.dp, color = Color.White) {
                 Box(

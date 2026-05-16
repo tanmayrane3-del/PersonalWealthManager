@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pwm.personalwealthmanager.core.utils.IndianCurrencyFormatter
 import com.pwm.personalwealthmanager.data.remote.dto.BucketSummaryDto
+import com.pwm.personalwealthmanager.data.remote.dto.IncomeTargetViewDto
 import com.pwm.personalwealthmanager.presentation.budget.BudgetBottomNavBar
 import com.pwm.personalwealthmanager.presentation.budget.BudgetNavTab
 import com.pwm.personalwealthmanager.data.remote.dto.CategoryBudgetViewDto
@@ -55,8 +56,9 @@ fun DashboardScreen(
     onRetry: () -> Unit
 ) {
     var monthMenuExpanded by remember { mutableStateOf(false) }
-    var selectedBucket by remember { mutableStateOf<BucketSummaryDto?>(null) }
     var sheetData by remember { mutableStateOf<Pair<BucketSummaryDto, List<CategoryBudgetViewDto>>?>(null) }
+    var showIncomeSheet by remember { mutableStateOf(false) }
+    var showUnbudgetedSheet by remember { mutableStateOf(false) }
 
     val isCurrentMonth = viewModel.isCurrentMonth()
 
@@ -114,7 +116,7 @@ fun DashboardScreen(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
             )
         },
-        bottomBar = { BudgetBottomNavBar(activeTab = BudgetNavTab.BUDGET) },
+        bottomBar = { BudgetBottomNavBar(activeTab = BudgetNavTab.MENU) },
         floatingActionButton = {
             if (isCurrentMonth && uiState is DashboardUiState.Success) {
                 FloatingActionButton(
@@ -150,7 +152,9 @@ fun DashboardScreen(
                         onBucketTap = { bucket ->
                             val cats = plan.categoryBudgets.filter { it.spendingType == bucket.type }
                             sheetData = bucket to cats
-                        }
+                        },
+                        onIncomeTap    = { showIncomeSheet = true },
+                        onUnbudgetedTap = { showUnbudgetedSheet = true }
                     )
                 }
             }
@@ -166,13 +170,38 @@ fun DashboardScreen(
             BucketDetailSheet(bucket = bucket, categories = cats)
         }
     }
+
+    // Income breakdown bottom sheet
+    if (showIncomeSheet && uiState is DashboardUiState.Success) {
+        ModalBottomSheet(
+            onDismissRequest = { showIncomeSheet = false },
+            containerColor = Color.White
+        ) {
+            IncomeDetailSheet(incomeTargets = uiState.data.incomeTargets)
+        }
+    }
+
+    // Unbudgeted spend bottom sheet
+    if (showUnbudgetedSheet && uiState is DashboardUiState.Success) {
+        ModalBottomSheet(
+            onDismissRequest = { showUnbudgetedSheet = false },
+            containerColor = Color.White
+        ) {
+            UnbudgetedDetailSheet(
+                unbudgetedActual = uiState.data.totals.unbudgetedActual,
+                unbudgetedBuffer = uiState.data.totals.unbudgetedBuffer
+            )
+        }
+    }
 }
 
 @Composable
 private fun DashboardContent(
     plan: MonthlyPlanDto,
     isCurrentMonth: Boolean,
-    onBucketTap: (BucketSummaryDto) -> Unit
+    onBucketTap: (BucketSummaryDto) -> Unit,
+    onIncomeTap: () -> Unit,
+    onUnbudgetedTap: () -> Unit
 ) {
     val expensePct = if (plan.totals.expenseBudget > 0)
         (plan.totals.expenseActual / plan.totals.expenseBudget).coerceIn(0.0, 1.0)
@@ -239,12 +268,13 @@ private fun DashboardContent(
             }
         }
 
-        // Income bar
+        // Income bar — tappable
         item {
             IncomeBar(
                 actual = plan.totals.incomeActual,
                 target = plan.totals.incomeTarget,
-                isLocked = plan.isLocked
+                isLocked = plan.isLocked,
+                onClick = onIncomeTap
             )
         }
 
@@ -258,18 +288,24 @@ private fun DashboardContent(
             BucketCard(bucket = bucket, onClick = { onBucketTap(bucket) })
         }
 
-        // Unbudgeted
-        if (plan.totals.unbudgetedActual > 0) {
-            item {
-                Card(colors = CardDefaults.cardColors(containerColor = Color(0xFFFAFAFA))) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(12.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text("Unbudgeted spend", style = MaterialTheme.typography.bodySmall, color = Color(0xFF6B7280))
-                        Text(IndianCurrencyFormatter.format(plan.totals.unbudgetedActual),
-                            style = MaterialTheme.typography.bodySmall, color = Color(0xFF374151))
-                    }
+        // Unbudgeted — tappable
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth().clickable(onClick = onUnbudgetedTap),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFFAFAFA)),
+                elevation = CardDefaults.cardElevation(1.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Unbudgeted spend", style = MaterialTheme.typography.bodySmall, color = Color(0xFF6B7280))
+                    Text(
+                        IndianCurrencyFormatter.format(plan.totals.unbudgetedActual),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (plan.totals.unbudgetedActual > 0) Color(0xFFEF4444) else Color(0xFF374151)
+                    )
                 }
             }
         }
@@ -340,10 +376,13 @@ private fun HeroStat(label: String, value: String) {
 }
 
 @Composable
-private fun IncomeBar(actual: Double, target: Double, isLocked: Boolean) {
+private fun IncomeBar(actual: Double, target: Double, isLocked: Boolean, onClick: () -> Unit) {
     val pct = if (target > 0) (actual / target).coerceIn(0.0, 1.0) else 0.0
-    Card(colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(1.dp)) {
+    Card(
+        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(1.dp)
+    ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("Income received", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
@@ -430,6 +469,160 @@ fun BucketDetailSheet(bucket: BucketSummaryDto, categories: List<CategoryBudgetV
                     trackColor = Color(0xFFE5E7EB)
                 )
             }
+        }
+    }
+}
+
+// ── Income detail bottom sheet ────────────────────────────────────────────────
+@Composable
+fun IncomeDetailSheet(incomeTargets: List<IncomeTargetViewDto>) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+            .padding(bottom = 32.dp)
+    ) {
+        Text(
+            "Income breakdown",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(Modifier.height(4.dp))
+        Text(
+            "Target vs received this month",
+            style = MaterialTheme.typography.bodySmall,
+            color = Color(0xFF6B7280)
+        )
+        Spacer(Modifier.height(16.dp))
+
+        if (incomeTargets.isEmpty()) {
+            Text(
+                "No income targets set for this month.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color(0xFF9CA3AF)
+            )
+        } else {
+            incomeTargets.forEach { it ->
+                val pct = if (it.target > 0) (it.actual / it.target).coerceIn(0.0, 1.0) else 0.0
+                Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(it.categoryName, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
+                            Text(
+                                it.incomeType?.name?.lowercase()?.replaceFirstChar { c -> c.uppercase() } ?: "",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color(0xFF9CA3AF)
+                            )
+                        }
+                        Column(horizontalAlignment = Alignment.End) {
+                            Text(
+                                IndianCurrencyFormatter.compact(it.actual),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color(0xFF10B981)
+                            )
+                            Text(
+                                "of ${IndianCurrencyFormatter.compact(it.target)}",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color(0xFF9CA3AF)
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(6.dp))
+                    LinearProgressIndicator(
+                        progress = { pct.toFloat() },
+                        modifier = Modifier.fillMaxWidth().height(5.dp),
+                        color = Color(0xFF10B981),
+                        trackColor = Color(0xFFE5E7EB)
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        "${it.pctReceived.toInt()}% received${it.starsProjection?.let { s -> " · $s⭐" } ?: ""}",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color(0xFF9CA3AF)
+                    )
+                }
+                HorizontalDivider(color = Color(0xFFF3F4F6))
+            }
+        }
+    }
+}
+
+// ── Unbudgeted spend detail bottom sheet ──────────────────────────────────────
+@Composable
+fun UnbudgetedDetailSheet(unbudgetedActual: Double, unbudgetedBuffer: Double) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+            .padding(bottom = 40.dp)
+    ) {
+        Text(
+            "Unbudgeted spend",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(Modifier.height(4.dp))
+        Text(
+            "Expenses in categories not assigned to a budget",
+            style = MaterialTheme.typography.bodySmall,
+            color = Color(0xFF6B7280)
+        )
+        Spacer(Modifier.height(20.dp))
+
+        // Spent vs buffer
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            StatCard(
+                label = "Unbudgeted spent",
+                value = IndianCurrencyFormatter.format(unbudgetedActual),
+                valueColor = if (unbudgetedActual > unbudgetedBuffer) Color(0xFFEF4444) else Color(0xFF374151),
+                modifier = Modifier.weight(1f)
+            )
+            StatCard(
+                label = "Buffer available",
+                value = IndianCurrencyFormatter.format(unbudgetedBuffer),
+                valueColor = TealGreen,
+                modifier = Modifier.weight(1f)
+            )
+        }
+        Spacer(Modifier.height(16.dp))
+
+        val over = unbudgetedActual > unbudgetedBuffer
+        Surface(
+            color = if (over) Color(0xFFFEE2E2) else Color(0xFFF0FBF6),
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = if (over)
+                    "You've exceeded your unbudgeted buffer by ${IndianCurrencyFormatter.format(unbudgetedActual - unbudgetedBuffer)}. " +
+                            "Consider assigning these categories a budget."
+                else
+                    "These expenses are in categories not assigned to any budget bucket. " +
+                            "Assign spending_type in the app to start tracking them.",
+                style = MaterialTheme.typography.bodySmall,
+                color = if (over) Color(0xFF991B1B) else Color(0xFF065F46),
+                modifier = Modifier.padding(12.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun StatCard(label: String, value: String, valueColor: Color, modifier: Modifier) {
+    Card(colors = CardDefaults.cardColors(containerColor = Color(0xFFF9FAFB)),
+        modifier = modifier) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Text(label, style = MaterialTheme.typography.labelSmall, color = Color(0xFF9CA3AF))
+            Spacer(Modifier.height(4.dp))
+            Text(value, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = valueColor)
         }
     }
 }

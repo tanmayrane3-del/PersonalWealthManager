@@ -24,10 +24,10 @@ import com.pwm.personalwealthmanager.presentation.transactions.TransactionsActiv
 private val TealGreen  = Color(0xFF1A7C5C)
 private val MutedColor = Color(0xFF9CA3AF)
 
-enum class BudgetNavTab { DASHBOARD, TRANSACTIONS, NETWORTH, BUDGET }
+enum class BudgetNavTab { DASHBOARD, TRANSACTIONS, NETWORTH, MENU }
 
 @Composable
-fun BudgetBottomNavBar(activeTab: BudgetNavTab = BudgetNavTab.BUDGET) {
+fun BudgetBottomNavBar(activeTab: BudgetNavTab = BudgetNavTab.MENU) {
     val context = LocalContext.current
 
     Column {
@@ -75,9 +75,15 @@ fun BudgetBottomNavBar(activeTab: BudgetNavTab = BudgetNavTab.BUDGET) {
             )
             NavItem(
                 iconRes = R.drawable.ic_nav_menu,
-                label = "Budget",
-                active = activeTab == BudgetNavTab.BUDGET,
-                onClick = { /* already on budget */ }
+                label = "Menu",
+                active = activeTab == BudgetNavTab.MENU,
+                onClick = {
+                    // Navigate to main app so user can access the drawer
+                    context.startActivity(
+                        Intent(context, MainActivity::class.java)
+                            .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                    )
+                }
             )
         }
     }
