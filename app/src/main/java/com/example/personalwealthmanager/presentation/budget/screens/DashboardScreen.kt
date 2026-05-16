@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.pwm.personalwealthmanager.core.utils.IndianCurrencyFormatter
 import com.pwm.personalwealthmanager.data.remote.dto.BucketSummaryDto
 import com.pwm.personalwealthmanager.data.remote.dto.IncomeTargetViewDto
+import com.pwm.personalwealthmanager.data.remote.dto.UnbudgetedCategoryDto
 import com.pwm.personalwealthmanager.presentation.budget.BudgetBottomNavBar
 import com.pwm.personalwealthmanager.presentation.budget.BudgetNavTab
 import com.pwm.personalwealthmanager.data.remote.dto.CategoryBudgetViewDto
@@ -188,8 +189,9 @@ fun DashboardScreen(
             containerColor = Color.White
         ) {
             UnbudgetedDetailSheet(
-                unbudgetedActual = uiState.data.totals.unbudgetedActual,
-                unbudgetedBuffer = uiState.data.totals.unbudgetedBuffer
+                unbudgetedActual    = uiState.data.totals.unbudgetedActual,
+                unbudgetedBuffer    = uiState.data.totals.unbudgetedBuffer,
+                unbudgetedCategories = uiState.data.unbudgetedCategories
             )
         }
     }
@@ -554,75 +556,81 @@ fun IncomeDetailSheet(incomeTargets: List<IncomeTargetViewDto>) {
 
 // ── Unbudgeted spend detail bottom sheet ──────────────────────────────────────
 @Composable
-fun UnbudgetedDetailSheet(unbudgetedActual: Double, unbudgetedBuffer: Double) {
+fun UnbudgetedDetailSheet(
+    unbudgetedActual: Double,
+    unbudgetedBuffer: Double,
+    unbudgetedCategories: List<UnbudgetedCategoryDto>
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
-            .padding(bottom = 40.dp)
+            .padding(bottom = 32.dp)
     ) {
         Text(
             "Unbudgeted spend",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
-        Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(2.dp))
         Text(
-            "Expenses in categories not assigned to a budget",
+            "${IndianCurrencyFormatter.compact(unbudgetedActual)} across ${unbudgetedCategories.size} categories",
             style = MaterialTheme.typography.bodySmall,
             color = Color(0xFF6B7280)
         )
-        Spacer(Modifier.height(20.dp))
-
-        // Spent vs buffer
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            StatCard(
-                label = "Unbudgeted spent",
-                value = IndianCurrencyFormatter.format(unbudgetedActual),
-                valueColor = if (unbudgetedActual > unbudgetedBuffer) Color(0xFFEF4444) else Color(0xFF374151),
-                modifier = Modifier.weight(1f)
-            )
-            StatCard(
-                label = "Buffer available",
-                value = IndianCurrencyFormatter.format(unbudgetedBuffer),
-                valueColor = TealGreen,
-                modifier = Modifier.weight(1f)
-            )
-        }
         Spacer(Modifier.height(16.dp))
 
-        val over = unbudgetedActual > unbudgetedBuffer
-        Surface(
-            color = if (over) Color(0xFFFEE2E2) else Color(0xFFF0FBF6),
-            shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        if (unbudgetedCategories.isEmpty()) {
             Text(
-                text = if (over)
-                    "You've exceeded your unbudgeted buffer by ${IndianCurrencyFormatter.format(unbudgetedActual - unbudgetedBuffer)}. " +
-                            "Consider assigning these categories a budget."
-                else
-                    "These expenses are in categories not assigned to any budget bucket. " +
-                            "Assign spending_type in the app to start tracking them.",
-                style = MaterialTheme.typography.bodySmall,
-                color = if (over) Color(0xFF991B1B) else Color(0xFF065F46),
-                modifier = Modifier.padding(12.dp)
+                "No unbudgeted spend this month.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color(0xFF9CA3AF)
             )
-        }
-    }
-}
+        } else {
+            unbudgetedCategories.forEach { cat ->
+                // Progress bar = proportion of this category vs total unbudgeted
+                val pct = if (unbudgetedActual > 0)
+                    (cat.actual / unbudgetedActual).toFloat().coerceIn(0f, 1f)
+                else 0f
 
-@Composable
-private fun StatCard(label: String, value: String, valueColor: Color, modifier: Modifier) {
-    Card(colors = CardDefaults.cardColors(containerColor = Color(0xFFF9FAFB)),
-        modifier = modifier) {
-        Column(modifier = Modifier.padding(12.dp)) {
-            Text(label, style = MaterialTheme.typography.labelSmall, color = Color(0xFF9CA3AF))
-            Spacer(Modifier.height(4.dp))
-            Text(value, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = valueColor)
+                Column(modifier = Modifier.padding(vertical = 8.dp)) {
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Icon + name
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            if (!cat.icon.isNullOrBlank()) {
+                                Text(cat.icon, fontSize = 16.sp)
+                                Spacer(Modifier.width(8.dp))
+                            }
+                            Text(
+                                cat.categoryName,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                        Text(
+                            IndianCurrencyFormatter.compact(cat.actual),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFF374151),
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                    Spacer(Modifier.height(5.dp))
+                    LinearProgressIndicator(
+                        progress = { pct },
+                        modifier = Modifier.fillMaxWidth().height(4.dp),
+                        color = Color(0xFFF97316),
+                        trackColor = Color(0xFFE5E7EB)
+                    )
+                }
+                HorizontalDivider(color = Color(0xFFF3F4F6))
+            }
         }
     }
 }

@@ -121,7 +121,8 @@ data class MonthlyPlanDto(
     val totals: TotalsDto,
     val buckets: List<BucketSummaryDto>,
     @SerializedName("category_budgets") val categoryBudgets: List<CategoryBudgetViewDto>,
-    @SerializedName("income_targets")   val incomeTargets: List<IncomeTargetViewDto>,
+    @SerializedName("income_targets")          val incomeTargets: List<IncomeTargetViewDto>,
+    @SerializedName("unbudgeted_categories")   val unbudgetedCategories: List<UnbudgetedCategoryDto> = emptyList(),
     val projection: ProjectionDto
 )
 
@@ -215,6 +216,14 @@ data class SavingsCumPointDto(
     val month: String,
     @SerializedName("planned_cum") val plannedCum: Double,
     @SerializedName("actual_cum")  val actualCum: Double
+)
+
+// ── Unbudgeted category breakdown ─────────────────────────────────────────────
+
+data class UnbudgetedCategoryDto(
+    @SerializedName("category_name") val categoryName: String,
+    val icon: String?,
+    val actual: Double
 )
 
 // ── Liability category mapping ────────────────────────────────────────────────
