@@ -32,11 +32,12 @@ enum class IncomeType {
 
 data class WizardPrefillDto(
     val month: String,
-    @SerializedName("is_first_time_user") val isFirstTimeUser: Boolean,
-    @SerializedName("income_categories")  val incomeCategories: List<IncomeCategoryPrefillDto>,
+    @SerializedName("is_first_time_user")         val isFirstTimeUser: Boolean,
+    @SerializedName("income_categories")           val incomeCategories: List<IncomeCategoryPrefillDto>,
     @SerializedName("expense_categories_by_bucket") val expenseCategoriesByBucket: ExpenseBucketMapDto,
-    @SerializedName("active_liabilities") val activeLiabilities: List<LiabilityForMappingDto>,
-    @SerializedName("previous_month_plan") val previousMonthPlan: PreviousMonthPlanDto?
+    @SerializedName("active_liabilities")          val activeLiabilities: List<LiabilityForMappingDto>,
+    @SerializedName("current_month_plan")          val currentMonthPlan: PreviousMonthPlanDto?,
+    @SerializedName("previous_month_plan")         val previousMonthPlan: PreviousMonthPlanDto?
 )
 
 data class IncomeCategoryPrefillDto(
@@ -75,6 +76,9 @@ data class LiabilityForMappingDto(
 data class PreviousMonthPlanDto(
     val exists: Boolean,
     val framework: Framework?,
+    @SerializedName("needs_pct")             val needsPct: Double?,
+    @SerializedName("wants_pct")             val wantsPct: Double?,
+    @SerializedName("savings_pct")           val savingsPct: Double?,
     @SerializedName("total_income_target")   val totalIncomeTarget: Double?,
     @SerializedName("total_expense_budget")  val totalExpenseBudget: Double?
 )

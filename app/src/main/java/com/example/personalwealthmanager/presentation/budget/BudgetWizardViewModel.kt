@@ -77,10 +77,21 @@ class BudgetWizardViewModel @Inject constructor(
                         })
                     }
 
-                    val prevFramework = prefill.previousMonthPlan?.framework
-                    val prevNeeds = 50.0
-                    val prevWants = 30.0
-                    val prevSavings = 20.0
+                    // Framework priority:
+                    // 1. Current month's saved plan (re-run wizard for same month)
+                    // 2. User's in-session selection (don't wipe on liability re-load)
+                    // 3. Previous month's plan (default for new month)
+                    // 4. 50/30/20 as final fallback
+                    val resolvedFramework = prefill.currentMonthPlan?.framework
+                        ?: _state.value.framework
+                        ?: prefill.previousMonthPlan?.framework
+
+                    val resolvedNeeds   = prefill.currentMonthPlan?.needsPct
+                        ?: if (_state.value.framework != null) _state.value.needsPct else 50.0
+                    val resolvedWants   = prefill.currentMonthPlan?.wantsPct
+                        ?: if (_state.value.framework != null) _state.value.wantsPct else 30.0
+                    val resolvedSavings = prefill.currentMonthPlan?.savingsPct
+                        ?: if (_state.value.framework != null) _state.value.savingsPct else 20.0
 
                     _state.update {
                         it.copy(
@@ -90,10 +101,10 @@ class BudgetWizardViewModel @Inject constructor(
                             bucketAllocations = bucketAllocations,
                             allLiabilities = prefill.activeLiabilities,
                             unmappedLiabilities = prefill.activeLiabilities.filter { l -> l.mappedCategoryId == null },
-                            framework = prevFramework,
-                            needsPct = prevNeeds,
-                            wantsPct = prevWants,
-                            savingsPct = prevSavings
+                            framework = resolvedFramework,
+                            needsPct = resolvedNeeds,
+                            wantsPct = resolvedWants,
+                            savingsPct = resolvedSavings
                         )
                     }
                 },
@@ -185,16 +196,28 @@ class BudgetWizardViewModel @Inject constructor(
             repository.setLiabilityCategory(token, liabilityId, categoryId).fold(
                 onSuccess = { updated ->
                     _state.update { s ->
-                        val updatedLiabilities = s.allLiabilities.map { l ->
+                        // 1. Update the liability's mapping in the local list
+                        val newLiabilities = s.allLiabilities.map { l ->
                             if (l.id == liabilityId) l.copy(mappedCategoryId = updated.budgetCategoryId) else l
                         }
+                        // 2. Recompute EMI sum per category from updated list (all shown liabilities are active)
+                        val emiByCategory = newLiabilities
+                            .filter { l -> l.mappedCategoryId != null }
+                            .groupBy { it.mappedCategoryId!! }
+                            .mapValues { (_, liabs) -> liabs.sumOf { it.emiAmount } }
+                        // 3. Patch emiPrefill on affected bucket categories without touching amounts
+                        val newAllocations = s.bucketAllocations.mapValues { (_, cats) ->
+                            cats.map { cat ->
+                                val newEmi = emiByCategory[cat.categoryId] ?: 0.0
+                                if (newEmi != cat.emiPrefill) cat.copy(emiPrefill = newEmi) else cat
+                            }
+                        }
                         s.copy(
-                            allLiabilities = updatedLiabilities,
-                            unmappedLiabilities = updatedLiabilities.filter { it.mappedCategoryId == null }
+                            allLiabilities = newLiabilities,
+                            unmappedLiabilities = newLiabilities.filter { it.mappedCategoryId == null },
+                            bucketAllocations = newAllocations
                         )
                     }
-                    // Reload prefill to pick up new EMI mapping
-                    loadPrefill(_state.value.month)
                 },
                 onFailure = { /* silently ignore — user can retry */ }
             )
@@ -204,7 +227,10 @@ class BudgetWizardViewModel @Inject constructor(
     fun save(onSuccess: () -> Unit) {
         val s = _state.value
         val token = sessionManager.getSessionToken() ?: return
-        val fw = s.framework ?: return
+        val fw = s.framework ?: run {
+            _state.update { it.copy(saveError = "Budget framework not selected — go back to Step 2 and choose one") }
+            return
+        }
 
         val budgetItems = s.bucketAllocations.values.flatten()
             .filter { it.amount > 0 }
