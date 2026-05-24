@@ -409,6 +409,7 @@ private fun IncomeBar(actual: Double, target: Double, isLocked: Boolean, onClick
 private fun BucketCard(bucket: BucketSummaryDto, onClick: () -> Unit) {
     val pct = (bucket.pctUsed / 100.0).toFloat()
     val color = bucketColor(bucket.type)
+    val hasPlanned = bucket.planned > 0.0
     Card(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -430,17 +431,27 @@ private fun BucketCard(bucket: BucketSummaryDto, onClick: () -> Unit) {
             }
             Spacer(Modifier.height(8.dp))
             LinearProgressIndicator(
-                progress = { pct.coerceIn(0f, 1f) },
+                progress = { if (hasPlanned) pct.coerceIn(0f, 1f) else 0f },
                 modifier = Modifier.fillMaxWidth().height(5.dp),
-                color = if (pct > 1f) Color(0xFFEF4444) else color,
+                // When no planned budget, match the indicator color to the track so the
+                // Material3 stop-indicator dot is invisible and the bar looks truly empty.
+                color = when {
+                    !hasPlanned -> Color(0xFFE5E7EB)
+                    pct > 1f    -> Color(0xFFEF4444)
+                    else        -> color
+                },
                 trackColor = Color(0xFFE5E7EB)
             )
             Spacer(Modifier.height(6.dp))
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text(IndianCurrencyFormatter.compact(bucket.actual),
                     style = MaterialTheme.typography.labelSmall, color = color)
-                Text("of ${IndianCurrencyFormatter.compact(bucket.planned)}",
-                    style = MaterialTheme.typography.labelSmall, color = Color(0xFF9CA3AF))
+                Text(
+                    if (hasPlanned) "of ${IndianCurrencyFormatter.compact(bucket.planned)}"
+                    else "Unplanned",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color(0xFF9CA3AF)
+                )
             }
         }
     }
@@ -451,23 +462,38 @@ fun BucketDetailSheet(bucket: BucketSummaryDto, categories: List<CategoryBudgetV
     Column(modifier = Modifier.padding(horizontal = 20.dp).padding(bottom = 32.dp)) {
         Text(bucketLabel(bucket.type), style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold)
-        Text("${IndianCurrencyFormatter.compact(bucket.actual)} of ${IndianCurrencyFormatter.compact(bucket.planned)}",
-            style = MaterialTheme.typography.bodySmall, color = Color(0xFF6B7280))
+        Text(
+            if (bucket.planned > 0)
+                "${IndianCurrencyFormatter.compact(bucket.actual)} of ${IndianCurrencyFormatter.compact(bucket.planned)}"
+            else
+                "${IndianCurrencyFormatter.compact(bucket.actual)} spent · Unplanned",
+            style = MaterialTheme.typography.bodySmall, color = Color(0xFF6B7280)
+        )
         Spacer(Modifier.height(16.dp))
         categories.forEach { cat ->
-            val pct = if (cat.planned > 0) (cat.actual / cat.planned).coerceIn(0.0, 1.0) else 0.0
+            val catHasPlanned = cat.planned > 0
+            val pct = if (catHasPlanned) (cat.actual / cat.planned).coerceIn(0.0, 1.0) else 0.0
             Column(modifier = Modifier.padding(vertical = 6.dp)) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(cat.categoryName, style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.weight(1f))
-                    Text("${IndianCurrencyFormatter.compact(cat.actual)} / ${IndianCurrencyFormatter.compact(cat.planned)}",
-                        style = MaterialTheme.typography.labelSmall, color = Color(0xFF6B7280))
+                    Text(
+                        if (catHasPlanned)
+                            "${IndianCurrencyFormatter.compact(cat.actual)} / ${IndianCurrencyFormatter.compact(cat.planned)}"
+                        else
+                            "${IndianCurrencyFormatter.compact(cat.actual)} spent",
+                        style = MaterialTheme.typography.labelSmall, color = Color(0xFF6B7280)
+                    )
                 }
                 Spacer(Modifier.height(3.dp))
                 LinearProgressIndicator(
                     progress = { pct.toFloat() },
                     modifier = Modifier.fillMaxWidth().height(4.dp),
-                    color = if (pct >= 1.0) Color(0xFFEF4444) else bucketColor(bucket.type),
+                    color = when {
+                        !catHasPlanned -> Color(0xFFE5E7EB)
+                        pct >= 1.0     -> Color(0xFFEF4444)
+                        else           -> bucketColor(bucket.type)
+                    },
                     trackColor = Color(0xFFE5E7EB)
                 )
             }
