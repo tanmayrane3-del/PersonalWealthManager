@@ -21,18 +21,38 @@
 -dontwarn com.google.gson.**
 
 # ============================================================
-# Retrofit 2
+# Retrofit 2 — official R8 rules from square/retrofit
+# https://github.com/square/retrofit/blob/master/retrofit/src/main/resources/META-INF/proguard/retrofit2.pro
 # ============================================================
 -keep class retrofit2.** { *; }
-# Keep ALL Retrofit API interface methods WITH their generic Signature attributes.
-# Without this, R8 strips the Signature from Kotlin suspend fun parameters, so
-# method.getGenericParameterTypes()[last] returns Class instead of
-# Continuation<? super Response<ApiResponse<T>>>, crashing HttpServiceMethod with:
-#   java.lang.Class cannot be cast to java.lang.reflect.ParameterizedType
+-keepattributes Exceptions
+
+# Retain Retrofit service method parameters when optimizing.
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
+
+# R8 full mode strips generic signatures from runtime-annotated classes.
+# This -if rule says: for every interface that has Retrofit HTTP annotated
+# methods, keep the interface itself (and its members + Signature attribute).
+# This is THE rule that fixes "Class cannot be cast to ParameterizedType"
+# crashes from Kotlin suspend functions in Retrofit interfaces.
+-if interface * { @retrofit2.http.* <methods>; }
+-keep,allowobfuscation interface <1>
+
+# Belt-and-suspenders: also explicitly keep our API interface package roots.
 -keep interface com.pwm.personalwealthmanager.data.remote.api.** { *; }
 -keep interface com.example.personalwealthmanager.data.remote.api.** { *; }
+
+# Kotlin coroutines Continuation is referenced by Retrofit's suspend handling.
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+
 -dontwarn retrofit2.**
 -dontwarn retrofit2.Platform$Java8
+-dontwarn retrofit2.KotlinExtensions
+-dontwarn retrofit2.KotlinExtensions$*
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn kotlin.Unit
 
 # ============================================================
 # OkHttp / Okio
