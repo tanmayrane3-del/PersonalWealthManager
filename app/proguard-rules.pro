@@ -24,9 +24,13 @@
 # Retrofit 2
 # ============================================================
 -keep class retrofit2.** { *; }
--keepclassmembers,allowshrinking,allowobfuscation interface * {
-    @retrofit2.http.* <methods>;
-}
+# Keep ALL Retrofit API interface methods WITH their generic Signature attributes.
+# Without this, R8 strips the Signature from Kotlin suspend fun parameters, so
+# method.getGenericParameterTypes()[last] returns Class instead of
+# Continuation<? super Response<ApiResponse<T>>>, crashing HttpServiceMethod with:
+#   java.lang.Class cannot be cast to java.lang.reflect.ParameterizedType
+-keep interface com.pwm.personalwealthmanager.data.remote.api.** { *; }
+-keep interface com.example.personalwealthmanager.data.remote.api.** { *; }
 -dontwarn retrofit2.**
 -dontwarn retrofit2.Platform$Java8
 
