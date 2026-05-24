@@ -12,10 +12,14 @@ import java.util.Locale
 
 class MetalHoldingAdapter(
     private val onEdit: (MetalHolding) -> Unit,
-    private val onDelete: (MetalHolding) -> Unit
+    private val onDelete: (MetalHolding) -> Unit,
+    private val onAdd: (metalType: String) -> Unit = {}
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val items = mutableListOf<Any>() // String (header) or MetalHolding
+    /** Carries both the display label and the API key for "add to this section". */
+    data class SectionHeader(val label: String, val metalType: String)
+
+    private val items = mutableListOf<Any>() // SectionHeader or MetalHolding
 
     companion object {
         private const val VIEW_TYPE_HEADER = 0
@@ -35,14 +39,14 @@ class MetalHoldingAdapter(
                 "sgb" -> "Sovereign Gold Bonds"
                 else -> type
             }
-            items.add(headerLabel)
+            items.add(SectionHeader(headerLabel, type))
             items.addAll(group)
         }
         notifyDataSetChanged()
     }
 
     override fun getItemViewType(position: Int) =
-        if (items[position] is String) VIEW_TYPE_HEADER else VIEW_TYPE_ITEM
+        if (items[position] is SectionHeader) VIEW_TYPE_HEADER else VIEW_TYPE_ITEM
 
     override fun getItemCount() = items.size
 
@@ -57,7 +61,7 @@ class MetalHoldingAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is HeaderViewHolder) {
-            holder.bind(items[position] as String)
+            holder.bind(items[position] as SectionHeader)
         } else if (holder is ItemViewHolder) {
             holder.bind(items[position] as MetalHolding)
         }
@@ -65,8 +69,9 @@ class MetalHoldingAdapter(
 
     inner class HeaderViewHolder(private val binding: ItemMetalHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(title: String) {
-            binding.tvSectionHeader.text = title
+        fun bind(header: SectionHeader) {
+            binding.tvSectionHeader.text = header.label
+            binding.btnAddToSection.setOnClickListener { onAdd(header.metalType) }
         }
     }
 

@@ -76,12 +76,13 @@ class CategoryManagementViewModel @Inject constructor(
         categoryId: String,
         name: String?,
         description: String?,
-        icon: String?
+        icon: String?,
+        budgetType: String? = null
     ) {
         viewModelScope.launch {
             _state.update { it.copy(isUpdating = true, error = null, updateSuccess = false) }
 
-            categoryRepository.updateCategory(type, categoryId, name, description, icon)
+            categoryRepository.updateCategory(type, categoryId, name, description, icon, budgetType)
                 .onSuccess {
                     _state.update { it.copy(isUpdating = false, updateSuccess = true) }
                     loadCategories()
@@ -117,8 +118,34 @@ class CategoryManagementViewModel @Inject constructor(
         }
     }
 
+    fun createCategory(
+        type: String,
+        name: String,
+        description: String?,
+        icon: String?,
+        budgetType: String? = null
+    ) {
+        viewModelScope.launch {
+            _state.update { it.copy(isCreating = true, error = null, createSuccess = false) }
+
+            categoryRepository.createCategory(type, name, description, icon, budgetType)
+                .onSuccess {
+                    _state.update { it.copy(isCreating = false, createSuccess = true) }
+                    loadCategories()
+                }
+                .onFailure { error ->
+                    _state.update {
+                        it.copy(
+                            isCreating = false,
+                            error = error.message ?: "Failed to create category"
+                        )
+                    }
+                }
+        }
+    }
+
     fun clearSuccessStates() {
-        _state.update { it.copy(updateSuccess = false, deleteSuccess = false) }
+        _state.update { it.copy(updateSuccess = false, deleteSuccess = false, createSuccess = false) }
     }
 
     fun clearError() {

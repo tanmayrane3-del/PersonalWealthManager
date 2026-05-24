@@ -30,7 +30,9 @@ data class Category(
     val type: String? = null,  // Type is determined by which endpoint is called, not from response
     val isGlobal: Boolean = false,
     val isUserSpecific: Boolean = false,
-    val transactionCount: Int = 0
+    val transactionCount: Int = 0,
+    val spendingType: String? = null,   // expense: "need", "want", "savings_investment"
+    val incomeType: String? = null      // income: "primary", "passive", "one_time"
 )
 
 data class Source(

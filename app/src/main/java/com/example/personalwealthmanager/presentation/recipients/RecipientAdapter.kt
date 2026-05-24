@@ -1,5 +1,6 @@
-﻿package com.pwm.personalwealthmanager.presentation.recipients
+package com.pwm.personalwealthmanager.presentation.recipients
 
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,19 +9,32 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.pwm.personalwealthmanager.R
 import com.pwm.personalwealthmanager.domain.model.Recipient
+import kotlin.math.abs
 
 class RecipientAdapter(
     private var recipients: List<Recipient>,
-    private val showEditButton: Boolean,
-    private val onEditClick: ((Recipient) -> Unit)? = null
+    private val onItemClick: ((Recipient) -> Unit)? = null
 ) : RecyclerView.Adapter<RecipientAdapter.RecipientViewHolder>() {
+
+    private val iconColors = intArrayOf(
+        0xFF2196F3.toInt(), // Blue
+        0xFF9C27B0.toInt(), // Purple
+        0xFFE91E63.toInt(), // Pink
+        0xFFFF5722.toInt(), // Deep Orange
+        0xFF00BCD4.toInt(), // Cyan
+        0xFF4CAF50.toInt(), // Green
+        0xFFFF9800.toInt(), // Orange
+        0xFF795548.toInt(), // Brown
+        0xFF607D8B.toInt(), // Blue Grey
+        0xFFE53935.toInt(), // Red
+    )
 
     class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvRecipientIcon: TextView = view.findViewById(R.id.tvRecipientIcon)
         val tvRecipientName: TextView = view.findViewById(R.id.tvRecipientName)
         val tvRecipientDescription: TextView = view.findViewById(R.id.tvRecipientDescription)
         val ivFavorite: ImageView = view.findViewById(R.id.ivFavorite)
-        val btnEditRecipient: ImageView = view.findViewById(R.id.btnEditRecipient)
+        val ivChevron: ImageView = view.findViewById(R.id.ivChevron)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipientViewHolder {
@@ -32,13 +46,16 @@ class RecipientAdapter(
     override fun onBindViewHolder(holder: RecipientViewHolder, position: Int) {
         val recipient = recipients[position]
 
-        // Set recipient icon (default icon for recipients)
-        holder.tvRecipientIcon.text = "\uD83C\uDFEA" // Store emoji
+        // Colored circle with first letter
+        val color = iconColors[abs(recipient.name.hashCode()) % iconColors.size]
+        val circle = GradientDrawable()
+        circle.shape = GradientDrawable.OVAL
+        circle.setColor(color)
+        holder.tvRecipientIcon.background = circle
+        holder.tvRecipientIcon.text = recipient.name.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
 
-        // Set recipient name
         holder.tvRecipientName.text = recipient.name
 
-        // Set description if available
         if (!recipient.description.isNullOrBlank()) {
             holder.tvRecipientDescription.text = recipient.description
             holder.tvRecipientDescription.visibility = View.VISIBLE
@@ -46,17 +63,16 @@ class RecipientAdapter(
             holder.tvRecipientDescription.visibility = View.GONE
         }
 
-        // Show favorite indicator
         holder.ivFavorite.visibility = if (recipient.isFavorite) View.VISIBLE else View.GONE
 
-        // Show edit button only for user-specific recipients
-        if (showEditButton && recipient.isUserSpecific) {
-            holder.btnEditRecipient.visibility = View.VISIBLE
-            holder.btnEditRecipient.setOnClickListener {
-                onEditClick?.invoke(recipient)
-            }
+        // Chevron and click only for user-specific recipients
+        if (recipient.isUserSpecific) {
+            holder.ivChevron.visibility = View.VISIBLE
+            holder.itemView.setOnClickListener { onItemClick?.invoke(recipient) }
         } else {
-            holder.btnEditRecipient.visibility = View.GONE
+            holder.ivChevron.visibility = View.INVISIBLE
+            holder.itemView.setOnClickListener(null)
+            holder.itemView.isClickable = false
         }
     }
 

@@ -25,29 +25,37 @@ class AddEditMetalBottomSheet : BottomSheetDialogFragment() {
     private var editHolding: MetalHolding? = null
 
     companion object {
-        private const val ARG_HOLDING_ID = "holding_id"
-        private const val ARG_METAL_TYPE = "metal_type"
-        private const val ARG_SUB_TYPE = "sub_type"
-        private const val ARG_LABEL = "label"
-        private const val ARG_QUANTITY = "quantity"
-        private const val ARG_PURITY = "purity"
-        private const val ARG_NOTES = "notes"
+        private const val ARG_HOLDING_ID    = "holding_id"
+        private const val ARG_METAL_TYPE    = "metal_type"
+        private const val ARG_SUB_TYPE      = "sub_type"
+        private const val ARG_LABEL         = "label"
+        private const val ARG_QUANTITY      = "quantity"
+        private const val ARG_PURITY        = "purity"
+        private const val ARG_NOTES         = "notes"
+        /** For new holdings only – pre-selects the metal type spinner. */
+        private const val ARG_DEFAULT_TYPE  = "default_metal_type"
 
-        fun newInstance(holding: MetalHolding? = null): AddEditMetalBottomSheet {
-            return AddEditMetalBottomSheet().apply {
-                if (holding != null) {
-                    arguments = Bundle().apply {
-                        putString(ARG_HOLDING_ID, holding.id)
-                        putString(ARG_METAL_TYPE, holding.metalType)
-                        putString(ARG_SUB_TYPE, holding.subType)
-                        putString(ARG_LABEL, holding.label)
-                        putDouble(ARG_QUANTITY, holding.quantityGrams)
-                        putString(ARG_PURITY, holding.purity)
-                        putString(ARG_NOTES, holding.notes)
-                    }
+        /** Open in add mode, optionally pre-selecting a metal type. */
+        fun newInstance(defaultMetalType: String? = null): AddEditMetalBottomSheet =
+            AddEditMetalBottomSheet().apply {
+                if (defaultMetalType != null) {
+                    arguments = Bundle().apply { putString(ARG_DEFAULT_TYPE, defaultMetalType) }
                 }
             }
-        }
+
+        /** Open in edit mode with all fields pre-populated. */
+        fun newInstance(holding: MetalHolding): AddEditMetalBottomSheet =
+            AddEditMetalBottomSheet().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_HOLDING_ID, holding.id)
+                    putString(ARG_METAL_TYPE,  holding.metalType)
+                    putString(ARG_SUB_TYPE,    holding.subType)
+                    putString(ARG_LABEL,       holding.label)
+                    putDouble(ARG_QUANTITY,    holding.quantityGrams)
+                    putString(ARG_PURITY,      holding.purity)
+                    putString(ARG_NOTES,       holding.notes)
+                }
+            }
     }
 
     private val metalTypes = listOf("Physical Gold", "Digital Gold", "SGB")
@@ -63,7 +71,6 @@ class AddEditMetalBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Restore edit args if present
         val editId = arguments?.getString(ARG_HOLDING_ID)
         if (editId != null) {
             binding.tvTitle.text = "Edit Metal Holding"
@@ -71,6 +78,15 @@ class AddEditMetalBottomSheet : BottomSheetDialogFragment() {
 
         setupSpinners()
         setupPurityVisibility()
+
+        // Pre-select metal type for add mode (e.g. tapped "+" in a section header)
+        if (editId == null) {
+            val defaultType = arguments?.getString(ARG_DEFAULT_TYPE)
+            if (defaultType != null) {
+                val idx = metalTypeValues.indexOf(defaultType).coerceAtLeast(0)
+                binding.spinnerMetalType.setSelection(idx)
+            }
+        }
 
         // Populate for edit mode
         if (editId != null) {

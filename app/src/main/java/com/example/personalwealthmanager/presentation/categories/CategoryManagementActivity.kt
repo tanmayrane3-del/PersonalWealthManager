@@ -1,13 +1,15 @@
-﻿package com.pwm.personalwealthmanager.presentation.categories
+package com.pwm.personalwealthmanager.presentation.categories
 
 import android.app.AlertDialog
-import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
-import android.view.Window
 import android.widget.*
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
@@ -27,20 +29,28 @@ class CategoryManagementActivity : com.pwm.personalwealthmanager.presentation.ba
     private val viewModel: CategoryManagementViewModel by viewModels()
 
     private lateinit var progressBar: ProgressBar
+    private lateinit var etSearch: EditText
+    private lateinit var fabAddCategory: FloatingActionButton
 
-    // Income section views
+    // Income section
     private lateinit var incomeHeader: LinearLayout
-    private lateinit var incomeContent: LinearLayout
     private lateinit var ivIncomeExpand: ImageView
+    private lateinit var incomeContent: LinearLayout
+    private lateinit var tvIncomeCount: TextView
     private lateinit var rvIncomeGlobalCategories: RecyclerView
+    private lateinit var incomeDivider: View
+    private lateinit var tvIncomeCustomLabel: TextView
     private lateinit var rvIncomeUserCategories: RecyclerView
     private lateinit var tvNoIncomeUserCategories: TextView
 
-    // Expense section views
+    // Expense section
     private lateinit var expenseHeader: LinearLayout
-    private lateinit var expenseContent: LinearLayout
     private lateinit var ivExpenseExpand: ImageView
+    private lateinit var expenseContent: LinearLayout
+    private lateinit var tvExpenseCount: TextView
     private lateinit var rvExpenseGlobalCategories: RecyclerView
+    private lateinit var expenseDivider: View
+    private lateinit var tvExpenseCustomLabel: TextView
     private lateinit var rvExpenseUserCategories: RecyclerView
     private lateinit var tvNoExpenseUserCategories: TextView
 
@@ -50,8 +60,9 @@ class CategoryManagementActivity : com.pwm.personalwealthmanager.presentation.ba
     private lateinit var expenseGlobalAdapter: CategoryAdapter
     private lateinit var expenseUserAdapter: CategoryAdapter
 
-    // Management menu state
-    private var isManagementExpanded = true
+    private var isIncomeExpanded = true
+    private var isExpenseExpanded = true
+    private var searchQuery = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,130 +78,164 @@ class CategoryManagementActivity : com.pwm.personalwealthmanager.presentation.ba
 
     private fun initializeViews() {
         progressBar = findViewById(R.id.progressBar)
+        etSearch = findViewById(R.id.etSearch)
+        fabAddCategory = findViewById(R.id.fabAddCategory)
 
-        // Income section
         incomeHeader = findViewById(R.id.incomeHeader)
-        incomeContent = findViewById(R.id.incomeContent)
         ivIncomeExpand = findViewById(R.id.ivIncomeExpand)
+        incomeContent = findViewById(R.id.incomeContent)
+        tvIncomeCount = findViewById(R.id.tvIncomeCount)
         rvIncomeGlobalCategories = findViewById(R.id.rvIncomeGlobalCategories)
+        incomeDivider = findViewById(R.id.incomeDivider)
+        tvIncomeCustomLabel = findViewById(R.id.tvIncomeCustomLabel)
         rvIncomeUserCategories = findViewById(R.id.rvIncomeUserCategories)
         tvNoIncomeUserCategories = findViewById(R.id.tvNoIncomeUserCategories)
 
-        // Expense section
         expenseHeader = findViewById(R.id.expenseHeader)
-        expenseContent = findViewById(R.id.expenseContent)
         ivExpenseExpand = findViewById(R.id.ivExpenseExpand)
+        expenseContent = findViewById(R.id.expenseContent)
+        tvExpenseCount = findViewById(R.id.tvExpenseCount)
         rvExpenseGlobalCategories = findViewById(R.id.rvExpenseGlobalCategories)
+        expenseDivider = findViewById(R.id.expenseDivider)
+        tvExpenseCustomLabel = findViewById(R.id.tvExpenseCustomLabel)
         rvExpenseUserCategories = findViewById(R.id.rvExpenseUserCategories)
         tvNoExpenseUserCategories = findViewById(R.id.tvNoExpenseUserCategories)
     }
 
     private fun setupRecyclerViews() {
-        // Income Global Categories - no edit button
-        incomeGlobalAdapter = CategoryAdapter(
-            categories = emptyList(),
-            showEditButton = false
-        )
+        incomeGlobalAdapter = CategoryAdapter(emptyList())
         rvIncomeGlobalCategories.layoutManager = LinearLayoutManager(this)
         rvIncomeGlobalCategories.adapter = incomeGlobalAdapter
 
-        // Income User Categories - with edit button
         incomeUserAdapter = CategoryAdapter(
             categories = emptyList(),
-            showEditButton = true,
-            onEditClick = { category ->
-                showEditCategoryDialog(category, "income")
-            }
+            onItemClick = { category -> showEditCategoryDialog(category, "income") }
         )
         rvIncomeUserCategories.layoutManager = LinearLayoutManager(this)
         rvIncomeUserCategories.adapter = incomeUserAdapter
 
-        // Expense Global Categories - no edit button
-        expenseGlobalAdapter = CategoryAdapter(
-            categories = emptyList(),
-            showEditButton = false
-        )
+        expenseGlobalAdapter = CategoryAdapter(emptyList())
         rvExpenseGlobalCategories.layoutManager = LinearLayoutManager(this)
         rvExpenseGlobalCategories.adapter = expenseGlobalAdapter
 
-        // Expense User Categories - with edit button
         expenseUserAdapter = CategoryAdapter(
             categories = emptyList(),
-            showEditButton = true,
-            onEditClick = { category ->
-                showEditCategoryDialog(category, "expense")
-            }
+            onItemClick = { category -> showEditCategoryDialog(category, "expense") }
         )
         rvExpenseUserCategories.layoutManager = LinearLayoutManager(this)
         rvExpenseUserCategories.adapter = expenseUserAdapter
     }
 
     private fun setupClickListeners() {
-        // Back button
-        findViewById<ImageView>(R.id.btnBack).setOnClickListener {
-            finish()
-        }
+        findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
 
-        // Menu button
         findViewById<ImageView>(R.id.btnMenu).setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.END)
         }
 
-        // Income section collapse/expand
         incomeHeader.setOnClickListener {
-            viewModel.toggleIncomeSection()
+            isIncomeExpanded = !isIncomeExpanded
+            setIncomeExpanded(isIncomeExpanded)
         }
 
-        // Expense section collapse/expand
         expenseHeader.setOnClickListener {
-            viewModel.toggleExpenseSection()
+            isExpenseExpanded = !isExpenseExpanded
+            setExpenseExpanded(isExpenseExpanded)
         }
+
+        fabAddCategory.setOnClickListener {
+            val types = arrayOf("Income Category", "Expense Category")
+            AlertDialog.Builder(this)
+                .setTitle("Add New Category")
+                .setItems(types) { _, which ->
+                    val type = if (which == 0) "income" else "expense"
+                    showCreateCategoryDialog(type)
+                }
+                .show()
+        }
+
+        etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                searchQuery = s?.toString() ?: ""
+                applySearchFilter(viewModel.state.value)
+            }
+        })
     }
 
-    private fun showEditCategoryDialog(category: Category, type: String) {
-        val dialog = Dialog(this)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    private fun applySearchFilter(state: CategoryManagementState) {
+        fun filter(list: List<Category>) =
+            if (searchQuery.isBlank()) list
+            else list.filter { c ->
+                c.name.contains(searchQuery, ignoreCase = true) ||
+                c.description?.contains(searchQuery, ignoreCase = true) == true
+            }
+
+        val incomeGlobal = filter(state.incomeCategories.filter { it.isGlobal })
+        val incomeUser = filter(state.incomeCategories.filter { it.isUserSpecific })
+        incomeGlobalAdapter.updateCategories(incomeGlobal)
+        incomeUserAdapter.updateCategories(incomeUser)
+        tvIncomeCount.text = "${incomeGlobal.size + incomeUser.size} TOTAL"
+        val showIncomeCustom = incomeUser.isNotEmpty()
+        incomeDivider.visibility = if (showIncomeCustom && incomeGlobal.isNotEmpty()) View.VISIBLE else View.GONE
+        tvIncomeCustomLabel.visibility = if (showIncomeCustom) View.VISIBLE else View.GONE
+        tvNoIncomeUserCategories.visibility = if (incomeUser.isEmpty()) View.VISIBLE else View.GONE
+
+        val expenseGlobal = filter(state.expenseCategories.filter { it.isGlobal })
+        val expenseUser = filter(state.expenseCategories.filter { it.isUserSpecific })
+        expenseGlobalAdapter.updateCategories(expenseGlobal)
+        expenseUserAdapter.updateCategories(expenseUser)
+        tvExpenseCount.text = "${expenseGlobal.size + expenseUser.size} TOTAL"
+        val showExpenseCustom = expenseUser.isNotEmpty()
+        expenseDivider.visibility = if (showExpenseCustom && expenseGlobal.isNotEmpty()) View.VISIBLE else View.GONE
+        tvExpenseCustomLabel.visibility = if (showExpenseCustom) View.VISIBLE else View.GONE
+        tvNoExpenseUserCategories.visibility = if (expenseUser.isEmpty()) View.VISIBLE else View.GONE
+    }
+
+    private fun setIncomeExpanded(expanded: Boolean) {
+        incomeContent.visibility = if (expanded) View.VISIBLE else View.GONE
+        ivIncomeExpand.setImageResource(if (expanded) R.drawable.ic_expand_less else R.drawable.ic_expand_more)
+    }
+
+    private fun setExpenseExpanded(expanded: Boolean) {
+        expenseContent.visibility = if (expanded) View.VISIBLE else View.GONE
+        ivExpenseExpand.setImageResource(if (expanded) R.drawable.ic_expand_less else R.drawable.ic_expand_more)
+    }
+
+    private fun showCreateCategoryDialog(type: String) {
+        val dialog = BottomSheetDialog(this)
         dialog.setContentView(R.layout.dialog_edit_category)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.window?.setLayout(
-            (resources.displayMetrics.widthPixels * 0.9).toInt(),
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
 
-        val etCategoryName = dialog.findViewById<TextInputEditText>(R.id.etCategoryName)
-        val etCategoryDescription = dialog.findViewById<TextInputEditText>(R.id.etCategoryDescription)
-        val etIcon = dialog.findViewById<TextInputEditText>(R.id.etIcon)
-        val tvTransactionWarning = dialog.findViewById<TextView>(R.id.tvTransactionWarning)
-        val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)
-        val tvError = dialog.findViewById<TextView>(R.id.tvError)
-        val buttonsLayout = dialog.findViewById<LinearLayout>(R.id.buttonsLayout)
-        val btnCancel = dialog.findViewById<Button>(R.id.btnCancel)
-        val btnSave = dialog.findViewById<Button>(R.id.btnSave)
-        val btnDelete = dialog.findViewById<Button>(R.id.btnDelete)
-        val btnCloseDialog = dialog.findViewById<ImageView>(R.id.btnCloseDialog)
+        val tvDialogTitle = dialog.findViewById<TextView>(R.id.tvDialogTitle)!!
+        val etCategoryName = dialog.findViewById<TextInputEditText>(R.id.etCategoryName)!!
+        val etCategoryDescription = dialog.findViewById<TextInputEditText>(R.id.etCategoryDescription)!!
+        val etIcon = dialog.findViewById<TextInputEditText>(R.id.etIcon)!!
+        val tvTransactionWarning = dialog.findViewById<TextView>(R.id.tvTransactionWarning)!!
+        val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)!!
+        val tvError = dialog.findViewById<TextView>(R.id.tvError)!!
+        val buttonsLayout = dialog.findViewById<LinearLayout>(R.id.buttonsLayout)!!
+        val btnCancel = dialog.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)!!
+        val btnSave = dialog.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSave)!!
+        val btnDelete = dialog.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDelete)!!
+        val toggleIncomeType = dialog.findViewById<MaterialButtonToggleGroup>(R.id.toggleIncomeType)!!
+        val toggleSpendingType = dialog.findViewById<MaterialButtonToggleGroup>(R.id.toggleSpendingType)!!
 
-        // Pre-populate fields
-        etCategoryName.setText(category.name)
-        etCategoryDescription.setText(category.description ?: "")
-        etIcon.setText(category.icon ?: "")
+        val typeLabel = if (type == "income") "Income" else "Expense"
+        tvDialogTitle.text = "Add $typeLabel Category"
+        tvTransactionWarning.visibility = View.GONE
+        btnDelete.visibility = View.GONE
 
-        // Show transaction warning or delete button based on transaction count
-        if (category.transactionCount > 0) {
-            tvTransactionWarning.text = getString(R.string.category_has_transactions, category.transactionCount)
-            tvTransactionWarning.visibility = View.VISIBLE
-            btnDelete.visibility = View.GONE
+        // Show appropriate budget type toggle
+        if (type == "income") {
+            toggleIncomeType.visibility = View.VISIBLE
+            toggleSpendingType.visibility = View.GONE
         } else {
-            tvTransactionWarning.visibility = View.GONE
-            btnDelete.visibility = View.VISIBLE
+            toggleIncomeType.visibility = View.GONE
+            toggleSpendingType.visibility = View.VISIBLE
         }
 
-        btnCloseDialog.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        btnCancel.setOnClickListener {
-            dialog.dismiss()
-        }
+        btnCancel.setOnClickListener { dialog.dismiss() }
 
         btnSave.setOnClickListener {
             val name = etCategoryName.text.toString().trim()
@@ -203,11 +248,144 @@ class CategoryManagementActivity : com.pwm.personalwealthmanager.presentation.ba
                 return@setOnClickListener
             }
 
-            // Validate icon is emoji
             if (icon != null && !isValidEmoji(icon)) {
                 tvError.text = "Please enter a valid emoji icon"
                 tvError.visibility = View.VISIBLE
                 return@setOnClickListener
+            }
+
+            val budgetType = if (type == "income") {
+                when (toggleIncomeType.checkedButtonId) {
+                    R.id.btnPrimary -> "primary"
+                    R.id.btnPassive -> "passive"
+                    R.id.btnOneTime -> "one_time"
+                    else -> null
+                }
+            } else {
+                when (toggleSpendingType.checkedButtonId) {
+                    R.id.btnNeeds -> "need"
+                    R.id.btnWants -> "want"
+                    R.id.btnSavings -> "savings_investment"
+                    else -> null
+                }
+            }
+
+            tvError.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
+            buttonsLayout.visibility = View.GONE
+
+            viewModel.createCategory(type, name, description, icon, budgetType)
+
+            lifecycleScope.launch {
+                viewModel.state.collect { state ->
+                    if (state.createSuccess) {
+                        viewModel.clearSuccessStates()
+                        dialog.dismiss()
+                        Toast.makeText(
+                            this@CategoryManagementActivity,
+                            "$typeLabel category created",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@collect
+                    }
+                    if (!state.isCreating && state.error != null) {
+                        progressBar.visibility = View.GONE
+                        buttonsLayout.visibility = View.VISIBLE
+                        tvError.text = state.error
+                        tvError.visibility = View.VISIBLE
+                        viewModel.clearError()
+                    }
+                }
+            }
+        }
+
+        showExpandedBottomSheet(dialog)
+    }
+
+    private fun showEditCategoryDialog(category: Category, type: String) {
+        val dialog = BottomSheetDialog(this)
+        dialog.setContentView(R.layout.dialog_edit_category)
+
+        val etCategoryName = dialog.findViewById<TextInputEditText>(R.id.etCategoryName)!!
+        val etCategoryDescription = dialog.findViewById<TextInputEditText>(R.id.etCategoryDescription)!!
+        val etIcon = dialog.findViewById<TextInputEditText>(R.id.etIcon)!!
+        val tvTransactionWarning = dialog.findViewById<TextView>(R.id.tvTransactionWarning)!!
+        val progressBar = dialog.findViewById<ProgressBar>(R.id.progressBar)!!
+        val tvError = dialog.findViewById<TextView>(R.id.tvError)!!
+        val buttonsLayout = dialog.findViewById<LinearLayout>(R.id.buttonsLayout)!!
+        val btnCancel = dialog.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)!!
+        val btnSave = dialog.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSave)!!
+        val btnDelete = dialog.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDelete)!!
+        val btnCloseDialog = dialog.findViewById<ImageView>(R.id.btnCloseDialog)!!
+        val toggleIncomeType = dialog.findViewById<MaterialButtonToggleGroup>(R.id.toggleIncomeType)!!
+        val toggleSpendingType = dialog.findViewById<MaterialButtonToggleGroup>(R.id.toggleSpendingType)!!
+
+        etCategoryName.setText(category.name)
+        etCategoryDescription.setText(category.description ?: "")
+        etIcon.setText(category.icon ?: "")
+
+        // Show appropriate budget type toggle and pre-select existing value
+        if (type == "income") {
+            toggleIncomeType.visibility = View.VISIBLE
+            toggleSpendingType.visibility = View.GONE
+            when (category.incomeType) {
+                "primary" -> toggleIncomeType.check(R.id.btnPrimary)
+                "passive" -> toggleIncomeType.check(R.id.btnPassive)
+                "one_time" -> toggleIncomeType.check(R.id.btnOneTime)
+            }
+        } else {
+            toggleIncomeType.visibility = View.GONE
+            toggleSpendingType.visibility = View.VISIBLE
+            when (category.spendingType) {
+                "need" -> toggleSpendingType.check(R.id.btnNeeds)
+                "want" -> toggleSpendingType.check(R.id.btnWants)
+                "savings_investment" -> toggleSpendingType.check(R.id.btnSavings)
+            }
+        }
+
+        if (category.transactionCount > 0) {
+            tvTransactionWarning.text = getString(R.string.category_has_transactions, category.transactionCount)
+            tvTransactionWarning.visibility = View.VISIBLE
+            btnDelete.visibility = View.GONE
+        } else {
+            tvTransactionWarning.visibility = View.GONE
+            btnDelete.visibility = View.VISIBLE
+        }
+
+        btnCloseDialog.setOnClickListener { dialog.dismiss() }
+        btnCancel.setOnClickListener { dialog.dismiss() }
+
+        btnSave.setOnClickListener {
+            val name = etCategoryName.text.toString().trim()
+            val description = etCategoryDescription.text.toString().trim().ifEmpty { null }
+            val icon = etIcon.text.toString().trim().ifEmpty { null }
+
+            if (name.isEmpty()) {
+                tvError.text = getString(R.string.name_required)
+                tvError.visibility = View.VISIBLE
+                return@setOnClickListener
+            }
+
+            if (icon != null && !isValidEmoji(icon)) {
+                tvError.text = "Please enter a valid emoji icon"
+                tvError.visibility = View.VISIBLE
+                return@setOnClickListener
+            }
+
+            val budgetType = if (type == "income") {
+                when (toggleIncomeType.checkedButtonId) {
+                    R.id.btnPrimary -> "primary"
+                    R.id.btnPassive -> "passive"
+                    R.id.btnOneTime -> "one_time"
+                    else -> null
+                }
+            } else {
+                when (toggleSpendingType.checkedButtonId) {
+                    R.id.btnNeeds -> "need"
+                    R.id.btnWants -> "want"
+                    R.id.btnSavings -> "savings_investment"
+                    else -> null
+                }
             }
 
             tvError.visibility = View.GONE
@@ -215,9 +393,8 @@ class CategoryManagementActivity : com.pwm.personalwealthmanager.presentation.ba
             buttonsLayout.visibility = View.GONE
             btnDelete.visibility = View.GONE
 
-            viewModel.updateCategory(type, category.id, name, description, icon)
+            viewModel.updateCategory(type, category.id, name, description, icon, budgetType)
 
-            // Observe for result
             lifecycleScope.launch {
                 viewModel.state.collect { state ->
                     if (state.updateSuccess) {
@@ -229,9 +406,7 @@ class CategoryManagementActivity : com.pwm.personalwealthmanager.presentation.ba
                     if (!state.isUpdating && state.error != null) {
                         progressBar.visibility = View.GONE
                         buttonsLayout.visibility = View.VISIBLE
-                        if (category.transactionCount == 0) {
-                            btnDelete.visibility = View.VISIBLE
-                        }
+                        if (category.transactionCount == 0) btnDelete.visibility = View.VISIBLE
                         tvError.text = state.error
                         tvError.visibility = View.VISIBLE
                         viewModel.clearError()
@@ -274,26 +449,37 @@ class CategoryManagementActivity : com.pwm.personalwealthmanager.presentation.ba
                 .show()
         }
 
+        showExpandedBottomSheet(dialog)
+    }
+
+    private fun showExpandedBottomSheet(dialog: BottomSheetDialog) {
+        dialog.setOnShowListener {
+            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.let { view ->
+                val lp = view.layoutParams
+                lp.height = (resources.displayMetrics.heightPixels * 0.75).toInt()
+                view.layoutParams = lp
+                BottomSheetBehavior.from(view).apply {
+                    state = BottomSheetBehavior.STATE_EXPANDED
+                    skipCollapsed = true
+                }
+            }
+        }
         dialog.show()
     }
 
     private fun isValidEmoji(text: String): Boolean {
         if (text.isEmpty()) return false
-
-        // Check if string contains at least one emoji
         var i = 0
         while (i < text.length) {
             val codePoint = text.codePointAt(i)
-            // Check for common emoji ranges
-            if (codePoint in 0x1F300..0x1F9FF || // Miscellaneous Symbols and Pictographs, Emoticons, etc.
-                codePoint in 0x2600..0x26FF ||   // Miscellaneous Symbols
-                codePoint in 0x2700..0x27BF ||   // Dingbats
-                codePoint in 0x1F600..0x1F64F || // Emoticons
-                codePoint in 0x1F680..0x1F6FF || // Transport and Map Symbols
-                codePoint in 0x1F1E0..0x1F1FF    // Flags
-            ) {
-                return true
-            }
+            if (codePoint in 0x1F300..0x1F9FF ||
+                codePoint in 0x2600..0x26FF ||
+                codePoint in 0x2700..0x27BF ||
+                codePoint in 0x1F600..0x1F64F ||
+                codePoint in 0x1F680..0x1F6FF ||
+                codePoint in 0x1F1E0..0x1F1FF
+            ) return true
             i += Character.charCount(codePoint)
         }
         return false
@@ -303,45 +489,14 @@ class CategoryManagementActivity : com.pwm.personalwealthmanager.presentation.ba
         lifecycleScope.launch {
             viewModel.state.collect { state ->
                 progressBar.visibility = if (state.isLoading) View.VISIBLE else View.GONE
+                applySearchFilter(state)
 
-                // Update Income section
-                updateIncomeSectionVisibility(state.isIncomeExpanded)
-                val incomeGlobal = state.incomeCategories.filter { it.isGlobal }
-                val incomeUser = state.incomeCategories.filter { it.isUserSpecific }
-                incomeGlobalAdapter.updateCategories(incomeGlobal)
-                incomeUserAdapter.updateCategories(incomeUser)
-                tvNoIncomeUserCategories.visibility = if (incomeUser.isEmpty()) View.VISIBLE else View.GONE
-
-                // Update Expense section
-                updateExpenseSectionVisibility(state.isExpenseExpanded)
-                val expenseGlobal = state.expenseCategories.filter { it.isGlobal }
-                val expenseUser = state.expenseCategories.filter { it.isUserSpecific }
-                expenseGlobalAdapter.updateCategories(expenseGlobal)
-                expenseUserAdapter.updateCategories(expenseUser)
-                tvNoExpenseUserCategories.visibility = if (expenseUser.isEmpty()) View.VISIBLE else View.GONE
-
-                // Show error if any
                 state.error?.let { error ->
-                    if (!state.isUpdating && !state.isDeleting) {
+                    if (!state.isUpdating && !state.isDeleting && !state.isCreating) {
                         Toast.makeText(this@CategoryManagementActivity, error, Toast.LENGTH_LONG).show()
                     }
                 }
             }
         }
     }
-
-    private fun updateIncomeSectionVisibility(isExpanded: Boolean) {
-        incomeContent.visibility = if (isExpanded) View.VISIBLE else View.GONE
-        ivIncomeExpand.setImageResource(
-            if (isExpanded) R.drawable.ic_expand_less else R.drawable.ic_expand_more
-        )
-    }
-
-    private fun updateExpenseSectionVisibility(isExpanded: Boolean) {
-        expenseContent.visibility = if (isExpanded) View.VISIBLE else View.GONE
-        ivExpenseExpand.setImageResource(
-            if (isExpanded) R.drawable.ic_expand_less else R.drawable.ic_expand_more
-        )
-    }
-
 }

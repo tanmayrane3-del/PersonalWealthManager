@@ -11,6 +11,8 @@ data class CategoryManagementState(
     val isExpenseExpanded: Boolean = true,
     val isUpdating: Boolean = false,
     val isDeleting: Boolean = false,
+    val isCreating: Boolean = false,
     val updateSuccess: Boolean = false,
-    val deleteSuccess: Boolean = false
+    val deleteSuccess: Boolean = false,
+    val createSuccess: Boolean = false
 )

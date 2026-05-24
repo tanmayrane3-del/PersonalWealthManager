@@ -3,6 +3,7 @@
 import com.pwm.personalwealthmanager.core.utils.SessionManager
 import com.pwm.personalwealthmanager.data.remote.api.MetadataApi
 import com.pwm.personalwealthmanager.data.remote.dto.CategoryDto
+import com.pwm.personalwealthmanager.data.remote.dto.CreateCategoryRequest
 import com.pwm.personalwealthmanager.data.remote.dto.UpdateCategoryRequest
 import com.pwm.personalwealthmanager.domain.model.Category
 import com.pwm.personalwealthmanager.domain.repository.CategoryRepository
@@ -56,7 +57,8 @@ class CategoryRepositoryImpl @Inject constructor(
         categoryId: String,
         name: String?,
         description: String?,
-        icon: String?
+        icon: String?,
+        budgetType: String?
     ): Result<Category> {
         return try {
             val sessionToken = sessionManager.getSessionToken()
@@ -65,7 +67,9 @@ class CategoryRepositoryImpl @Inject constructor(
             val request = UpdateCategoryRequest(
                 name = name,
                 description = description,
-                icon = icon
+                icon = icon,
+                spendingType = if (type == "expense") budgetType else null,
+                incomeType = if (type == "income") budgetType else null
             )
 
             val response = if (type == "income") {
@@ -112,6 +116,47 @@ class CategoryRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun createCategory(
+        type: String,
+        name: String,
+        description: String?,
+        icon: String?,
+        budgetType: String?
+    ): Result<Category> {
+        return try {
+            val sessionToken = sessionManager.getSessionToken()
+                ?: return Result.failure(Exception("No session token"))
+
+            val request = CreateCategoryRequest(
+                name = name,
+                description = description,
+                icon = icon,
+                spendingType = if (type == "expense") budgetType else null,
+                incomeType = if (type == "income") budgetType else null
+            )
+
+            val response = if (type == "income") {
+                metadataApi.createIncomeCategory(sessionToken, request)
+            } else {
+                metadataApi.createExpenseCategory(sessionToken, request)
+            }
+
+            if (response.isSuccessful && response.body()?.status == "success") {
+                val categoryDto = response.body()?.data
+                if (categoryDto != null) {
+                    Result.success(categoryDto.toDomain())
+                } else {
+                    Result.failure(Exception("Failed to create category"))
+                }
+            } else {
+                val errorMessage = response.body()?.reason ?: "Failed to create category"
+                Result.failure(Exception(errorMessage))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     private fun CategoryDto.toDomain(): Category {
         return Category(
             id = this.id,
@@ -122,7 +167,9 @@ class CategoryRepositoryImpl @Inject constructor(
             type = this.type,
             isGlobal = this.isGlobal,
             isUserSpecific = this.isUserSpecific,
-            transactionCount = this.transactionCount
+            transactionCount = this.transactionCount,
+            spendingType = this.spendingType?.name?.lowercase(),
+            incomeType = this.incomeType?.name?.lowercase()
         )
     }
 }

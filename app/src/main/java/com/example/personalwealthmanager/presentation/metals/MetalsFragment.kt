@@ -39,14 +39,15 @@ class MetalsFragment : Fragment() {
 
         adapter = MetalHoldingAdapter(
             onEdit = { holding -> showEditSheet(holding) },
-            onDelete = { holding -> confirmDelete(holding) }
+            onDelete = { holding -> confirmDelete(holding) },
+            onAdd = { metalType -> showAddSheet(metalType) }
         )
         binding.rvHoldings.layoutManager = LinearLayoutManager(requireContext())
         binding.rvHoldings.adapter = adapter
         binding.rvHoldings.isNestedScrollingEnabled = false
 
         binding.fabAddHolding.setOnClickListener {
-            AddEditMetalBottomSheet.newInstance().show(childFragmentManager, "add_metal")
+            showAddSheet(null)
         }
 
         binding.ivSyncCagr.setOnClickListener {
@@ -167,6 +168,11 @@ class MetalsFragment : Fragment() {
     private fun updateTotalValue(totalValue: Double) {
         val inrFormatter = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
         binding.tvTotalValue.text = inrFormatter.format(totalValue)
+    }
+
+    private fun showAddSheet(metalType: String?) {
+        AddEditMetalBottomSheet.newInstance(metalType)
+            .show(childFragmentManager, "add_metal")
     }
 
     private fun showEditSheet(holding: MetalHolding) {

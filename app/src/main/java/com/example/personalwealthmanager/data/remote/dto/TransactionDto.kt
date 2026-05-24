@@ -61,7 +61,9 @@ data class CategoryDto(
     val type: String? = null,  // Type is determined by which endpoint is called
     @SerializedName("is_global") val isGlobal: Boolean = false,
     @SerializedName("is_user_specific") val isUserSpecific: Boolean = false,
-    @SerializedName("transaction_count") val transactionCount: Int = 0
+    @SerializedName("transaction_count") val transactionCount: Int = 0,
+    @SerializedName("spending_type") val spendingType: SpendingType? = null,
+    @SerializedName("income_type") val incomeType: IncomeType? = null
 )
 
 data class CreateCategoryRequest(
@@ -69,13 +71,17 @@ data class CreateCategoryRequest(
     val description: String? = null,
     val icon: String? = null,
     val color: String = "#FF5722",
-    @SerializedName("display_order") val displayOrder: Int = 0
+    @SerializedName("display_order") val displayOrder: Int = 0,
+    @SerializedName("spending_type") val spendingType: String? = null,
+    @SerializedName("income_type") val incomeType: String? = null
 )
 
 data class UpdateCategoryRequest(
     val name: String? = null,
     val description: String? = null,
-    val icon: String? = null
+    val icon: String? = null,
+    @SerializedName("spending_type") val spendingType: String? = null,
+    @SerializedName("income_type") val incomeType: String? = null
 )
 
 data class SourceDto(

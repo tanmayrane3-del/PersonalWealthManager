@@ -445,13 +445,14 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <!-- FAB -->
+        <!-- FAB – bottom margin must clear the bottom nav bar (~56 dp) + gap -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabAddHolding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
+            android:layout_marginBottom="80dp"
             android:src="@drawable/ic_add"
             android:contentDescription="Add holding"
             app:backgroundTint="@color/card_dark_teal"
