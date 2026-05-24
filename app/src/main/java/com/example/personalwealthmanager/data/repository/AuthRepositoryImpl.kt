@@ -1,6 +1,5 @@
 ﻿package com.pwm.personalwealthmanager.data.repository
 
-import android.util.Log
 import com.pwm.personalwealthmanager.core.utils.SessionManager
 import com.pwm.personalwealthmanager.data.remote.api.AuthApi
 import com.pwm.personalwealthmanager.data.remote.dto.CreateSessionRequest
@@ -17,7 +16,6 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun login(email: String, password: String): Result<User> {
         return try {
-            Log.d("AuthRepoLogin", "Calling validateLogin for $email")
             // Step 1: Validate credentials
             val validateResponse = authApi.validateLogin(LoginRequest(email, password))
 
@@ -56,7 +54,6 @@ class AuthRepositoryImpl @Inject constructor(
                 )
             )
         } catch (e: Exception) {
-            Log.e("AuthRepoLogin", "Login failed: ${e.javaClass.name}: ${e.message}", e)
             Result.failure(e)
         }
     }
