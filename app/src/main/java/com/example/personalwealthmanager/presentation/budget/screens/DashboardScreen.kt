@@ -407,9 +407,12 @@ private fun IncomeBar(actual: Double, target: Double, isLocked: Boolean, onClick
 
 @Composable
 private fun BucketCard(bucket: BucketSummaryDto, onClick: () -> Unit) {
-    val pct = (bucket.pctUsed / 100.0).toFloat()
     val color = bucketColor(bucket.type)
     val hasPlanned = bucket.planned > 0.0
+    // If no plan set, treat planned=1 so actual/1=actual → bar fills to 100% when there's spend
+    val effectivePct = if (hasPlanned) (bucket.pctUsed / 100.0).toFloat()
+                       else if (bucket.actual > 0.0) 1f else 0f
+    val pct = (bucket.pctUsed / 100.0).toFloat()
     Card(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -431,15 +434,9 @@ private fun BucketCard(bucket: BucketSummaryDto, onClick: () -> Unit) {
             }
             Spacer(Modifier.height(8.dp))
             LinearProgressIndicator(
-                progress = { if (hasPlanned) pct.coerceIn(0f, 1f) else 0f },
+                progress = { effectivePct.coerceIn(0f, 1f) },
                 modifier = Modifier.fillMaxWidth().height(5.dp),
-                // When no planned budget, match the indicator color to the track so the
-                // Material3 stop-indicator dot is invisible and the bar looks truly empty.
-                color = when {
-                    !hasPlanned -> Color(0xFFE5E7EB)
-                    pct > 1f    -> Color(0xFFEF4444)
-                    else        -> color
-                },
+                color = if (hasPlanned && pct > 1f) Color(0xFFEF4444) else color,
                 trackColor = Color(0xFFE5E7EB)
             )
             Spacer(Modifier.height(6.dp))
@@ -472,7 +469,12 @@ fun BucketDetailSheet(bucket: BucketSummaryDto, categories: List<CategoryBudgetV
         Spacer(Modifier.height(16.dp))
         categories.forEach { cat ->
             val catHasPlanned = cat.planned > 0
-            val pct = if (catHasPlanned) (cat.actual / cat.planned).coerceIn(0.0, 1.0) else 0.0
+            // If no plan, treat planned=1 so bar fills to 100% when there's any spend
+            val catPct = when {
+                catHasPlanned    -> (cat.actual / cat.planned).coerceIn(0.0, 1.0)
+                cat.actual > 0.0 -> 1.0
+                else             -> 0.0
+            }
             Column(modifier = Modifier.padding(vertical = 6.dp)) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(cat.categoryName, style = MaterialTheme.typography.bodyMedium,
@@ -487,13 +489,10 @@ fun BucketDetailSheet(bucket: BucketSummaryDto, categories: List<CategoryBudgetV
                 }
                 Spacer(Modifier.height(3.dp))
                 LinearProgressIndicator(
-                    progress = { pct.toFloat() },
+                    progress = { catPct.toFloat() },
                     modifier = Modifier.fillMaxWidth().height(4.dp),
-                    color = when {
-                        !catHasPlanned -> Color(0xFFE5E7EB)
-                        pct >= 1.0     -> Color(0xFFEF4444)
-                        else           -> bucketColor(bucket.type)
-                    },
+                    color = if (catHasPlanned && catPct >= 1.0) Color(0xFFEF4444)
+                            else bucketColor(bucket.type),
                     trackColor = Color(0xFFE5E7EB)
                 )
             }
